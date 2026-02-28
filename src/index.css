@@ -1,58 +1,40 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #0a0a0a;
-  --color-cream: #f2ede4;
+  --color-ink: #080808;
+  --color-cream: #f0ebe2;
   --color-gold: #c9a84c;
-  --color-gold-light: #e2c06e;
-  --color-warm-black: #111111;
-  --color-muted: rgba(242, 237, 228, 0.35);
+  --color-gold-light: #ddb96a;
+  --color-warm-black: #0f0f0f;
+  --color-surface: #141414;
+  --color-border: rgba(240, 235, 226, 0.07);
 
   --font-display: "Playfair Display", Georgia, serif;
-  --font-heading: "Space Grotesk", "Inter", sans-serif;
+  --font-heading: "Space Grotesk", sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-html {
-  scroll-behavior: smooth;
-}
+html, body { height: 100%; }
 
 body {
-  background-color: #0a0a0a;
-  color: #f2ede4;
+  background-color: #080808;
+  color: #f0ebe2;
   font-family: "Inter", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-/* Film grain overlay */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.022;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+#root {
+  min-height: 100%;
 }
 
-/* Minimal scrollbar */
-::-webkit-scrollbar { width: 2px; }
-::-webkit-scrollbar-track { background: #0a0a0a; }
-::-webkit-scrollbar-thumb { background: #c9a84c; }
-
-/* Selection */
 ::selection {
-  background: rgba(201, 168, 76, 0.25);
-  color: #f2ede4;
+  background: rgba(201, 168, 76, 0.2);
+  color: #f0ebe2;
 }
+
+::-webkit-scrollbar { width: 2px; }
+::-webkit-scrollbar-track { background: #080808; }
+::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.4); }

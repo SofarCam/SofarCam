@@ -1,16 +1,6 @@
 import './App.css'
-import Hero from './components/Hero'
-import Links from './components/Links'
-import About from './components/About'
-import Footer from './components/Footer'
+import Card from './components/Card'
 
 export default function App() {
-  return (
-    <main className="min-h-screen bg-ink">
-      <Hero />
-      <Links />
-      <About />
-      <Footer />
-    </main>
-  )
+  return <Card />
 }
