@@ -1,40 +1,33 @@
-export const config = { runtime: 'edge' }
-
-export default async function handler(req) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return new Response('Method not allowed', { status: 405 })
+    return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  let body
-  try {
-    body = await req.json()
-  } catch {
-    return new Response('Invalid JSON', { status: 400 })
-  }
-
-  const { niche, platform, style } = body
+  const { niche, platform, style } = req.body
 
   if (!niche || !platform || !style) {
-    return new Response(JSON.stringify({ error: 'Missing fields' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    })
+    return res.status(400).json({ error: 'Missing fields' })
+  }
+
+  const apiKey = process.env.ANTHROPIC_API_KEY
+  if (!apiKey) {
+    return res.status(500).json({ error: 'API key not configured' })
   }
 
   const prompt = `You are a viral content strategist who deeply understands what performs on social media in 2026.
 
 Generate exactly 3 viral content concepts for a ${niche} creator on ${platform} with a ${style} style.
 
-Each concept must be a proven format that stops the scroll and drives real engagement.
+Each concept must be a specific, scroll-stopping idea — not generic advice. Write hooks like a real creator would say them, not like a marketer.
 
-Return ONLY valid JSON in this exact format, no markdown, no explanation:
+Return ONLY valid JSON, no markdown, no explanation:
 {
   "concepts": [
     {
-      "hook": "The exact opening line or visual hook (first 3 seconds). Make it impossible to scroll past.",
-      "format": "The specific content format (e.g. POV, before/after, day in the life, storytime, tutorial reveal)",
-      "angle": "Why this works right now — the psychological or trend-based reason it goes viral",
-      "cta": "The call to action that drives saves, shares, or follows"
+      "hook": "The exact opening line or visual hook for the first 3 seconds. Specific, punchy, impossible to scroll past.",
+      "format": "The exact content format (e.g. POV, before/after, silent tutorial, storytime, talking head, trending audio)",
+      "angle": "Why this works right now — the psychological trigger or trend behind it",
+      "cta": "The exact call to action that drives saves, shares, or follows"
     },
     {
       "hook": "...",
@@ -50,14 +43,6 @@ Return ONLY valid JSON in this exact format, no markdown, no explanation:
     }
   ]
 }`
-
-  const apiKey = process.env.ANTHROPIC_API_KEY
-  if (!apiKey) {
-    return new Response(JSON.stringify({ error: 'API key not configured' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    })
-  }
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -77,10 +62,7 @@ Return ONLY valid JSON in this exact format, no markdown, no explanation:
     if (!response.ok) {
       const err = await response.text()
       console.error('Anthropic error:', err)
-      return new Response(JSON.stringify({ error: 'AI generation failed' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      })
+      return res.status(500).json({ error: 'AI generation failed' })
     }
 
     const data = await response.json()
@@ -90,24 +72,12 @@ Return ONLY valid JSON in this exact format, no markdown, no explanation:
     try {
       parsed = JSON.parse(text)
     } catch {
-      return new Response(JSON.stringify({ error: 'Failed to parse AI response' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      })
+      return res.status(500).json({ error: 'Failed to parse AI response' })
     }
 
-    return new Response(JSON.stringify(parsed), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-    })
+    return res.status(200).json(parsed)
   } catch (err) {
     console.error('Handler error:', err)
-    return new Response(JSON.stringify({ error: 'Internal server error' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    })
+    return res.status(500).json({ error: 'Internal server error' })
   }
 }
