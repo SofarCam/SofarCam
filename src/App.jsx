@@ -1,12 +1,14 @@
 import './App.css'
-import Card from './components/Card'
+import Hero from './components/Hero'
 import SofarContent from './components/SofarContent'
+import Services from './components/Services'
 
 export default function App() {
   return (
     <main>
-      <Card />
+      <Hero />
       <SofarContent />
+      <Services />
     </main>
   )
 }
