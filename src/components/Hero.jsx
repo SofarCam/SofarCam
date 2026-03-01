@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden" style={{ paddingTop: 'clamp(80px, 15vh, 120px)' }}>
       {/* Background radial glow */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -142,7 +142,8 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.1, duration: 0.8 }}
-          className="mt-14 flex items-center justify-center gap-2 flex-wrap"
+          className="flex items-center justify-center gap-2 flex-wrap"
+          style={{ marginTop: '60px', opacity: 0.5 }}
         >
           <span
             className="text-[9px] tracking-[0.3em] uppercase text-cream/15 mr-2"

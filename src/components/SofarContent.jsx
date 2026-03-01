@@ -1,11 +1,18 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import HookWriter from './HookWriter'
 
 const NICHES = ['Photography', 'Fitness', 'Fashion', 'Food', 'Travel', 'Music', 'Art', 'Business', 'Gaming', 'Lifestyle']
 const PLATFORMS = ['Instagram', 'TikTok', 'YouTube Shorts']
 const STYLES = ['Educational', 'Raw & Real', 'Aesthetic', 'Funny', 'Motivational', 'Behind the Scenes']
 
+const TABS = [
+  { id: 'concepts', label: 'Concept Generator', sub: '3 viral concepts in 30s' },
+  { id: 'hooks', label: 'Hook Writer', sub: '10 scroll-stopping hooks' },
+]
+
 export default function SofarContent() {
+  const [activeTab, setActiveTab] = useState('concepts')
   const [form, setForm] = useState({ niche: '', platform: '', style: '' })
   const [results, setResults] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -103,7 +110,7 @@ Return ONLY valid JSON, no markdown, no explanation:
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="text-center mb-16"
+          className="text-center mb-10"
         >
           <div className="inline-flex items-center gap-2 mb-6">
             <div className="w-5 h-px bg-gold/40" />
@@ -111,7 +118,7 @@ Return ONLY valid JSON, no markdown, no explanation:
               className="text-[10px] tracking-[0.35em] uppercase text-gold/70"
               style={{ fontFamily: 'var(--font-heading)' }}
             >
-              SofarContent
+              Free Tools
             </span>
             <div className="w-5 h-px bg-gold/40" />
           </div>
@@ -131,9 +138,76 @@ Return ONLY valid JSON, no markdown, no explanation:
             className="text-cream/35 max-w-md mx-auto leading-relaxed"
             style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem' }}
           >
-            Tell me your niche. Get 3 viral content concepts in 30 seconds.
+            AI-powered tools that tell you exactly what to post and how to hook your audience.
           </p>
         </motion.div>
+
+        {/* Tabs */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="flex items-center gap-2 mb-8 p-1 rounded-xl"
+          style={{ background: 'rgba(240,235,226,0.03)', border: '1px solid rgba(240,235,226,0.06)' }}
+        >
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className="flex-1 py-3 px-4 rounded-lg text-left transition-all duration-200"
+              style={{
+                background: activeTab === tab.id ? 'rgba(201,168,76,0.1)' : 'transparent',
+                border: `1px solid ${activeTab === tab.id ? 'rgba(201,168,76,0.25)' : 'transparent'}`,
+              }}
+            >
+              <p
+                className="text-xs font-medium mb-0.5"
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  color: activeTab === tab.id ? 'var(--color-gold)' : 'rgba(240,235,226,0.4)',
+                }}
+              >
+                {tab.label}
+              </p>
+              <p
+                className="text-[10px]"
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  color: activeTab === tab.id ? 'rgba(201,168,76,0.5)' : 'rgba(240,235,226,0.2)',
+                }}
+              >
+                {tab.sub}
+              </p>
+            </button>
+          ))}
+        </motion.div>
+
+        {/* Hook Writer tab */}
+        <AnimatePresence mode="wait">
+          {activeTab === 'hooks' && (
+            <motion.div
+              key="hooks"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+            >
+              <HookWriter />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Concepts tab wrapper start — only render below when concepts tab active */}
+        <AnimatePresence mode="wait">
+        {activeTab === 'concepts' && (
+        <motion.div
+          key="concepts"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.3 }}
+        >
 
         {/* Form */}
         <motion.div
@@ -400,6 +474,11 @@ Return ONLY valid JSON, no markdown, no explanation:
             </motion.div>
           )}
         </AnimatePresence>
+
+        </motion.div>
+        )}
+        </AnimatePresence>
+
       </div>
 
       {/* Bottom rule */}
