@@ -20,15 +20,56 @@ export default function SofarContent() {
     setError(null)
     setResults(null)
 
+    const prompt = `You are a viral content strategist who deeply understands what performs on social media in 2026.
+
+Generate exactly 3 viral content concepts for a ${form.niche} creator on ${form.platform} with a ${form.style} style.
+
+Each concept must be specific and scroll-stopping — not generic advice. Write hooks like a real creator would say them.
+
+Return ONLY valid JSON, no markdown, no explanation:
+{
+  "concepts": [
+    {
+      "hook": "The exact opening line or visual hook for the first 3 seconds. Specific, punchy, impossible to scroll past.",
+      "format": "The exact content format (e.g. POV, before/after, silent tutorial, storytime, talking head, trending audio)",
+      "angle": "Why this works right now — the psychological trigger or trend behind it",
+      "cta": "The exact call to action that drives saves, shares, or follows"
+    },
+    {
+      "hook": "...",
+      "format": "...",
+      "angle": "...",
+      "cta": "..."
+    },
+    {
+      "hook": "...",
+      "format": "...",
+      "angle": "...",
+      "cta": "..."
+    }
+  ]
+}`
+
     try {
-      const res = await fetch('/api/generate-content', {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': import.meta.env.VITE_ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1024,
+          messages: [{ role: 'user', content: prompt }],
+        }),
       })
       if (!res.ok) throw new Error('Generation failed')
       const data = await res.json()
-      setResults(data.concepts)
+      const text = data.content?.[0]?.text
+      const parsed = JSON.parse(text)
+      setResults(parsed.concepts)
     } catch {
       setError('Something went wrong. Try again.')
     } finally {
