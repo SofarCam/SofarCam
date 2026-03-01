@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import HookWriter from './HookWriter'
+import { llmFetch } from '../lib/llmFetch'
 
 const NICHES = ['Photography', 'Fitness', 'Fashion', 'Food', 'Travel', 'Music', 'Art', 'Business', 'Gaming', 'Lifestyle']
 const PLATFORMS = ['Instagram', 'TikTok', 'YouTube Shorts']
@@ -18,6 +19,7 @@ export default function SofarContent() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [copied, setCopied] = useState(null)
+  const [usedFallback, setUsedFallback] = useState(false)
 
   const ready = form.niche && form.platform && form.style
 
@@ -58,23 +60,8 @@ Return ONLY valid JSON, no markdown, no explanation:
 }`
 
     try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': import.meta.env.VITE_ANTHROPIC_API_KEY,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 1024,
-          messages: [{ role: 'user', content: prompt }],
-        }),
-      })
-      if (!res.ok) throw new Error('Generation failed')
-      const data = await res.json()
-      const text = data.content?.[0]?.text
+      const { text, usedFallback: fb } = await llmFetch(prompt, 1024)
+      setUsedFallback(fb)
       const parsed = JSON.parse(text)
       setResults(parsed.concepts)
     } catch {
@@ -360,12 +347,26 @@ Return ONLY valid JSON, no markdown, no explanation:
               transition={{ duration: 0.5 }}
               className="space-y-4"
             >
-              <p
-                className="text-center text-[10px] tracking-[0.3em] uppercase text-cream/25 mb-6"
-                style={{ fontFamily: 'var(--font-heading)' }}
-              >
-                3 concepts · tap to copy
-              </p>
+              <div className="flex items-center justify-center gap-3 mb-6">
+                <p
+                  className="text-[10px] tracking-[0.3em] uppercase text-cream/25"
+                  style={{ fontFamily: 'var(--font-heading)' }}
+                >
+                  3 concepts · tap to copy
+                </p>
+                {usedFallback && (
+                  <span
+                    className="text-[9px] tracking-widest uppercase px-2 py-0.5 rounded-full"
+                    style={{
+                      background: 'rgba(255,165,0,0.08)',
+                      color: 'rgba(255,165,0,0.5)',
+                      border: '1px solid rgba(255,165,0,0.12)',
+                    }}
+                  >
+                    Using backup model
+                  </span>
+                )}
+              </div>
               {results.map((concept, idx) => (
                 <motion.div
                   key={idx}

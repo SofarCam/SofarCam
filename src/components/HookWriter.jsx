@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { llmFetch } from '../lib/llmFetch'
 
 const PLATFORMS = ['Instagram', 'TikTok', 'X (Twitter)', 'LinkedIn', 'YouTube']
 const EMOTIONS = ['Curious', 'Aspirational', 'Urgent', 'Controversial', 'Relatable']
@@ -12,6 +13,7 @@ export default function HookWriter() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [copied, setCopied] = useState(null)
+  const [usedFallback, setUsedFallback] = useState(false)
 
   const ready = form.idea.trim() && form.platform
 
@@ -89,23 +91,8 @@ Return ONLY valid JSON, no markdown, no explanation:
 }`
 
     try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': import.meta.env.VITE_ANTHROPIC_API_KEY,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 2000,
-          messages: [{ role: 'user', content: prompt }],
-        }),
-      })
-      if (!res.ok) throw new Error('Generation failed')
-      const data = await res.json()
-      const text = data.content?.[0]?.text
+      const { text, usedFallback: fb } = await llmFetch(prompt, 2000)
+      setUsedFallback(fb)
       const parsed = JSON.parse(text)
       setResults(parsed)
     } catch {
@@ -309,6 +296,22 @@ Return ONLY valid JSON, no markdown, no explanation:
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
           >
+            {/* Fallback model badge */}
+            {usedFallback && (
+              <div className="flex justify-center mb-4">
+                <span
+                  className="text-[9px] tracking-widest uppercase px-2 py-0.5 rounded-full"
+                  style={{
+                    background: 'rgba(255,165,0,0.08)',
+                    color: 'rgba(255,165,0,0.5)',
+                    border: '1px solid rgba(255,165,0,0.12)',
+                  }}
+                >
+                  Using backup model
+                </span>
+              </div>
+            )}
+
             {/* Platform tips */}
             {results.platform_tips && (
               <motion.div
