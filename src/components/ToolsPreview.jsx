@@ -20,10 +20,10 @@ const TOOLS = [
   {
     id: 'caption-writer',
     name: 'Caption Writer',
-    description: 'Turn your hook into 3 full captions — with formatting, hashtags, and CTA variations.',
-    status: 'soon',
+    description: '5 platform-optimized captions from your concept — formatting, hashtags, and CTA included.',
+    status: 'live',
     icon: '✍️',
-    href: null,
+    href: '#sofarcontent',
   },
   {
     id: 'bio-generator',

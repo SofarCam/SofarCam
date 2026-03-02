@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import HookWriter from './HookWriter'
+import CaptionWriter from './CaptionWriter'
 import { llmFetch } from '../lib/llmFetch'
 
 const NICHES = ['Photography', 'Fitness', 'Fashion', 'Food', 'Travel', 'Music', 'Art', 'Business', 'Gaming', 'Lifestyle']
@@ -10,6 +11,7 @@ const STYLES = ['Educational', 'Raw & Real', 'Aesthetic', 'Funny', 'Motivational
 const TABS = [
   { id: 'concepts', label: 'Concept Generator', sub: '3 viral concepts in 30s' },
   { id: 'hooks', label: 'Hook Writer', sub: '10 scroll-stopping hooks' },
+  { id: 'captions', label: 'Caption Writer', sub: '5 platform-ready captions' },
 ]
 
 export default function SofarContent() {
@@ -181,6 +183,21 @@ Return ONLY valid JSON, no markdown, no explanation:
               transition={{ duration: 0.3 }}
             >
               <HookWriter />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Caption Writer tab */}
+        <AnimatePresence mode="wait">
+          {activeTab === 'captions' && (
+            <motion.div
+              key="captions"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+            >
+              <CaptionWriter />
             </motion.div>
           )}
         </AnimatePresence>
