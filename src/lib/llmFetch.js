@@ -54,7 +54,7 @@ async function callOpenRouter(prompt, maxTokens) {
       'X-Title': 'SofarContent',
     },
     body: JSON.stringify({
-      model: 'openai/gpt-4.1-mini',
+      model: 'moonshotai/kimi-k2.5',
       max_tokens: maxTokens,
       messages: [{ role: 'user', content: prompt }],
     }),
