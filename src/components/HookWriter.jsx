@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { llmFetch } from '../lib/llmFetch'
 
 const PLATFORMS = ['Instagram', 'TikTok', 'X (Twitter)', 'LinkedIn', 'YouTube']
-const EMOTIONS = ['Curious', 'Aspirational', 'Urgent', 'Controversial', 'Relatable']
+const EMOTIONS = ['Curious', 'Aspirational', 'Urgent', 'Controversial', 'Relatable', 'Engagement Bait']
 
 const RANK_MEDALS = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣']
 
@@ -54,18 +54,28 @@ export default function HookWriter() {
       ],
     }
 
+    const engagementBaitPatterns = [
+      '"Comment [keyword] and I\'ll send you [valuable thing]"',
+      '"Like this if you want [outcome] — I\'ll share the full guide with everyone who does"',
+      '"Drop a 🔥 if you want me to break this down"',
+      '"Save this before [urgency reason]"',
+      '"Tag someone who needs to see this"',
+    ]
+
     const patterns = viralPatterns[form.platform] || viralPatterns['Instagram']
+    const isEngagementBait = form.emotion === 'Engagement Bait'
 
     const prompt = `You are a viral hook specialist who deeply understands what stops the scroll on social media in 2026.
 
 Generate exactly 10 scroll-stopping hooks for this content idea on ${form.platform}:
 "${form.idea}"
 
-${form.emotion ? `Emotional angle: ${form.emotion}` : ''}
-${form.includeCta ? 'Include a subtle CTA in at least 3 of the hooks.' : ''}
+${form.emotion && !isEngagementBait ? `Emotional angle: ${form.emotion}` : ''}
+${isEngagementBait ? `ENGAGEMENT BAIT MODE: Every hook must drive a specific action (comment, like, save, tag). Use the "Comment X and I'll send Y" format, save-bait, tag-bait, or reply-bait patterns. The hook itself IS the CTA.` : ''}
+${form.includeCta && !isEngagementBait ? 'Include a subtle CTA in at least 3 of the hooks.' : ''}
 
 Proven viral patterns for ${form.platform}:
-${patterns.join('\n')}
+${isEngagementBait ? engagementBaitPatterns.join('\n') : patterns.join('\n')}
 
 Scoring criteria (auto-score each hook out of 100):
 - Pattern Match (40pts): Does it use a proven viral pattern for this platform?
