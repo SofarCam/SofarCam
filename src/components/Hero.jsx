@@ -1,136 +1,150 @@
 import { motion } from 'framer-motion'
 
+const tools = [
+  { label: 'Concept Generator', color: '#a78bfa', desc: '3 viral ideas in 30s' },
+  { label: 'Hook Writer', color: '#67e8f9', desc: '10 scroll-stopping hooks' },
+  { label: 'Caption Writer', color: '#f9a8d4', desc: '5 ready-to-post captions' },
+]
+
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden" style={{ paddingTop: 'clamp(80px, 15vh, 120px)' }}>
+    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden grid-bg" style={{ paddingTop: 'clamp(80px, 15vh, 120px)' }}>
       {/* Background radial glow */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse 70% 60% at 50% 40%, rgba(201,168,76,0.07) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(124,58,237,0.12) 0%, rgba(6,182,212,0.05) 50%, transparent 70%)',
         }}
       />
 
-      {/* Top rule */}
+      {/* Floating orbs */}
       <motion.div
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
-        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute top-0 left-0 w-full h-px origin-left"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(201,168,76,0.25), transparent)' }}
+        animate={{ y: [0, -20, 0], opacity: [0.3, 0.6, 0.3] }}
+        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%)', filter: 'blur(40px)' }}
+      />
+      <motion.div
+        animate={{ y: [0, 20, 0], opacity: [0.2, 0.5, 0.2] }}
+        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+        className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(6,182,212,0.12) 0%, transparent 70%)', filter: 'blur(50px)' }}
       />
 
-      <div className="text-center max-w-3xl mx-auto relative z-10">
+      <div className="text-center max-w-4xl mx-auto relative z-10">
 
         {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="inline-flex items-center gap-2 mb-10"
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="inline-flex items-center gap-2 mb-8 px-4 py-1.5 rounded-full"
+          style={{
+            background: 'rgba(124,58,237,0.1)',
+            border: '1px solid rgba(167,139,250,0.25)',
+          }}
         >
-          <div className="w-5 h-px bg-gold/40" />
-          <span
-            className="text-[10px] tracking-[0.35em] uppercase text-gold/70"
-            style={{ fontFamily: 'var(--font-heading)' }}
-          >
-            SofarContent — Beta
+          <span className="w-1.5 h-1.5 rounded-full bg-violet-light animate-pulse" style={{ background: '#a78bfa' }} />
+          <span className="text-[11px] tracking-[0.2em] uppercase" style={{ color: '#a78bfa', fontFamily: 'var(--font-heading)' }}>
+            Free Tools · Beta
           </span>
-          <div className="w-5 h-px bg-gold/40" />
         </motion.div>
 
         {/* Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="text-cream mb-6"
+          transition={{ duration: 0.9, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-6"
           style={{
             fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(2.4rem, 7vw, 5rem)',
-            fontWeight: 700,
-            lineHeight: 1.02,
-            letterSpacing: '-0.02em',
+            fontSize: 'clamp(2.8rem, 8vw, 5.5rem)',
+            fontWeight: 800,
+            lineHeight: 1.0,
+            letterSpacing: '-0.03em',
+            color: '#f4f4f5',
           }}
         >
-          Your Business Needs
+          Stop Guessing.
           <br />
-          a Marketing Brain
-          <span style={{ color: 'var(--color-gold)', fontStyle: 'italic' }}>.</span>
-          <br />
-          <motion.span
-            style={{
-              fontStyle: 'italic',
-              background: 'linear-gradient(90deg, #c9a84c 0%, #e8c96a 40%, #c9a84c 60%, #a07828 100%)',
-              backgroundSize: '200% auto',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              display: 'inline-block',
-            }}
-            animate={{ backgroundPosition: ['0% center', '200% center'] }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
-          >
-            Now It Has One.
-          </motion.span>
+          <span className="gradient-text">Start Going Viral.</span>
         </motion.h1>
 
-        {/* Tagline */}
+        {/* Sub */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.55 }}
-          className="text-cream/45 mb-4 leading-relaxed"
+          transition={{ duration: 0.8, delay: 0.45 }}
+          className="mb-12 leading-relaxed max-w-2xl mx-auto"
           style={{
             fontFamily: 'var(--font-body)',
-            fontSize: 'clamp(0.95rem, 2.5vw, 1.15rem)',
+            fontSize: 'clamp(1rem, 2.5vw, 1.2rem)',
+            color: 'rgba(244,244,245,0.55)',
           }}
         >
-          Marketing intelligence for the rest of us.
+          Free AI tools that tell you exactly what to post, how to hook your audience,
+          and what will actually grow your account — in seconds.
         </motion.p>
 
-        {/* Description */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
+        {/* Tool cards */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.65 }}
-          className="text-cream/25 mb-12 leading-relaxed max-w-xl mx-auto"
-          style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: 'clamp(0.82rem, 2vw, 0.95rem)',
-          }}
+          transition={{ duration: 0.7, delay: 0.6 }}
+          className="flex flex-wrap items-center justify-center gap-3 mb-12"
         >
-          AI-powered marketing intelligence for creatives and small businesses who can't afford a CMO.
-          No marketing degree required. No guessing what works. Just results.
-        </motion.p>
+          {tools.map((tool, i) => (
+            <motion.a
+              key={tool.label}
+              href="#sofarcontent"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.65 + i * 0.1 }}
+              whileHover={{ y: -3, scale: 1.03 }}
+              className="flex flex-col gap-1 px-5 py-3.5 rounded-2xl text-left no-underline"
+              style={{
+                background: `rgba(${tool.color === '#a78bfa' ? '124,58,237' : tool.color === '#67e8f9' ? '6,182,212' : '236,72,153'},0.08)`,
+                border: `1px solid ${tool.color}30`,
+                minWidth: '160px',
+              }}
+            >
+              <span className="text-sm font-semibold" style={{ color: tool.color, fontFamily: 'var(--font-heading)' }}>
+                {tool.label}
+              </span>
+              <span className="text-xs" style={{ color: 'rgba(244,244,245,0.4)', fontFamily: 'var(--font-body)' }}>
+                {tool.desc}
+              </span>
+            </motion.a>
+          ))}
+        </motion.div>
 
         {/* CTAs */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.8 }}
+          transition={{ duration: 0.7, delay: 0.9 }}
           className="flex items-center justify-center gap-4 flex-wrap"
         >
           <a
             href="#sofarcontent"
-            className="px-8 py-3.5 rounded-xl text-sm font-medium tracking-widest uppercase transition-all duration-300 hover:bg-gold/20"
+            className="px-8 py-4 rounded-xl text-sm font-bold tracking-wide uppercase transition-all duration-300"
             style={{
               fontFamily: 'var(--font-heading)',
-              background: 'rgba(201,168,76,0.12)',
-              border: '1px solid rgba(201,168,76,0.4)',
-              color: 'var(--color-gold)',
+              background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+              color: '#fff',
+              boxShadow: '0 0 30px rgba(124,58,237,0.4)',
             }}
           >
-            Start Free
+            Try Free Tools →
           </a>
           <a
             href="#services"
-            className="px-8 py-3.5 rounded-xl text-sm font-medium tracking-widest uppercase transition-all duration-300 hover:border-cream/20 hover:text-cream/60"
+            className="px-8 py-4 rounded-xl text-sm font-medium tracking-wide uppercase transition-all duration-300"
             style={{
               fontFamily: 'var(--font-heading)',
-              background: 'rgba(240,235,226,0.03)',
-              border: '1px solid rgba(240,235,226,0.08)',
-              color: 'rgba(240,235,226,0.35)',
+              background: 'rgba(244,244,245,0.04)',
+              border: '1px solid rgba(244,244,245,0.1)',
+              color: 'rgba(244,244,245,0.5)',
             }}
           >
             Work With Us
@@ -141,24 +155,21 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.1, duration: 0.8 }}
-          className="flex items-center justify-center gap-2 flex-wrap"
-          style={{ marginTop: '60px', opacity: 0.5 }}
+          transition={{ delay: 1.2, duration: 0.8 }}
+          className="flex items-center justify-center gap-2 flex-wrap mt-12"
         >
-          <span
-            className="text-[9px] tracking-[0.3em] uppercase text-cream/15 mr-2"
-            style={{ fontFamily: 'var(--font-heading)' }}
-          >
+          <span className="text-[9px] tracking-[0.3em] uppercase mr-1" style={{ color: 'rgba(244,244,245,0.2)', fontFamily: 'var(--font-heading)' }}>
             Works on
           </span>
           {['Instagram', 'TikTok', 'YouTube', 'X', 'LinkedIn'].map((p) => (
             <span
               key={p}
-              className="text-[10px] tracking-[0.1em] text-cream/20 px-2.5 py-1 rounded-full"
+              className="text-[10px] px-2.5 py-1 rounded-full"
               style={{
                 fontFamily: 'var(--font-heading)',
-                border: '1px solid rgba(240,235,226,0.06)',
-                background: 'rgba(240,235,226,0.02)',
+                color: 'rgba(244,244,245,0.3)',
+                border: '1px solid rgba(244,244,245,0.07)',
+                background: 'rgba(244,244,245,0.02)',
               }}
             >
               {p}
@@ -171,13 +182,14 @@ export default function Hero() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.4, duration: 0.8 }}
+        transition={{ delay: 1.5, duration: 0.8 }}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
       >
         <motion.div
           animate={{ y: [0, 6, 0] }}
           transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
-          className="w-px h-8 bg-gradient-to-b from-gold/30 to-transparent"
+          className="w-px h-8"
+          style={{ background: 'linear-gradient(to bottom, rgba(124,58,237,0.5), transparent)' }}
         />
       </motion.div>
     </section>

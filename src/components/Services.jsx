@@ -9,6 +9,8 @@ const services = [
     price: '$500–1,500',
     recurring: '+ $150–300/mo',
     timeline: '1–2 weeks',
+    color: '#a78bfa',
+    colorRgb: '124,58,237',
     description:
       'We build and deploy custom AI agents for your business. Sales follow-up? Customer support? Content brainstorming? We configure systems that handle repetitive work while you focus on growth.',
     includes: [
@@ -26,6 +28,8 @@ const services = [
     price: '$500–2,000',
     recurring: 'One-time',
     timeline: '5 business days',
+    color: '#67e8f9',
+    colorRgb: '6,182,212',
     description:
       "You've got 12 AI subscriptions and nothing to show for it. We audit your stack, identify what's actually moving your business forward, and build a 90-day implementation roadmap you can execute.",
     includes: [
@@ -43,6 +47,8 @@ const services = [
     price: '$1,500–5,000+',
     recurring: '90-day support',
     timeline: '2–4 weeks',
+    color: '#f9a8d4',
+    colorRgb: '236,72,153',
     description:
       'Static sites are dead. We build AI-powered websites that generate content, integrate your tools automatically, and turn visitors into leads without extra work on your end.',
     includes: [
@@ -58,9 +64,6 @@ const services = [
 export default function ServicesSection() {
   return (
     <section id="services" className="relative py-32 px-6 overflow-hidden">
-      {/* Top rule */}
-      <div className="w-full h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent mb-20" />
-
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <motion.div
@@ -70,32 +73,28 @@ export default function ServicesSection() {
           transition={{ duration: 0.7 }}
           className="mb-16"
         >
-          <div className="inline-flex items-center gap-2 mb-6">
-            <div className="w-5 h-px bg-gold/40" />
-            <span
-              className="text-[10px] tracking-[0.35em] uppercase text-gold/70"
-              style={{ fontFamily: 'var(--font-heading)' }}
-            >
+          <div className="inline-flex items-center gap-2 mb-5 px-3 py-1 rounded-full" style={{ background: 'rgba(236,72,153,0.08)', border: '1px solid rgba(249,168,212,0.2)' }}>
+            <span className="text-[10px] tracking-[0.25em] uppercase" style={{ color: '#f9a8d4', fontFamily: 'var(--font-heading)' }}>
               Work With Us
             </span>
-            <div className="w-5 h-px bg-gold/40" />
           </div>
           <h2
-            className="text-cream mb-4"
+            className="mb-4"
             style={{
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(2.2rem, 6vw, 3.5rem)',
-              fontWeight: 700,
+              fontWeight: 800,
               lineHeight: 1.05,
-              letterSpacing: '-0.02em',
+              letterSpacing: '-0.03em',
+              color: '#f4f4f5',
             }}
           >
-            Here's What We{' '}
-            <span style={{ fontStyle: 'italic', color: 'var(--color-gold)' }}>Do For You</span>
+            Here is What We{' '}
+            <span className="gradient-text-warm">Do For You</span>
           </h2>
           <p
-            className="text-cream/30 max-w-lg leading-relaxed"
-            style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem' }}
+            className="max-w-lg leading-relaxed"
+            style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'rgba(244,244,245,0.35)' }}
           >
             SofarContent sits between ChatGPT (too generic) and hiring a marketing agency (too expensive).
             We build solutions that feel like expertise you can actually use.
@@ -103,7 +102,7 @@ export default function ServicesSection() {
         </motion.div>
 
         {/* Service cards */}
-        <div className="space-y-6 mb-16">
+        <div className="space-y-5 mb-16">
           {services.map((s, idx) => (
             <motion.div
               key={s.id}
@@ -113,27 +112,27 @@ export default function ServicesSection() {
               transition={{ duration: 0.6, delay: idx * 0.1 }}
               className="rounded-2xl border p-8"
               style={{
-                background: 'rgba(20,20,20,0.6)',
-                borderColor: 'rgba(240,235,226,0.07)',
+                background: `rgba(${s.colorRgb},0.04)`,
+                borderColor: `${s.color}20`,
                 backdropFilter: 'blur(8px)',
               }}
             >
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
                 <div>
                   <p
-                    className="text-[9px] tracking-[0.3em] uppercase text-gold/50 mb-2"
-                    style={{ fontFamily: 'var(--font-heading)' }}
+                    className="text-[9px] tracking-[0.3em] uppercase mb-2"
+                    style={{ fontFamily: 'var(--font-heading)', color: `${s.color}80` }}
                   >
                     {s.name}
                   </p>
                   <h3
-                    className="text-cream"
                     style={{
                       fontFamily: 'var(--font-display)',
                       fontSize: 'clamp(1.2rem, 3vw, 1.6rem)',
                       fontWeight: 700,
                       lineHeight: 1.1,
                       letterSpacing: '-0.01em',
+                      color: '#f4f4f5',
                     }}
                   >
                     {s.headline}
@@ -141,29 +140,23 @@ export default function ServicesSection() {
                 </div>
                 <div className="text-right shrink-0">
                   <p
-                    className="text-gold font-medium"
-                    style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem' }}
+                    className="font-bold"
+                    style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', color: s.color }}
                   >
                     {s.price}
                   </p>
-                  <p
-                    className="text-cream/25 text-xs mt-0.5"
-                    style={{ fontFamily: 'var(--font-body)' }}
-                  >
+                  <p className="text-xs mt-0.5" style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.3)' }}>
                     {s.recurring}
                   </p>
-                  <p
-                    className="text-cream/20 text-xs mt-0.5"
-                    style={{ fontFamily: 'var(--font-body)' }}
-                  >
+                  <p className="text-xs mt-0.5" style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.2)' }}>
                     {s.timeline}
                   </p>
                 </div>
               </div>
 
               <p
-                className="text-cream/40 mb-6 leading-relaxed"
-                style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem' }}
+                className="mb-6 leading-relaxed"
+                style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'rgba(244,244,245,0.45)' }}
               >
                 {s.description}
               </p>
@@ -172,12 +165,12 @@ export default function ServicesSection() {
                 {s.includes.map((item) => (
                   <div key={item} className="flex items-center gap-2">
                     <div
-                      className="w-1 h-1 rounded-full shrink-0"
-                      style={{ background: 'rgba(201,168,76,0.5)' }}
+                      className="w-1.5 h-1.5 rounded-full shrink-0"
+                      style={{ background: s.color, opacity: 0.6 }}
                     />
                     <span
-                      className="text-cream/30 text-xs"
-                      style={{ fontFamily: 'var(--font-body)' }}
+                      className="text-xs"
+                      style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.35)' }}
                     >
                       {item}
                     </span>
@@ -196,52 +189,50 @@ export default function ServicesSection() {
           transition={{ duration: 0.7 }}
           className="rounded-2xl border p-10 text-center"
           style={{
-            background: 'rgba(201,168,76,0.04)',
-            borderColor: 'rgba(201,168,76,0.15)',
+            background: 'rgba(124,58,237,0.06)',
+            borderColor: 'rgba(124,58,237,0.2)',
           }}
         >
           <p
-            className="text-[10px] tracking-[0.3em] uppercase text-gold/50 mb-4"
-            style={{ fontFamily: 'var(--font-heading)' }}
+            className="text-[10px] tracking-[0.3em] uppercase mb-4"
+            style={{ fontFamily: 'var(--font-heading)', color: 'rgba(167,139,250,0.5)' }}
           >
             Not sure what you need?
           </p>
           <h3
-            className="text-cream mb-3"
+            className="mb-3"
             style={{
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(1.4rem, 4vw, 2rem)',
               fontWeight: 700,
-              letterSpacing: '-0.01em',
+              letterSpacing: '-0.02em',
+              color: '#f4f4f5',
             }}
           >
             Let's figure it out together.
           </h3>
           <p
-            className="text-cream/30 mb-8 max-w-sm mx-auto text-sm leading-relaxed"
-            style={{ fontFamily: 'var(--font-body)' }}
+            className="mb-8 max-w-sm mx-auto text-sm leading-relaxed"
+            style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.35)' }}
           >
             Book a free 15-minute discovery call. We'll tell you exactly what you need —
             and if we're not the right fit, we'll say that too.
           </p>
           <a
             href="mailto:shotbyseven@gmail.com?subject=SofarContent%20Discovery%20Call"
-            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl text-sm font-medium tracking-widest uppercase transition-all duration-300 hover:bg-gold/20"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-sm font-bold tracking-wide uppercase transition-all duration-300"
             style={{
               fontFamily: 'var(--font-heading)',
-              background: 'rgba(201,168,76,0.12)',
-              border: '1px solid rgba(201,168,76,0.35)',
-              color: 'var(--color-gold)',
+              background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+              color: '#fff',
+              boxShadow: '0 0 30px rgba(124,58,237,0.3)',
             }}
           >
             Book a Discovery Call
-            <HiArrowUpRight size={13} />
+            <HiArrowUpRight size={14} />
           </a>
         </motion.div>
       </div>
-
-      {/* Bottom rule */}
-      <div className="w-full h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent mt-20" />
     </section>
   )
 }
