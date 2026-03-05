@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import HookWriter from './HookWriter'
 import CaptionWriter from './CaptionWriter'
@@ -108,7 +108,7 @@ Return ONLY valid JSON, no markdown, no explanation:
             </span>
           </div>
           <h2
-            className="mb-4"
+            className="mb-4 heading-glow"
             style={{
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(2.2rem, 6vw, 3.5rem)',
@@ -119,7 +119,7 @@ Return ONLY valid JSON, no markdown, no explanation:
             }}
           >
             Pick a tool.{' '}
-            <span className="gradient-text">Start creating.</span>
+            <span className="gradient-text-glow">Start creating.</span>
           </h2>
           <p
             className="max-w-md mx-auto leading-relaxed"
@@ -140,34 +140,12 @@ Return ONLY valid JSON, no markdown, no explanation:
           {TABS.map((tab) => {
             const isActive = activeTab === tab.id
             return (
-              <button
+              <TabCard
                 key={tab.id}
+                tab={tab}
+                isActive={isActive}
                 onClick={() => { setActiveTab(tab.id); setResults(null) }}
-                className="py-3 px-3 rounded-xl text-left transition-all duration-200"
-                style={{
-                  background: isActive ? `rgba(${tab.colorRgb},0.12)` : 'rgba(244,244,245,0.03)',
-                  border: `1px solid ${isActive ? tab.color + '40' : 'rgba(244,244,245,0.07)'}`,
-                }}
-              >
-                <p
-                  className="text-xs font-semibold mb-0.5 truncate"
-                  style={{
-                    fontFamily: 'var(--font-heading)',
-                    color: isActive ? tab.color : 'rgba(244,244,245,0.4)',
-                  }}
-                >
-                  {tab.label}
-                </p>
-                <p
-                  className="text-[10px] truncate"
-                  style={{
-                    fontFamily: 'var(--font-body)',
-                    color: isActive ? tab.color + '80' : 'rgba(244,244,245,0.2)',
-                  }}
-                >
-                  {tab.sub}
-                </p>
-              </button>
+              />
             )
           })}
         </motion.div>
@@ -518,5 +496,63 @@ Return ONLY valid JSON, no markdown, no explanation:
 
       </div>
     </section>
+  )
+}
+
+function TabCard({ tab, isActive, onClick }) {
+  const ref = useRef(null)
+
+  function handleMouseMove(e) {
+    const el = ref.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    const cx = rect.width / 2
+    const cy = rect.height / 2
+    const rotX = ((y - cy) / cy) * -8
+    const rotY = ((x - cx) / cx) * 8
+    el.style.transform = `perspective(500px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.03,1.03,1.03)`
+  }
+
+  function handleMouseLeave() {
+    if (ref.current) {
+      ref.current.style.transform = 'perspective(500px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)'
+    }
+  }
+
+  return (
+    <button
+      ref={ref}
+      onClick={onClick}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="py-3 px-3 rounded-xl text-left tilt-card"
+      style={{
+        background: isActive ? `rgba(${tab.colorRgb},0.12)` : 'rgba(244,244,245,0.03)',
+        border: `1px solid ${isActive ? tab.color + '40' : 'rgba(244,244,245,0.07)'}`,
+        boxShadow: isActive ? `0 0 20px rgba(${tab.colorRgb},0.2), inset 0 1px 0 rgba(255,255,255,0.05)` : 'none',
+      }}
+    >
+      <p
+        className="text-xs font-semibold mb-0.5 truncate"
+        style={{
+          fontFamily: 'var(--font-heading)',
+          color: isActive ? tab.color : 'rgba(244,244,245,0.4)',
+          textShadow: isActive ? `0 0 12px ${tab.color}80` : 'none',
+        }}
+      >
+        {tab.label}
+      </p>
+      <p
+        className="text-[10px] truncate"
+        style={{
+          fontFamily: 'var(--font-body)',
+          color: isActive ? tab.color + '80' : 'rgba(244,244,245,0.2)',
+        }}
+      >
+        {tab.sub}
+      </p>
+    </button>
   )
 }
