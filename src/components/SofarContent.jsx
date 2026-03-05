@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import HookWriter from './HookWriter'
 import CaptionWriter from './CaptionWriter'
 import LinkedInWriter from './LinkedInWriter'
+import ContentAnalyzer from './ContentAnalyzer'
 import { llmFetch } from '../lib/llmFetch'
 
 const NICHES = ['Photography', 'Fitness', 'Fashion', 'Food', 'Travel', 'Music', 'Art', 'Business', 'Gaming', 'Lifestyle']
@@ -14,6 +15,7 @@ const TABS = [
   { id: 'hooks', label: 'Hook Writer', sub: '10 scroll-stopping hooks', color: '#67e8f9', colorRgb: '6,182,212' },
   { id: 'captions', label: 'Caption Writer', sub: '5 platform-ready captions', color: '#f9a8d4', colorRgb: '236,72,153' },
   { id: 'linkedin', label: 'LinkedIn Writer', sub: '3 authority-building posts', color: '#60a5fa', colorRgb: '96,165,250' },
+  { id: 'analyzer', label: 'Content Analyzer', sub: 'Break down any post', color: '#fb923c', colorRgb: '251,146,60' },
 ]
 
 export default function SofarContent() {
@@ -133,7 +135,7 @@ Return ONLY valid JSON, no markdown, no explanation:
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-8"
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-8"
         >
           {TABS.map((tab) => {
             const isActive = activeTab === tab.id
@@ -181,6 +183,21 @@ Return ONLY valid JSON, no markdown, no explanation:
               transition={{ duration: 0.3 }}
             >
               <LinkedInWriter />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Content Analyzer tab */}
+        <AnimatePresence mode="wait">
+          {activeTab === 'analyzer' && (
+            <motion.div
+              key="analyzer"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ContentAnalyzer />
             </motion.div>
           )}
         </AnimatePresence>
