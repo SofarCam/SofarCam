@@ -1,18 +1,22 @@
 import './App.css'
+import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import SofarContent from './components/SofarContent'
-import Services from './components/Services'
 import ToolsPreview from './components/ToolsPreview'
+import Services from './components/Services'
 import Footer from './components/Footer'
 
 export default function App() {
   return (
-    <main>
-      <Hero />
-      <SofarContent />
-      <ToolsPreview />
-      <Services />
-      <Footer />
-    </main>
+    <>
+      <Navbar />
+      <main>
+        <Hero />
+        <SofarContent />
+        <ToolsPreview />
+        <Services />
+        <Footer />
+      </main>
+    </>
   )
 }

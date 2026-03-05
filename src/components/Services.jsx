@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { motion } from 'framer-motion'
 import { HiArrowUpRight } from 'react-icons/hi2'
 
@@ -64,8 +65,12 @@ const services = [
 export default function ServicesSection() {
   return (
     <section id="services" className="relative py-32 px-6 overflow-hidden">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse 60% 50% at 80% 50%, rgba(236,72,153,0.04) 0%, transparent 60%)' }}
+      />
+
+      <div className="max-w-4xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -74,159 +79,60 @@ export default function ServicesSection() {
           className="mb-16"
         >
           <div className="inline-flex items-center gap-2 mb-5 px-3 py-1 rounded-full" style={{ background: 'rgba(236,72,153,0.08)', border: '1px solid rgba(249,168,212,0.2)' }}>
-            <span className="text-[10px] tracking-[0.25em] uppercase" style={{ color: '#f9a8d4', fontFamily: 'var(--font-heading)' }}>
-              Work With Us
-            </span>
+            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#f9a8d4' }} />
+            <span className="text-[10px] tracking-[0.25em] uppercase" style={{ color: '#f9a8d4', fontFamily: 'var(--font-heading)' }}>Work With Us</span>
           </div>
           <h2
-            className="mb-4"
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(2.2rem, 6vw, 3.5rem)',
-              fontWeight: 800,
-              lineHeight: 1.05,
-              letterSpacing: '-0.03em',
-              color: '#f4f4f5',
-            }}
+            className="mb-4 heading-glow"
+            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.2rem, 6vw, 3.5rem)', fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.03em', color: '#f4f4f5' }}
           >
             Here is What We{' '}
-            <span className="gradient-text-warm">Do For You</span>
+            <span className="gradient-text-warm" style={{ filter: 'drop-shadow(0 0 24px rgba(236,72,153,0.4))' }}>Do For You</span>
           </h2>
-          <p
-            className="max-w-lg leading-relaxed"
-            style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'rgba(244,244,245,0.35)' }}
-          >
+          <p className="max-w-lg leading-relaxed" style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'rgba(244,244,245,0.35)' }}>
             SofarContent sits between ChatGPT (too generic) and hiring a marketing agency (too expensive).
             We build solutions that feel like expertise you can actually use.
           </p>
         </motion.div>
 
-        {/* Service cards */}
         <div className="space-y-5 mb-16">
           {services.map((s, idx) => (
-            <motion.div
-              key={s.id}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: idx * 0.1 }}
-              className="rounded-2xl border p-8"
-              style={{
-                background: `rgba(${s.colorRgb},0.04)`,
-                borderColor: `${s.color}20`,
-                backdropFilter: 'blur(8px)',
-              }}
-            >
-              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
-                <div>
-                  <p
-                    className="text-[9px] tracking-[0.3em] uppercase mb-2"
-                    style={{ fontFamily: 'var(--font-heading)', color: `${s.color}80` }}
-                  >
-                    {s.name}
-                  </p>
-                  <h3
-                    style={{
-                      fontFamily: 'var(--font-display)',
-                      fontSize: 'clamp(1.2rem, 3vw, 1.6rem)',
-                      fontWeight: 700,
-                      lineHeight: 1.1,
-                      letterSpacing: '-0.01em',
-                      color: '#f4f4f5',
-                    }}
-                  >
-                    {s.headline}
-                  </h3>
-                </div>
-                <div className="text-right shrink-0">
-                  <p
-                    className="font-bold"
-                    style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', color: s.color }}
-                  >
-                    {s.price}
-                  </p>
-                  <p className="text-xs mt-0.5" style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.3)' }}>
-                    {s.recurring}
-                  </p>
-                  <p className="text-xs mt-0.5" style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.2)' }}>
-                    {s.timeline}
-                  </p>
-                </div>
-              </div>
-
-              <p
-                className="mb-6 leading-relaxed"
-                style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'rgba(244,244,245,0.45)' }}
-              >
-                {s.description}
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {s.includes.map((item) => (
-                  <div key={item} className="flex items-center gap-2">
-                    <div
-                      className="w-1.5 h-1.5 rounded-full shrink-0"
-                      style={{ background: s.color, opacity: 0.6 }}
-                    />
-                    <span
-                      className="text-xs"
-                      style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.35)' }}
-                    >
-                      {item}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
+            <ServiceCard key={s.id} s={s} idx={idx} />
           ))}
         </div>
 
-        {/* Book a call CTA */}
+        {/* CTA block */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="rounded-2xl border p-10 text-center"
+          className="relative rounded-2xl p-10 text-center overflow-hidden"
           style={{
-            background: 'rgba(124,58,237,0.06)',
-            borderColor: 'rgba(124,58,237,0.2)',
+            background: 'rgba(9,9,11,0.8)',
+            border: '1px solid rgba(124,58,237,0.25)',
+            boxShadow: '0 0 60px rgba(124,58,237,0.1), inset 0 1px 0 rgba(255,255,255,0.04)',
           }}
         >
-          <p
-            className="text-[10px] tracking-[0.3em] uppercase mb-4"
-            style={{ fontFamily: 'var(--font-heading)', color: 'rgba(167,139,250,0.5)' }}
-          >
+          <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent 0%, #7c3aed 30%, #06b6d4 70%, transparent 100%)', opacity: 0.6 }} />
+          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,58,237,0.08) 0%, transparent 60%)' }} />
+
+          <p className="text-[10px] tracking-[0.3em] uppercase mb-4 relative z-10" style={{ fontFamily: 'var(--font-heading)', color: 'rgba(167,139,250,0.5)' }}>
             Not sure what you need?
           </p>
-          <h3
-            className="mb-3"
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(1.4rem, 4vw, 2rem)',
-              fontWeight: 700,
-              letterSpacing: '-0.02em',
-              color: '#f4f4f5',
-            }}
-          >
+          <h3 className="mb-3 relative z-10 heading-glow" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.4rem, 4vw, 2rem)', fontWeight: 700, letterSpacing: '-0.02em', color: '#f4f4f5' }}>
             Let's figure it out together.
           </h3>
-          <p
-            className="mb-8 max-w-sm mx-auto text-sm leading-relaxed"
-            style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.35)' }}
-          >
+          <p className="mb-8 max-w-sm mx-auto text-sm leading-relaxed relative z-10" style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.35)' }}>
             Book a free 15-minute discovery call. We'll tell you exactly what you need —
             and if we're not the right fit, we'll say that too.
           </p>
           <a
             href="mailto:shotbyseven@gmail.com?subject=SofarContent%20Discovery%20Call"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-sm font-bold tracking-wide uppercase transition-all duration-300"
-            style={{
-              fontFamily: 'var(--font-heading)',
-              background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
-              color: '#fff',
-              boxShadow: '0 0 30px rgba(124,58,237,0.3)',
-            }}
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-sm font-bold tracking-wide uppercase transition-all duration-300 relative z-10"
+            style={{ fontFamily: 'var(--font-heading)', background: 'linear-gradient(135deg, #7c3aed, #06b6d4)', color: '#fff', boxShadow: '0 0 40px rgba(124,58,237,0.5), 0 0 80px rgba(124,58,237,0.2)' }}
+            onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 0 60px rgba(124,58,237,0.7), 0 0 120px rgba(124,58,237,0.3)'; e.currentTarget.style.transform = 'translateY(-2px)' }}
+            onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 0 40px rgba(124,58,237,0.5), 0 0 80px rgba(124,58,237,0.2)'; e.currentTarget.style.transform = 'translateY(0)' }}
           >
             Book a Discovery Call
             <HiArrowUpRight size={14} />
@@ -234,5 +140,66 @@ export default function ServicesSection() {
         </motion.div>
       </div>
     </section>
+  )
+}
+
+function ServiceCard({ s, idx }) {
+  const ref = useRef(null)
+
+  function handleMouseMove(e) {
+    const el = ref.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    const rotX = ((e.clientY - rect.top - rect.height / 2) / (rect.height / 2)) * -5
+    const rotY = ((e.clientX - rect.left - rect.width / 2) / (rect.width / 2)) * 5
+    el.style.transform = `perspective(1200px) rotateX(${rotX}deg) rotateY(${rotY}deg)`
+    el.style.boxShadow = `0 30px 80px rgba(${s.colorRgb},0.15), 0 0 0 1px ${s.color}20`
+  }
+
+  function handleMouseLeave() {
+    if (!ref.current) return
+    ref.current.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg)'
+    ref.current.style.boxShadow = 'none'
+  }
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: idx * 0.1 }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="rounded-2xl border p-8 tilt-card relative overflow-hidden"
+      style={{ background: `rgba(${s.colorRgb},0.04)`, borderColor: `${s.color}20`, backdropFilter: 'blur(8px)' }}
+    >
+      <div className="absolute top-0 left-0 right-0 h-px pointer-events-none" style={{ background: `linear-gradient(90deg, transparent 0%, ${s.color}60 50%, transparent 100%)` }} />
+
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
+        <div>
+          <p className="text-[9px] tracking-[0.3em] uppercase mb-2" style={{ fontFamily: 'var(--font-heading)', color: `${s.color}80` }}>{s.name}</p>
+          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.01em', color: '#f4f4f5', textShadow: `0 0 40px rgba(${s.colorRgb},0.2)` }}>
+            {s.headline}
+          </h3>
+        </div>
+        <div className="text-right shrink-0">
+          <p className="font-bold" style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', color: s.color, textShadow: `0 0 12px ${s.color}60` }}>{s.price}</p>
+          <p className="text-xs mt-0.5" style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.3)' }}>{s.recurring}</p>
+          <p className="text-xs mt-0.5" style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.2)' }}>{s.timeline}</p>
+        </div>
+      </div>
+
+      <p className="mb-6 leading-relaxed" style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'rgba(244,244,245,0.45)' }}>{s.description}</p>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        {s.includes.map((item) => (
+          <div key={item} className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: s.color, opacity: 0.6, boxShadow: `0 0 6px ${s.color}` }} />
+            <span className="text-xs" style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.35)' }}>{item}</span>
+          </div>
+        ))}
+      </div>
+    </motion.div>
   )
 }
