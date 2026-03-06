@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { llmFetch } from '../lib/llmFetch'
 
-const PLATFORMS = ['Instagram', 'TikTok', 'X (Twitter)', 'LinkedIn', 'YouTube Shorts']
+const PLATFORMS = ['Instagram', 'TikTok', 'YouTube', 'YouTube Shorts', 'Pinterest', 'Etsy', 'X (Twitter)', 'LinkedIn']
 const TONES = ['Bold', 'Casual', 'Professional', 'Inspirational', 'Humorous']
 
 export default function CaptionWriter() {
@@ -27,6 +27,9 @@ export default function CaptionWriter() {
       'X (Twitter)': '280 chars hard limit — tight, punchy, every word earns its place',
       LinkedIn: '3000 chars max, sweet spot 1300 for algorithm boost',
       'YouTube Shorts': '100 chars max, most viewers never read it — make the first line count',
+      YouTube: '5000 chars max — use first 157 for SEO snippet, structure with sections',
+      Pinterest: '500 chars max — keyword-rich description, search-optimized',
+      Etsy: '160 chars for listing title, use all 13 tags, front-load keywords',
     }
 
     const hashtagGuide = {
@@ -35,6 +38,9 @@ export default function CaptionWriter() {
       'X (Twitter)': '1–2 hashtags max, or none — they tank reach',
       LinkedIn: '3–5 professional hashtags at the end',
       'YouTube Shorts': '1–3 hashtags, keep it clean',
+      YouTube: '3–5 hashtags in description, match your video tags',
+      Pinterest: 'No hashtags — use keywords naturally in the description instead',
+      Etsy: 'No hashtags — use all 13 listing tags with buyer-intent keywords',
     }
 
     const ctaStyles = {
@@ -43,6 +49,9 @@ export default function CaptionWriter() {
       'X (Twitter)': 'RT if you agree, Follow for daily [topic], Reply with your take',
       LinkedIn: 'What do you think? Drop a comment, Repost to help a fellow creator',
       'YouTube Shorts': 'Subscribe for more, Comment your biggest takeaway, Watch next:',
+      YouTube: 'Subscribe for weekly [topic], Comment your question below, Watch this next:',
+      Pinterest: 'Save this pin, Visit the link for the full tutorial, Follow for more ideas',
+      Etsy: 'Add to favorites, Message me for custom orders, Check my shop for more',
     }
 
     const prompt = `You are an expert social media copywriter who writes captions that convert views into followers in 2026.

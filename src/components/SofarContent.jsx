@@ -7,7 +7,7 @@ import ContentAnalyzer from './ContentAnalyzer'
 import { llmFetch } from '../lib/llmFetch'
 
 const NICHES = ['Photography', 'Fitness', 'Fashion', 'Food', 'Travel', 'Music', 'Art', 'Business', 'Gaming', 'Lifestyle']
-const PLATFORMS = ['Instagram', 'TikTok', 'YouTube Shorts']
+const PLATFORMS = ['Instagram', 'TikTok', 'YouTube', 'YouTube Shorts', 'Pinterest', 'Etsy']
 const STYLES = ['Educational', 'Raw & Real', 'Aesthetic', 'Funny', 'Motivational', 'Behind the Scenes']
 
 const TABS = [

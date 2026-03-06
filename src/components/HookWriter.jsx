@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { llmFetch } from '../lib/llmFetch'
 
-const PLATFORMS = ['Instagram', 'TikTok', 'X (Twitter)', 'LinkedIn', 'YouTube']
+const PLATFORMS = ['Instagram', 'TikTok', 'YouTube', 'YouTube Shorts', 'Pinterest', 'Etsy', 'X (Twitter)', 'LinkedIn']
 const EMOTIONS = ['Curious', 'Aspirational', 'Urgent', 'Controversial', 'Relatable', 'Engagement Bait']
 
 const RANK_MEDALS = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣']
