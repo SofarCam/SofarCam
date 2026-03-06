@@ -39,7 +39,7 @@ const links = [
   {
     label: 'Hire Me',
     sub: 'Upwork · Freelance work',
-    href: 'https://upwork.com',
+    href: 'https://www.upwork.com/freelancers/sofarcam',
   },
 ]
 
