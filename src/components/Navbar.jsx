@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 const links = [
   { label: 'Tools', href: '#sofarcontent' },
+  { label: 'Trending', href: '#trending' },
   { label: 'Toolkit', href: '#tools' },
   { label: 'Services', href: '#services' },
 ]

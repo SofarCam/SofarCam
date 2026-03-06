@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { llmFetch } from '../lib/llmFetch'
+import { getActiveConcept, clearActiveConcept, saveSession, loadSession } from '../lib/sessionStore'
 
 const PLATFORMS = ['Instagram', 'TikTok', 'YouTube', 'YouTube Shorts', 'Pinterest', 'Etsy', 'X (Twitter)', 'LinkedIn']
 const TONES = ['Bold', 'Casual', 'Professional', 'Inspirational', 'Humorous']
@@ -12,6 +13,25 @@ export default function CaptionWriter() {
   const [error, setError] = useState(null)
   const [copied, setCopied] = useState(null)
   const [usedFallback, setUsedFallback] = useState(false)
+  const [fromConcept, setFromConcept] = useState(null)
+
+  // On mount: pick up chained concept or restore last session
+  useEffect(() => {
+    const concept = getActiveConcept()
+    if (concept) {
+      const text = concept.hook
+        ? `${concept.hook}${concept.angle ? ` — ${concept.angle}` : ''}`
+        : ''
+      setForm(f => ({ ...f, concept: text, platform: concept.platform || f.platform }))
+      setFromConcept(concept)
+      clearActiveConcept()
+    } else {
+      const savedForm = loadSession('captions_form')
+      const savedResults = loadSession('captions_results')
+      if (savedForm) setForm(savedForm)
+      if (savedResults) setResults(savedResults)
+    }
+  }, [])
 
   const ready = form.concept.trim() && form.platform
 
@@ -94,6 +114,8 @@ Return ONLY valid JSON, no markdown, no explanation:
       setUsedFallback(fb)
       const parsed = JSON.parse(text)
       setResults(parsed)
+      saveSession('captions_results', parsed)
+      saveSession('captions_form', form)
     } catch {
       setError('Something went wrong. Try again.')
     } finally {
@@ -129,6 +151,36 @@ Return ONLY valid JSON, no markdown, no explanation:
         }}
       >
         <div className="grid gap-5">
+          {/* Chained concept banner */}
+          {fromConcept && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex items-start gap-3 px-4 py-3 rounded-xl"
+              style={{
+                background: 'linear-gradient(135deg, rgba(236,72,153,0.08), rgba(124,58,237,0.06))',
+                border: '1px solid rgba(236,72,153,0.2)',
+              }}
+            >
+              <span className="text-base mt-0.5">✍️</span>
+              <div>
+                <p className="text-[9px] tracking-[0.25em] uppercase mb-1" style={{ fontFamily: 'var(--font-heading)', color: 'rgba(249,168,212,0.7)' }}>
+                  Pre-filled from your concept
+                </p>
+                <p className="text-xs leading-relaxed" style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.5)' }}>
+                  {fromConcept.hook}
+                </p>
+              </div>
+              <button
+                onClick={() => { setFromConcept(null); setForm(f => ({ ...f, concept: '', platform: '' })) }}
+                className="ml-auto text-[9px] tracking-wider uppercase shrink-0"
+                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(244,244,245,0.2)' }}
+              >
+                Clear
+              </button>
+            </motion.div>
+          )}
+
           {/* Concept input */}
           <div>
             <label
@@ -445,7 +497,13 @@ Return ONLY valid JSON, no markdown, no explanation:
                 {copied === 'all' ? 'Copied!' : 'Copy All 5'}
               </button>
               <button
-                onClick={() => { setResults(null); setForm({ concept: '', platform: '', tone: '', includeCta: true }) }}
+                onClick={() => {
+                  setResults(null)
+                  setFromConcept(null)
+                  setForm({ concept: '', platform: '', tone: '', includeCta: true })
+                  saveSession('captions_results', null)
+                  saveSession('captions_form', null)
+                }}
                 className="text-[10px] tracking-[0.2em] uppercase text-cream/20 hover:text-cream/40 transition-colors duration-200"
                 style={{ fontFamily: 'var(--font-heading)' }}
               >

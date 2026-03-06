@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { llmFetch } from '../lib/llmFetch'
+import { saveSession, loadSession } from '../lib/sessionStore'
 
 const GOALS = ['Attract Clients', 'Build Authority', 'Get Hired', 'Grow Network', 'Drive Traffic']
 const INDUSTRIES = ['Photography', 'Tech', 'Marketing', 'Design', 'Consulting', 'Finance', 'Healthcare', 'Real Estate', 'Education', 'Other']
@@ -14,6 +15,14 @@ export default function LinkedInWriter() {
   const [copied, setCopied] = useState(null)
   const [usedFallback, setUsedFallback] = useState(false)
   const [activePost, setActivePost] = useState(0)
+
+  // Restore last session on mount
+  useEffect(() => {
+    const savedForm = loadSession('linkedin_form')
+    const savedResults = loadSession('linkedin_results')
+    if (savedForm) setForm(savedForm)
+    if (savedResults) setResults(savedResults)
+  }, [])
 
   const ready = form.topic.trim() && form.goal && form.industry
 
@@ -65,6 +74,8 @@ Return ONLY valid JSON, no markdown, no explanation:
       setUsedFallback(fb)
       const parsed = JSON.parse(text)
       setResults(parsed)
+      saveSession('linkedin_results', parsed)
+      saveSession('linkedin_form', form)
     } catch {
       setError('Something went wrong. Try again.')
     } finally {
@@ -386,7 +397,7 @@ Return ONLY valid JSON, no markdown, no explanation:
             {/* Start over */}
             <div className="flex justify-center pt-2">
               <button
-                onClick={() => { setResults(null); setForm({ topic: '', goal: '', industry: '', format: '' }); setActivePost(0) }}
+                onClick={() => { setResults(null); setForm({ topic: '', goal: '', industry: '', format: '' }); setActivePost(0); saveSession('linkedin_results', null); saveSession('linkedin_form', null) }}
                 className="text-[10px] tracking-[0.2em] uppercase text-cream/20 hover:text-cream/40 transition-colors duration-200"
                 style={{ fontFamily: 'var(--font-heading)' }}
               >

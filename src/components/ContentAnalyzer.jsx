@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { llmFetch } from '../lib/llmFetch'
+import { saveSession, loadSession } from '../lib/sessionStore'
 
 // Color theme for the analyzer tab
 const COLOR = '#fb923c'
@@ -30,6 +31,17 @@ export default function ContentAnalyzer() {
   const [copied, setCopied] = useState(null)
   const [step, setStep] = useState('input') // 'input' | 'preview' | 'results'
 
+  // Restore last analysis session on mount
+  useEffect(() => {
+    const savedAnalysis = loadSession('analyzer_results')
+    const savedContent = loadSession('analyzer_content')
+    if (savedAnalysis && savedContent) {
+      setAnalysis(savedAnalysis)
+      setContentData(savedContent)
+      setStep('results')
+    }
+  }, [])
+
   function reset() {
     setUrl('')
     setManualText('')
@@ -40,6 +52,8 @@ export default function ContentAnalyzer() {
     setFetchError(null)
     setCopied(null)
     setStep('input')
+    saveSession('analyzer_results', null)
+    saveSession('analyzer_content', null)
   }
 
   async function handleFetch() {
@@ -129,6 +143,8 @@ Return ONLY valid JSON, no markdown, no explanation:
       const parsed = JSON.parse(text)
       setAnalysis(parsed)
       setStep('results')
+      saveSession('analyzer_results', parsed)
+      saveSession('analyzer_content', contentData)
     } catch {
       setFetchError('Analysis failed. Try again.')
     } finally {
