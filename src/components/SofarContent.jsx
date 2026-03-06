@@ -84,7 +84,7 @@ Return ONLY valid JSON, no markdown, no explanation:
   }
 
   return (
-    <section id="sofarcontent" className="relative py-32 px-6 overflow-hidden">
+    <section id="sofarcontent" className="relative py-24 px-6 overflow-hidden">
       {/* Background */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -93,7 +93,7 @@ Return ONLY valid JSON, no markdown, no explanation:
         }}
       />
 
-      <div className="max-w-3xl mx-auto relative z-10">
+      <div className="max-w-5xl mx-auto relative z-10">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -135,7 +135,7 @@ Return ONLY valid JSON, no markdown, no explanation:
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-8"
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-10"
         >
           {TABS.map((tab) => {
             const isActive = activeTab === tab.id
@@ -227,37 +227,39 @@ Return ONLY valid JSON, no markdown, no explanation:
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, delay: 0.1 }}
-          className="rounded-2xl border p-8 mb-8"
+          className="rounded-2xl border p-10 mb-10"
           style={{
             background: 'rgba(17,17,22,0.9)',
             borderColor: 'rgba(124,58,237,0.15)',
             backdropFilter: 'blur(12px)',
           }}
         >
-          <div className="grid gap-6">
+          <div className="grid gap-8">
             {/* Niche */}
             <div>
               <label
-                className="block text-[10px] tracking-[0.25em] uppercase mb-3"
-                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(167,139,250,0.6)' }}
+                className="block text-xs tracking-[0.2em] uppercase mb-4"
+                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(167,139,250,0.7)' }}
               >
                 Your Niche
               </label>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-3">
                 {NICHES.map((n) => {
                   const sel = form.niche === n
                   return (
                     <button
                       key={n}
                       onClick={() => setForm((f) => ({ ...f, niche: n }))}
-                      className="px-3 py-1.5 rounded-full text-xs transition-all duration-200"
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
                       style={{
                         fontFamily: 'var(--font-heading)',
                         background: sel ? 'rgba(124,58,237,0.2)' : 'rgba(244,244,245,0.04)',
-                        border: `1px solid ${sel ? 'rgba(167,139,250,0.5)' : 'rgba(244,244,245,0.08)'}`,
-                        color: sel ? '#a78bfa' : 'rgba(244,244,245,0.4)',
+                        border: `1px solid ${sel ? 'rgba(167,139,250,0.5)' : 'rgba(244,244,245,0.09)'}`,
+                        color: sel ? '#a78bfa' : 'rgba(244,244,245,0.5)',
+                        boxShadow: sel ? '0 0 14px rgba(124,58,237,0.2)' : 'none',
                       }}
                     >
+                      {sel && <span style={{ color: '#a78bfa', fontSize: '0.7rem' }}>✓</span>}
                       {n}
                     </button>
                   )
@@ -268,26 +270,28 @@ Return ONLY valid JSON, no markdown, no explanation:
             {/* Platform */}
             <div>
               <label
-                className="block text-[10px] tracking-[0.25em] uppercase mb-3"
-                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(167,139,250,0.6)' }}
+                className="block text-xs tracking-[0.2em] uppercase mb-4"
+                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(167,139,250,0.7)' }}
               >
                 Platform
               </label>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-3">
                 {PLATFORMS.map((p) => {
                   const sel = form.platform === p
                   return (
                     <button
                       key={p}
                       onClick={() => setForm((f) => ({ ...f, platform: p }))}
-                      className="px-3 py-1.5 rounded-full text-xs transition-all duration-200"
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
                       style={{
                         fontFamily: 'var(--font-heading)',
                         background: sel ? 'rgba(124,58,237,0.2)' : 'rgba(244,244,245,0.04)',
-                        border: `1px solid ${sel ? 'rgba(167,139,250,0.5)' : 'rgba(244,244,245,0.08)'}`,
-                        color: sel ? '#a78bfa' : 'rgba(244,244,245,0.4)',
+                        border: `1px solid ${sel ? 'rgba(167,139,250,0.5)' : 'rgba(244,244,245,0.09)'}`,
+                        color: sel ? '#a78bfa' : 'rgba(244,244,245,0.5)',
+                        boxShadow: sel ? '0 0 14px rgba(124,58,237,0.2)' : 'none',
                       }}
                     >
+                      {sel && <span style={{ color: '#a78bfa', fontSize: '0.7rem' }}>✓</span>}
                       {p}
                     </button>
                   )
@@ -298,26 +302,28 @@ Return ONLY valid JSON, no markdown, no explanation:
             {/* Style */}
             <div>
               <label
-                className="block text-[10px] tracking-[0.25em] uppercase mb-3"
-                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(167,139,250,0.6)' }}
+                className="block text-xs tracking-[0.2em] uppercase mb-4"
+                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(167,139,250,0.7)' }}
               >
                 Your Style
               </label>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-3">
                 {STYLES.map((s) => {
                   const sel = form.style === s
                   return (
                     <button
                       key={s}
                       onClick={() => setForm((f) => ({ ...f, style: s }))}
-                      className="px-3 py-1.5 rounded-full text-xs transition-all duration-200"
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
                       style={{
                         fontFamily: 'var(--font-heading)',
                         background: sel ? 'rgba(124,58,237,0.2)' : 'rgba(244,244,245,0.04)',
-                        border: `1px solid ${sel ? 'rgba(167,139,250,0.5)' : 'rgba(244,244,245,0.08)'}`,
-                        color: sel ? '#a78bfa' : 'rgba(244,244,245,0.4)',
+                        border: `1px solid ${sel ? 'rgba(167,139,250,0.5)' : 'rgba(244,244,245,0.09)'}`,
+                        color: sel ? '#a78bfa' : 'rgba(244,244,245,0.5)',
+                        boxShadow: sel ? '0 0 14px rgba(124,58,237,0.2)' : 'none',
                       }}
                     >
+                      {sel && <span style={{ color: '#a78bfa', fontSize: '0.7rem' }}>✓</span>}
                       {s}
                     </button>
                   )
@@ -330,7 +336,7 @@ Return ONLY valid JSON, no markdown, no explanation:
               onClick={handleGenerate}
               disabled={!ready || loading}
               whileTap={{ scale: 0.98 }}
-              className="w-full py-4 rounded-xl text-sm font-bold tracking-wide uppercase transition-all duration-300 mt-2"
+              className="w-full py-5 rounded-xl text-sm font-bold tracking-wide uppercase transition-all duration-300 mt-2"
               style={{
                 fontFamily: 'var(--font-heading)',
                 background: ready && !loading
@@ -527,28 +533,30 @@ function TabCard({ tab, isActive, onClick }) {
       onClick={onClick}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="py-3 px-3 rounded-xl text-left tilt-card"
+      className="py-4 px-4 rounded-2xl text-left tilt-card"
       style={{
         background: isActive ? `rgba(${tab.colorRgb},0.12)` : 'rgba(244,244,245,0.03)',
         border: `1px solid ${isActive ? tab.color + '40' : 'rgba(244,244,245,0.07)'}`,
-        boxShadow: isActive ? `0 0 20px rgba(${tab.colorRgb},0.2), inset 0 1px 0 rgba(255,255,255,0.05)` : 'none',
+        boxShadow: isActive ? `0 0 24px rgba(${tab.colorRgb},0.25), inset 0 1px 0 rgba(255,255,255,0.06)` : 'none',
       }}
     >
       <p
-        className="text-xs font-semibold mb-0.5 truncate"
+        className="text-sm font-bold mb-1"
         style={{
           fontFamily: 'var(--font-heading)',
-          color: isActive ? tab.color : 'rgba(244,244,245,0.4)',
-          textShadow: isActive ? `0 0 12px ${tab.color}80` : 'none',
+          color: isActive ? tab.color : 'rgba(244,244,245,0.5)',
+          textShadow: isActive ? `0 0 14px ${tab.color}80` : 'none',
+          lineHeight: 1.3,
         }}
       >
         {tab.label}
       </p>
       <p
-        className="text-[10px] truncate"
+        className="text-xs"
         style={{
           fontFamily: 'var(--font-body)',
-          color: isActive ? tab.color + '80' : 'rgba(244,244,245,0.2)',
+          color: isActive ? tab.color + '90' : 'rgba(244,244,245,0.25)',
+          lineHeight: 1.4,
         }}
       >
         {tab.sub}

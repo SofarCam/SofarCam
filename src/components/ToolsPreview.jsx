@@ -66,7 +66,7 @@ const cardVariants = {
 
 export default function ToolsPreview() {
   return (
-    <section id="tools" className="relative py-28 px-6 overflow-hidden">
+    <section id="tools" className="relative py-24 px-6 overflow-hidden">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{

@@ -64,7 +64,7 @@ const services = [
 
 export default function ServicesSection() {
   return (
-    <section id="services" className="relative py-32 px-6 overflow-hidden">
+    <section id="services" className="relative py-24 px-6 overflow-hidden">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{ background: 'radial-gradient(ellipse 60% 50% at 80% 50%, rgba(236,72,153,0.04) 0%, transparent 60%)' }}
