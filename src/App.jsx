@@ -6,6 +6,8 @@ import ToolsPreview from './components/ToolsPreview'
 import Services from './components/Services'
 import Footer from './components/Footer'
 import SectionDivider from './components/SectionDivider'
+import TrendingSection from './components/TrendingSection'
+import EmailCapture from './components/EmailCapture'
 
 export default function App() {
   return (
@@ -18,7 +20,11 @@ export default function App() {
         <SectionDivider color="violet" />
         <SofarContent />
         <SectionDivider color="pink" />
+        <TrendingSection />
+        <SectionDivider color="cyan" />
         <Services />
+        <SectionDivider color="violet" />
+        <EmailCapture />
         <Footer />
       </main>
     </>

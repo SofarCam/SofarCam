@@ -1,11 +1,43 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { llmFetch } from '../lib/llmFetch'
+import { getActiveConcept, clearActiveConcept, saveSession, loadSession } from '../lib/sessionStore'
 
 const PLATFORMS = ['Instagram', 'TikTok', 'YouTube', 'YouTube Shorts', 'Pinterest', 'Etsy', 'X (Twitter)', 'LinkedIn']
 const EMOTIONS = ['Curious', 'Aspirational', 'Urgent', 'Controversial', 'Relatable', 'Engagement Bait']
 
 const RANK_MEDALS = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣']
+
+function ViralScore({ score }) {
+  const pct = Math.min(100, Math.max(0, score || 0))
+  const label = pct >= 85 ? '🔥 Viral' : pct >= 65 ? '⚡ Strong' : '💤 Weak'
+  const barColor = pct >= 85
+    ? 'linear-gradient(90deg, #7c3aed, #06b6d4)'
+    : pct >= 65
+    ? 'linear-gradient(90deg, #ca8a04, #f59e0b)'
+    : 'linear-gradient(90deg, #374151, #4b5563)'
+  const labelColor = pct >= 85 ? '#a78bfa' : pct >= 65 ? '#f59e0b' : 'rgba(244,244,245,0.3)'
+
+  return (
+    <div className="flex items-center gap-3 mt-2">
+      <div className="flex-1 h-1 rounded-full overflow-hidden" style={{ background: 'rgba(244,244,245,0.06)' }}>
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${pct}%` }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+          className="h-full rounded-full"
+          style={{ background: barColor }}
+        />
+      </div>
+      <span
+        className="text-[9px] tracking-[0.15em] uppercase shrink-0"
+        style={{ fontFamily: 'var(--font-heading)', color: labelColor, minWidth: '3.5rem', textAlign: 'right' }}
+      >
+        {label}
+      </span>
+    </div>
+  )
+}
 
 export default function HookWriter() {
   const [form, setForm] = useState({ idea: '', platform: '', emotion: '', includeCta: true })
@@ -14,6 +46,30 @@ export default function HookWriter() {
   const [error, setError] = useState(null)
   const [copied, setCopied] = useState(null)
   const [usedFallback, setUsedFallback] = useState(false)
+  const [fromConcept, setFromConcept] = useState(null)
+
+  // On mount: check for active concept (chained from Concept Generator) + restore last session
+  useEffect(() => {
+    const concept = getActiveConcept()
+    if (concept) {
+      const idea = concept.hook
+        ? `${concept.hook}${concept.angle ? ` — ${concept.angle}` : ''}`
+        : ''
+      setForm(f => ({
+        ...f,
+        idea,
+        platform: concept.platform || f.platform,
+      }))
+      setFromConcept(concept)
+      clearActiveConcept()
+    } else {
+      // Restore last hook session
+      const savedForm = loadSession('hooks_form')
+      const savedResults = loadSession('hooks_results')
+      if (savedForm) setForm(savedForm)
+      if (savedResults) setResults(savedResults)
+    }
+  }, [])
 
   const ready = form.idea.trim() && form.platform
 
@@ -105,6 +161,8 @@ Return ONLY valid JSON, no markdown, no explanation:
       setUsedFallback(fb)
       const parsed = JSON.parse(text)
       setResults(parsed)
+      saveSession('hooks_results', parsed)
+      saveSession('hooks_form', form)
     } catch {
       setError('Something went wrong. Try again.')
     } finally {
@@ -147,6 +205,36 @@ Return ONLY valid JSON, no markdown, no explanation:
         }}
       >
         <div className="grid gap-5">
+          {/* Chained concept banner */}
+          {fromConcept && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex items-start gap-3 px-4 py-3 rounded-xl"
+              style={{
+                background: 'linear-gradient(135deg, rgba(124,58,237,0.1), rgba(6,182,212,0.06))',
+                border: '1px solid rgba(124,58,237,0.25)',
+              }}
+            >
+              <span className="text-base mt-0.5">⚡</span>
+              <div>
+                <p className="text-[9px] tracking-[0.25em] uppercase mb-1" style={{ fontFamily: 'var(--font-heading)', color: 'rgba(167,139,250,0.7)' }}>
+                  Pre-filled from your concept
+                </p>
+                <p className="text-xs leading-relaxed" style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.5)' }}>
+                  {fromConcept.hook}
+                </p>
+              </div>
+              <button
+                onClick={() => { setFromConcept(null); setForm(f => ({ ...f, idea: '', platform: '' })) }}
+                className="ml-auto text-[9px] tracking-wider uppercase shrink-0"
+                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(244,244,245,0.2)' }}
+              >
+                Clear
+              </button>
+            </motion.div>
+          )}
+
           {/* Content idea */}
           <div>
             <label
@@ -400,7 +488,9 @@ Return ONLY valid JSON, no markdown, no explanation:
                     {hook.hook}
                   </p>
 
-                  <div className="flex items-center gap-3 flex-wrap">
+                  <ViralScore score={hook.score} />
+
+                  <div className="flex items-center gap-3 flex-wrap mt-2">
                     <span
                       className="text-[8px] tracking-[0.15em] uppercase px-2 py-0.5 rounded-full text-cream/25"
                       style={{
@@ -457,7 +547,13 @@ Return ONLY valid JSON, no markdown, no explanation:
                 {copied === 'all' ? 'Copied!' : 'Copy All 10'}
               </button>
               <button
-                onClick={() => { setResults(null); setForm({ idea: '', platform: '', emotion: '', includeCta: true }) }}
+                onClick={() => {
+                  setResults(null)
+                  setFromConcept(null)
+                  setForm({ idea: '', platform: '', emotion: '', includeCta: true })
+                  saveSession('hooks_results', null)
+                  saveSession('hooks_form', null)
+                }}
                 className="text-[10px] tracking-[0.2em] uppercase text-cream/20 hover:text-cream/40 transition-colors duration-200"
                 style={{ fontFamily: 'var(--font-heading)' }}
               >

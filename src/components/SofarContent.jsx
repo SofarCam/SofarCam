@@ -1,10 +1,11 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import HookWriter from './HookWriter'
 import CaptionWriter from './CaptionWriter'
 import LinkedInWriter from './LinkedInWriter'
 import ContentAnalyzer from './ContentAnalyzer'
 import { llmFetch } from '../lib/llmFetch'
+import { saveSession, loadSession, setActiveConcept } from '../lib/sessionStore'
 
 const NICHES = ['Photography', 'Fitness', 'Fashion', 'Food', 'Travel', 'Music', 'Art', 'Business', 'Gaming', 'Lifestyle']
 const PLATFORMS = ['Instagram', 'TikTok', 'YouTube', 'YouTube Shorts', 'Pinterest', 'Etsy']
@@ -26,6 +27,15 @@ export default function SofarContent() {
   const [error, setError] = useState(null)
   const [copied, setCopied] = useState(null)
   const [usedFallback, setUsedFallback] = useState(false)
+  const [chainedConcept, setChainedConcept] = useState(null)
+
+  // Restore last session on mount
+  useEffect(() => {
+    const saved = loadSession('concepts_results')
+    if (saved) setResults(saved)
+    const savedForm = loadSession('concepts_form')
+    if (savedForm) setForm(savedForm)
+  }, [])
 
   const ready = form.niche && form.platform && form.style
 
@@ -70,6 +80,8 @@ Return ONLY valid JSON, no markdown, no explanation:
       setUsedFallback(fb)
       const parsed = JSON.parse(text)
       setResults(parsed.concepts)
+      saveSession('concepts_results', parsed.concepts)
+      saveSession('concepts_form', form)
     } catch {
       setError('Something went wrong. Try again.')
     } finally {
@@ -81,6 +93,13 @@ Return ONLY valid JSON, no markdown, no explanation:
     navigator.clipboard.writeText(text)
     setCopied(idx)
     setTimeout(() => setCopied(null), 2000)
+  }
+
+  function handleUseConcept(concept) {
+    // Save concept to sessionStore so HookWriter/CaptionWriter can pick it up
+    setActiveConcept({ hook: concept.hook, format: concept.format, angle: concept.angle, platform: form.platform })
+    setChainedConcept(concept)
+    setActiveTab('hooks')
   }
 
   return (
@@ -414,8 +433,7 @@ Return ONLY valid JSON, no markdown, no explanation:
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.1 }}
-                  onClick={() => handleCopy(`Hook: ${concept.hook}\n\nFormat: ${concept.format}\n\nAngle: ${concept.angle}\n\nCTA: ${concept.cta}`, idx)}
-                  className="rounded-xl border p-6 cursor-pointer transition-all duration-300"
+                  className="rounded-xl border p-6 transition-all duration-300"
                   style={{
                     background: copied === idx ? 'rgba(124,58,237,0.08)' : 'rgba(17,17,22,0.8)',
                     borderColor: copied === idx ? 'rgba(167,139,250,0.4)' : 'rgba(124,58,237,0.15)',
@@ -429,15 +447,16 @@ Return ONLY valid JSON, no markdown, no explanation:
                     >
                       Concept {idx + 1}
                     </span>
-                    <span
+                    <button
+                      onClick={() => handleCopy(`Hook: ${concept.hook}\n\nFormat: ${concept.format}\n\nAngle: ${concept.angle}\n\nCTA: ${concept.cta}`, idx)}
                       className="text-[9px] tracking-[0.2em] uppercase transition-colors duration-200"
                       style={{
                         fontFamily: 'var(--font-heading)',
                         color: copied === idx ? '#a78bfa' : 'rgba(244,244,245,0.2)',
                       }}
                     >
-                      {copied === idx ? 'Copied' : 'Copy'}
-                    </span>
+                      {copied === idx ? 'Copied ✓' : 'Copy'}
+                    </button>
                   </div>
 
                   <div className="space-y-3">
@@ -478,6 +497,45 @@ Return ONLY valid JSON, no markdown, no explanation:
                         </div>
                       ))}
                     </div>
+
+                    {/* Chained workflow CTA */}
+                    <div className="flex items-center gap-3 pt-2">
+                      <button
+                        onClick={() => handleUseConcept(concept)}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold tracking-wide uppercase transition-all duration-200"
+                        style={{
+                          fontFamily: 'var(--font-heading)',
+                          background: 'linear-gradient(135deg, rgba(124,58,237,0.2), rgba(6,182,212,0.15))',
+                          border: '1px solid rgba(124,58,237,0.35)',
+                          color: '#a78bfa',
+                          boxShadow: '0 0 12px rgba(124,58,237,0.15)',
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.boxShadow = '0 0 20px rgba(124,58,237,0.3)'}
+                        onMouseLeave={e => e.currentTarget.style.boxShadow = '0 0 12px rgba(124,58,237,0.15)'}
+                      >
+                        <span>⚡</span>
+                        Write Hooks for this →
+                      </button>
+                      <button
+                        onClick={() => {
+                          setActiveConcept({ hook: concept.hook, format: concept.format, angle: concept.angle, platform: form.platform })
+                          setChainedConcept(concept)
+                          setActiveTab('captions')
+                        }}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold tracking-wide uppercase transition-all duration-200"
+                        style={{
+                          fontFamily: 'var(--font-heading)',
+                          background: 'rgba(236,72,153,0.08)',
+                          border: '1px solid rgba(236,72,153,0.2)',
+                          color: 'rgba(249,168,212,0.7)',
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(236,72,153,0.4)'}
+                        onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(236,72,153,0.2)'}
+                      >
+                        <span>✍️</span>
+                        Write Caption →
+                      </button>
+                    </div>
                   </div>
                 </motion.div>
               ))}
@@ -485,7 +543,13 @@ Return ONLY valid JSON, no markdown, no explanation:
               {/* Start over */}
               <div className="text-center pt-4">
                 <button
-                  onClick={() => { setResults(null); setForm({ niche: '', platform: '', style: '' }) }}
+                  onClick={() => {
+                    setResults(null)
+                    setForm({ niche: '', platform: '', style: '' })
+                    setChainedConcept(null)
+                    saveSession('concepts_results', null)
+                    saveSession('concepts_form', null)
+                  }}
                   className="text-[10px] tracking-[0.25em] uppercase transition-colors duration-200"
                   style={{ fontFamily: 'var(--font-heading)', color: 'rgba(244,244,245,0.25)' }}
                 >
