@@ -16,24 +16,20 @@ export default function EmailCapture() {
     setError(null)
 
     try {
-      // Store locally so we never lose it, even if no backend yet
-      const existing = JSON.parse(localStorage.getItem('sofarcontent_waitlist') || '[]')
-      const entry = { email, timestamp: new Date().toISOString() }
-      localStorage.setItem('sofarcontent_waitlist', JSON.stringify([...existing, entry]))
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
 
-      // Try to POST to a webhook/backend (gracefully fails if not set up)
-      const webhookUrl = import.meta.env.VITE_EMAIL_WEBHOOK_URL
-      if (webhookUrl) {
-        await fetch(webhookUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(entry),
-        }).catch(() => {})
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || 'Failed to subscribe')
       }
 
       setSubmitted(true)
-    } catch {
-      setError('Something went wrong. Try again.')
+    } catch (err) {
+      setError(err.message || 'Something went wrong. Try again.')
     } finally {
       setLoading(false)
     }
@@ -115,9 +111,9 @@ export default function EmailCapture() {
               {/* Social proof */}
               <div className="flex items-center justify-center gap-6 mb-8">
                 {[
-                  { stat: '2,400+', label: 'creators joined' },
                   { stat: 'Free', label: 'always' },
                   { stat: 'Weekly', label: 'drops' },
+                  { stat: 'No spam', label: 'ever' },
                 ].map(({ stat, label }) => (
                   <div key={label} className="text-center">
                     <p
