@@ -1,6 +1,6 @@
-# Logs
-logs
+# Logs (npm/build logs ignored, but markdown scan logs in logs/ are tracked)
 *.log
+!logs/*.md
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
