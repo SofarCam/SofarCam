@@ -25,8 +25,8 @@ const GUIDES = [
   {
     id: 'daily-planning',
     icon: HiCalendarDays,
-    color: '#a78bfa',
-    colorRgb: '124,58,237',
+    color: '#E8C47A',
+    colorRgb: '212,160,74',
     title: 'Claude for Daily Planning & Decisions',
     teaser: 'Turn a scattered brain dump into a clear list of what actually matters today.',
     tips: [
@@ -48,8 +48,8 @@ const GUIDES = [
   {
     id: 'learning',
     icon: HiAcademicCap,
-    color: '#67e8f9',
-    colorRgb: '6,182,212',
+    color: '#E8C47A',
+    colorRgb: '212,160,74',
     title: 'Claude for Learning Anything Faster',
     teaser: 'Turn Claude into a tutor that explains, then checks you actually understood.',
     tips: [
@@ -71,8 +71,8 @@ const GUIDES = [
   {
     id: 'writing',
     icon: HiPencilSquare,
-    color: '#f9a8d4',
-    colorRgb: '236,72,153',
+    color: '#E8C47A',
+    colorRgb: '212,160,74',
     title: 'Claude for Writing & Hard Conversations',
     teaser: "Draft the message you're avoiding, then practice how the other person might respond.",
     tips: [
@@ -94,8 +94,8 @@ const GUIDES = [
   {
     id: 'freelance',
     icon: HiBriefcase,
-    color: '#fdba74',
-    colorRgb: '249,115,22',
+    color: '#E8C47A',
+    colorRgb: '212,160,74',
     title: 'Claude for Freelance & Client Work',
     teaser: 'Catch scope creep, draft proposals, and read contracts before you sign anything.',
     tips: [
@@ -117,8 +117,8 @@ const GUIDES = [
   {
     id: 'content',
     icon: HiSparkles,
-    color: '#86efac',
-    colorRgb: '34,197,94',
+    color: '#E8C47A',
+    colorRgb: '212,160,74',
     title: 'Claude for Content Creators',
     teaser: 'Turn one idea into a week of angles, and figure out why your best post actually worked.',
     tips: [
@@ -142,8 +142,8 @@ const GUIDES = [
   {
     id: 'money',
     icon: HiBanknotes,
-    color: '#60a5fa',
-    colorRgb: '96,165,250',
+    color: '#E8C47A',
+    colorRgb: '212,160,74',
     title: 'Claude for Getting Your Finances Organized',
     teaser: 'Turn a messy bank export into a clear picture of where your money actually goes.',
     tips: [
@@ -234,9 +234,9 @@ function UnlockForm({ onUnlocked, inputRef }) {
           className="flex-1 rounded-xl text-sm outline-none transition-all duration-200"
           style={{
             fontFamily: 'var(--font-body)',
-            background: 'rgba(244,244,245,0.05)',
-            border: `1px solid ${isValid ? 'rgba(167,139,250,0.35)' : 'rgba(244,244,245,0.08)'}`,
-            color: 'rgba(244,244,245,0.85)',
+            background: 'rgba(253,248,240,0.05)',
+            border: `1px solid ${isValid ? 'rgba(232,196,122,0.35)' : 'rgba(253,248,240,0.08)'}`,
+            color: 'rgba(253,248,240,0.85)',
             fontSize: '0.9rem',
             padding: '14px 20px',
           }}
@@ -248,11 +248,11 @@ function UnlockForm({ onUnlocked, inputRef }) {
           className="rounded-xl text-sm font-bold tracking-wide uppercase transition-all duration-300 shrink-0"
           style={{
             fontFamily: 'var(--font-heading)',
-            background: isValid && !loading ? 'linear-gradient(135deg, #7c3aed, #06b6d4)' : 'rgba(244,244,245,0.04)',
-            border: `1px solid ${isValid && !loading ? 'transparent' : 'rgba(244,244,245,0.06)'}`,
-            color: isValid && !loading ? '#fff' : 'rgba(244,244,245,0.2)',
+            background: isValid && !loading ? 'linear-gradient(135deg, #D4A04A, #B8862E)' : 'rgba(253,248,240,0.04)',
+            border: `1px solid ${isValid && !loading ? 'transparent' : 'rgba(253,248,240,0.06)'}`,
+            color: isValid && !loading ? '#0D0B09' : 'rgba(253,248,240,0.2)',
             cursor: isValid && !loading ? 'pointer' : 'not-allowed',
-            boxShadow: isValid && !loading ? '0 0 24px rgba(124,58,237,0.35)' : 'none',
+            boxShadow: isValid && !loading ? '0 0 24px rgba(212,160,74,0.35)' : 'none',
             padding: '14px 24px',
           }}
         >
@@ -274,7 +274,7 @@ function UnlockForm({ onUnlocked, inputRef }) {
       </AnimatePresence>
       <p
         className="text-[10px] tracking-[0.15em] uppercase text-center"
-        style={{ fontFamily: 'var(--font-heading)', color: 'rgba(244,244,245,0.2)', marginTop: '16px' }}
+        style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.2)', marginTop: '16px' }}
       >
         Free forever. No spam. Unsubscribe anytime.
       </p>
@@ -293,7 +293,7 @@ function GuideCard({ guide, unlocked, index, onLockedClick }) {
       transition={{ duration: 0.6, delay: (index % 2) * 0.08 }}
       className="relative rounded-2xl flex flex-col overflow-hidden"
       style={{
-        background: 'rgba(17,17,22,0.85)',
+        background: 'rgba(22,19,15,0.85)',
         border: `1px solid ${guide.color}25`,
         backdropFilter: 'blur(12px)',
         padding: '28px',
@@ -315,7 +315,7 @@ function GuideCard({ guide, unlocked, index, onLockedClick }) {
         </h3>
       </div>
 
-      <p className="text-sm leading-relaxed" style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.55)' }}>
+      <p className="text-sm leading-relaxed" style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.55)' }}>
         {guide.teaser}
       </p>
 
@@ -330,7 +330,7 @@ function GuideCard({ guide, unlocked, index, onLockedClick }) {
                 >
                   {tip.label}
                 </p>
-                <p className="text-xs leading-relaxed" style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.5)' }}>
+                <p className="text-xs leading-relaxed" style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.5)' }}>
                   {tip.body}
                 </p>
               </div>
@@ -347,13 +347,13 @@ function GuideCard({ guide, unlocked, index, onLockedClick }) {
             >
               Try this prompt
             </p>
-            <p className="text-xs leading-relaxed italic" style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.6)' }}>
+            <p className="text-xs leading-relaxed italic" style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.6)' }}>
               "{guide.prompt}"
             </p>
           </div>
 
           {guide.note && (
-            <p className="text-[10px] leading-relaxed" style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.3)', marginTop: '12px' }}>
+            <p className="text-[10px] leading-relaxed" style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.3)', marginTop: '12px' }}>
               {guide.note}
             </p>
           )}
@@ -373,16 +373,16 @@ function GuideCard({ guide, unlocked, index, onLockedClick }) {
           <button
             onClick={onLockedClick}
             className="absolute inset-0 flex flex-col items-center justify-center rounded-xl"
-            style={{ background: 'rgba(9,9,11,0.35)', gap: '8px' }}
+            style={{ background: 'rgba(13,11,9,0.35)', gap: '8px' }}
           >
-            <HiLockClosed size={18} color="rgba(244,244,245,0.6)" />
+            <HiLockClosed size={18} color="rgba(253,248,240,0.6)" />
             <span
               className="text-[10px] tracking-[0.2em] uppercase font-semibold rounded-full"
               style={{
                 fontFamily: 'var(--font-heading)',
-                color: '#fff',
-                background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
-                boxShadow: '0 0 20px rgba(124,58,237,0.4)',
+                color: '#0D0B09',
+                background: 'linear-gradient(135deg, #D4A04A, #B8862E)',
+                boxShadow: '0 0 20px rgba(212,160,74,0.4)',
                 padding: '6px 12px',
               }}
             >
@@ -425,10 +425,10 @@ export default function Guides() {
         >
           <div
             className="inline-flex items-center rounded-full"
-            style={{ background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(167,139,250,0.2)', gap: '8px', padding: '4px 12px', marginBottom: '24px' }}
+            style={{ background: 'rgba(212,160,74,0.1)', border: '1px solid rgba(232,196,122,0.2)', gap: '8px', padding: '4px 12px', marginBottom: '24px' }}
           >
-            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#a78bfa' }} />
-            <span className="text-[10px] tracking-[0.25em] uppercase" style={{ color: '#a78bfa', fontFamily: 'var(--font-heading)' }}>
+            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#E8C47A' }} />
+            <span className="text-[10px] tracking-[0.25em] uppercase" style={{ color: '#E8C47A', fontFamily: 'var(--font-heading)' }}>
               6 Free Guides
             </span>
           </div>
@@ -440,7 +440,7 @@ export default function Guides() {
               fontWeight: 800,
               lineHeight: 1.05,
               letterSpacing: '-0.03em',
-              color: '#f4f4f5',
+              color: '#FDF8F0',
               marginBottom: '20px',
             }}
           >
@@ -448,7 +448,7 @@ export default function Guides() {
           </h1>
           <p
             className="leading-relaxed"
-            style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', color: 'rgba(244,244,245,0.45)', marginBottom: '40px' }}
+            style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', color: 'rgba(253,248,240,0.45)', marginBottom: '40px' }}
           >
             Not another "10 AI prompts" list. Actual ways to use Claude for planning,
             learning, hard conversations, freelance work, content, and getting your
@@ -462,7 +462,7 @@ export default function Guides() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="text-sm font-semibold"
-              style={{ fontFamily: 'var(--font-heading)', color: '#86efac' }}
+              style={{ fontFamily: 'var(--font-heading)', color: '#6b6b6b' }}
             >
               ✓ Unlocked — all 6 guides below.
             </motion.p>

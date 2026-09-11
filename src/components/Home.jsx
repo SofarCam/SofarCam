@@ -15,15 +15,15 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
-        <SectionDivider color="cyan" />
+        <SectionDivider />
         <ToolsPreview />
-        <SectionDivider color="violet" />
+        <SectionDivider />
         <SofarContent />
-        <SectionDivider color="pink" />
+        <SectionDivider />
         <TrendingSection />
-        <SectionDivider color="cyan" />
+        <SectionDivider />
         <Services />
-        <SectionDivider color="violet" />
+        <SectionDivider />
         <EmailCapture />
         <Footer />
       </main>

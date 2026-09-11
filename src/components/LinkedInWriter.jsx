@@ -91,7 +91,7 @@ Return ONLY valid JSON, no markdown, no explanation:
 
   const RANK_MEDALS = ['🥇', '🥈', '🥉']
   // LinkedIn blue-ish accent color
-  const accent = '#60a5fa'
+  const accent = '#D4A04A'
   const accentRgb = '96,165,250'
 
   return (
@@ -103,7 +103,7 @@ Return ONLY valid JSON, no markdown, no explanation:
         transition={{ duration: 0.5 }}
         className="rounded-2xl border p-8 mb-6"
         style={{
-          background: 'rgba(20,20,20,0.8)',
+          background: 'rgba(22,19,15,0.8)',
           borderColor: `rgba(${accentRgb},0.12)`,
           backdropFilter: 'blur(12px)',
         }}
@@ -125,13 +125,13 @@ Return ONLY valid JSON, no markdown, no explanation:
               className="w-full rounded-xl px-4 py-3 text-sm resize-none outline-none transition-all duration-200"
               style={{
                 fontFamily: 'var(--font-body)',
-                background: 'rgba(240,235,226,0.04)',
-                border: '1px solid rgba(240,235,226,0.08)',
-                color: 'rgba(240,235,226,0.8)',
+                background: 'rgba(253,248,240,0.04)',
+                border: '1px solid rgba(253,248,240,0.08)',
+                color: 'rgba(253,248,240,0.8)',
                 fontSize: '0.88rem',
               }}
               onFocus={(e) => (e.target.style.borderColor = `rgba(${accentRgb},0.35)`)}
-              onBlur={(e) => (e.target.style.borderColor = 'rgba(240,235,226,0.08)')}
+              onBlur={(e) => (e.target.style.borderColor = 'rgba(253,248,240,0.08)')}
             />
           </div>
 
@@ -152,9 +152,9 @@ Return ONLY valid JSON, no markdown, no explanation:
                     className="px-3 py-1.5 rounded-full text-xs transition-all duration-200"
                     style={{
                       fontFamily: 'var(--font-heading)',
-                      background: form.goal === g ? `rgba(${accentRgb},0.15)` : 'rgba(240,235,226,0.04)',
-                      border: `1px solid ${form.goal === g ? `rgba(${accentRgb},0.5)` : 'rgba(240,235,226,0.08)'}`,
-                      color: form.goal === g ? accent : 'rgba(240,235,226,0.4)',
+                      background: form.goal === g ? `rgba(${accentRgb},0.15)` : 'rgba(253,248,240,0.04)',
+                      border: `1px solid ${form.goal === g ? `rgba(${accentRgb},0.5)` : 'rgba(253,248,240,0.08)'}`,
+                      color: form.goal === g ? accent : 'rgba(253,248,240,0.4)',
                     }}
                   >
                     {g}
@@ -178,9 +178,9 @@ Return ONLY valid JSON, no markdown, no explanation:
                     className="px-3 py-1.5 rounded-full text-xs transition-all duration-200"
                     style={{
                       fontFamily: 'var(--font-heading)',
-                      background: form.industry === i ? `rgba(${accentRgb},0.15)` : 'rgba(240,235,226,0.04)',
-                      border: `1px solid ${form.industry === i ? `rgba(${accentRgb},0.5)` : 'rgba(240,235,226,0.08)'}`,
-                      color: form.industry === i ? accent : 'rgba(240,235,226,0.4)',
+                      background: form.industry === i ? `rgba(${accentRgb},0.15)` : 'rgba(253,248,240,0.04)',
+                      border: `1px solid ${form.industry === i ? `rgba(${accentRgb},0.5)` : 'rgba(253,248,240,0.08)'}`,
+                      color: form.industry === i ? accent : 'rgba(253,248,240,0.4)',
                     }}
                   >
                     {i}
@@ -206,9 +206,9 @@ Return ONLY valid JSON, no markdown, no explanation:
                   className="px-3 py-1.5 rounded-full text-xs transition-all duration-200"
                   style={{
                     fontFamily: 'var(--font-heading)',
-                    background: form.format === f ? `rgba(${accentRgb},0.15)` : 'rgba(240,235,226,0.04)',
-                    border: `1px solid ${form.format === f ? `rgba(${accentRgb},0.5)` : 'rgba(240,235,226,0.08)'}`,
-                    color: form.format === f ? accent : 'rgba(240,235,226,0.4)',
+                    background: form.format === f ? `rgba(${accentRgb},0.15)` : 'rgba(253,248,240,0.04)',
+                    border: `1px solid ${form.format === f ? `rgba(${accentRgb},0.5)` : 'rgba(253,248,240,0.08)'}`,
+                    color: form.format === f ? accent : 'rgba(253,248,240,0.4)',
                   }}
                 >
                   {f}
@@ -225,9 +225,9 @@ Return ONLY valid JSON, no markdown, no explanation:
             className="w-full py-4 rounded-xl text-sm font-medium tracking-widest uppercase transition-all duration-300"
             style={{
               fontFamily: 'var(--font-heading)',
-              background: ready && !loading ? `rgba(${accentRgb},0.12)` : 'rgba(240,235,226,0.03)',
-              border: `1px solid ${ready && !loading ? `rgba(${accentRgb},0.4)` : 'rgba(240,235,226,0.06)'}`,
-              color: ready && !loading ? accent : 'rgba(240,235,226,0.2)',
+              background: ready && !loading ? `rgba(${accentRgb},0.12)` : 'rgba(253,248,240,0.03)',
+              border: `1px solid ${ready && !loading ? `rgba(${accentRgb},0.4)` : 'rgba(253,248,240,0.06)'}`,
+              color: ready && !loading ? accent : 'rgba(253,248,240,0.2)',
               cursor: ready && !loading ? 'pointer' : 'not-allowed',
             }}
           >
@@ -276,9 +276,9 @@ Return ONLY valid JSON, no markdown, no explanation:
                 <span
                   className="text-[9px] tracking-widest uppercase px-2 py-0.5 rounded-full"
                   style={{
-                    background: 'rgba(255,165,0,0.08)',
-                    color: 'rgba(255,165,0,0.5)',
-                    border: '1px solid rgba(255,165,0,0.12)',
+                    background: 'rgba(212,160,74,0.08)',
+                    color: 'rgba(212,160,74,0.5)',
+                    border: '1px solid rgba(212,160,74,0.12)',
                   }}
                 >
                   Using backup model
@@ -322,9 +322,9 @@ Return ONLY valid JSON, no markdown, no explanation:
                   className="flex-1 py-2.5 rounded-xl text-xs transition-all duration-200"
                   style={{
                     fontFamily: 'var(--font-heading)',
-                    background: activePost === idx ? `rgba(${accentRgb},0.12)` : 'rgba(240,235,226,0.03)',
-                    border: `1px solid ${activePost === idx ? `rgba(${accentRgb},0.4)` : 'rgba(240,235,226,0.06)'}`,
-                    color: activePost === idx ? accent : 'rgba(240,235,226,0.3)',
+                    background: activePost === idx ? `rgba(${accentRgb},0.12)` : 'rgba(253,248,240,0.03)',
+                    border: `1px solid ${activePost === idx ? `rgba(${accentRgb},0.4)` : 'rgba(253,248,240,0.06)'}`,
+                    color: activePost === idx ? accent : 'rgba(253,248,240,0.3)',
                   }}
                 >
                   {RANK_MEDALS[idx]} {post.score}/100
@@ -341,7 +341,7 @@ Return ONLY valid JSON, no markdown, no explanation:
                 transition={{ duration: 0.3 }}
                 className="rounded-xl border p-6 mb-4"
                 style={{
-                  background: 'rgba(20,20,20,0.6)',
+                  background: 'rgba(22,19,15,0.6)',
                   borderColor: `rgba(${accentRgb},0.1)`,
                 }}
               >
@@ -361,9 +361,9 @@ Return ONLY valid JSON, no markdown, no explanation:
                     className="text-[9px] tracking-[0.2em] uppercase px-3 py-1.5 rounded-lg transition-all duration-200"
                     style={{
                       fontFamily: 'var(--font-heading)',
-                      background: copied === activePost ? `rgba(${accentRgb},0.15)` : 'rgba(240,235,226,0.04)',
-                      border: `1px solid ${copied === activePost ? `rgba(${accentRgb},0.4)` : 'rgba(240,235,226,0.08)'}`,
-                      color: copied === activePost ? accent : 'rgba(240,235,226,0.3)',
+                      background: copied === activePost ? `rgba(${accentRgb},0.15)` : 'rgba(253,248,240,0.04)',
+                      border: `1px solid ${copied === activePost ? `rgba(${accentRgb},0.4)` : 'rgba(253,248,240,0.08)'}`,
+                      color: copied === activePost ? accent : 'rgba(253,248,240,0.3)',
                     }}
                   >
                     {copied === activePost ? 'Copied!' : 'Copy Post'}
@@ -375,9 +375,9 @@ Return ONLY valid JSON, no markdown, no explanation:
                   className="rounded-lg p-4 mb-3 whitespace-pre-wrap text-sm leading-relaxed"
                   style={{
                     fontFamily: 'var(--font-body)',
-                    background: 'rgba(240,235,226,0.03)',
-                    border: '1px solid rgba(240,235,226,0.05)',
-                    color: 'rgba(240,235,226,0.75)',
+                    background: 'rgba(253,248,240,0.03)',
+                    border: '1px solid rgba(253,248,240,0.05)',
+                    color: 'rgba(253,248,240,0.75)',
                     fontSize: '0.88rem',
                   }}
                 >
@@ -387,7 +387,7 @@ Return ONLY valid JSON, no markdown, no explanation:
                 {/* Why it works */}
                 <p
                   className="text-[10px] leading-relaxed"
-                  style={{ fontFamily: 'var(--font-body)', color: 'rgba(240,235,226,0.25)' }}
+                  style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.25)' }}
                 >
                   ✦ {results.posts[activePost].why_it_works}
                 </p>

@@ -158,10 +158,10 @@ const PLATFORMS = Object.keys(TRENDS)
 
 function FireBar({ score }) {
   const pct = Math.min(100, score)
-  const color = pct >= 90 ? '#f97316' : pct >= 80 ? '#f59e0b' : '#6366f1'
+  const color = pct >= 90 ? '#E8C47A' : pct >= 80 ? '#D4A04A' : '#B8862E'
   return (
     <div className="flex items-center gap-2">
-      <div className="flex-1 h-0.5 rounded-full overflow-hidden" style={{ background: 'rgba(244,244,245,0.06)' }}>
+      <div className="flex-1 h-0.5 rounded-full overflow-hidden" style={{ background: 'rgba(253,248,240,0.06)' }}>
         <motion.div
           initial={{ width: 0 }}
           whileInView={{ width: `${pct}%` }}
@@ -188,7 +188,7 @@ export default function TrendingSection() {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse 55% 40% at 50% 0%, rgba(249,115,22,0.06) 0%, transparent 60%)',
+          background: 'radial-gradient(ellipse 55% 40% at 50% 0%, rgba(212,160,74,0.06) 0%, transparent 60%)',
         }}
       />
 
@@ -203,11 +203,11 @@ export default function TrendingSection() {
         >
           <div
             className="inline-flex items-center gap-2 mb-5 px-3 py-1 rounded-full"
-            style={{ background: 'rgba(249,115,22,0.08)', border: '1px solid rgba(249,115,22,0.2)' }}
+            style={{ background: 'rgba(212,160,74,0.08)', border: '1px solid rgba(212,160,74,0.2)' }}
           >
             <span
               className="text-[10px] tracking-[0.25em] uppercase"
-              style={{ color: '#f97316', fontFamily: 'var(--font-heading)' }}
+              style={{ color: '#D4A04A', fontFamily: 'var(--font-heading)' }}
             >
               🔥 What's Working Right Now
             </span>
@@ -220,15 +220,15 @@ export default function TrendingSection() {
               fontWeight: 800,
               lineHeight: 1.05,
               letterSpacing: '-0.03em',
-              color: '#f4f4f5',
+              color: '#FDF8F0',
             }}
           >
             Trends updated{' '}
-            <span style={{ color: '#f97316' }}>weekly.</span>
+            <span style={{ color: '#D4A04A' }}>weekly.</span>
           </h2>
           <p
             className="max-w-md mx-auto leading-relaxed"
-            style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'rgba(244,244,245,0.4)' }}
+            style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'rgba(253,248,240,0.4)' }}
           >
             No guessing. Real signals from what's actually performing across platforms right now.
           </p>
@@ -249,10 +249,10 @@ export default function TrendingSection() {
               className="px-4 py-2 rounded-full text-xs font-bold tracking-wide uppercase transition-all duration-200"
               style={{
                 fontFamily: 'var(--font-heading)',
-                background: activePlatform === p ? 'rgba(249,115,22,0.15)' : 'rgba(244,244,245,0.04)',
-                border: `1px solid ${activePlatform === p ? 'rgba(249,115,22,0.4)' : 'rgba(244,244,245,0.08)'}`,
-                color: activePlatform === p ? '#f97316' : 'rgba(244,244,245,0.4)',
-                boxShadow: activePlatform === p ? '0 0 16px rgba(249,115,22,0.2)' : 'none',
+                background: activePlatform === p ? 'rgba(212,160,74,0.15)' : 'rgba(253,248,240,0.04)',
+                border: `1px solid ${activePlatform === p ? 'rgba(212,160,74,0.4)' : 'rgba(253,248,240,0.08)'}`,
+                color: activePlatform === p ? '#D4A04A' : 'rgba(253,248,240,0.4)',
+                boxShadow: activePlatform === p ? '0 0 16px rgba(212,160,74,0.2)' : 'none',
               }}
             >
               {p}
@@ -278,16 +278,16 @@ export default function TrendingSection() {
                 transition={{ delay: idx * 0.07 }}
                 className="rounded-xl border p-6 transition-all duration-300"
                 style={{
-                  background: 'rgba(17,17,22,0.85)',
-                  borderColor: 'rgba(249,115,22,0.1)',
+                  background: 'rgba(22,19,15,0.85)',
+                  borderColor: 'rgba(212,160,74,0.1)',
                   backdropFilter: 'blur(10px)',
                 }}
                 onMouseEnter={e => {
-                  e.currentTarget.style.borderColor = 'rgba(249,115,22,0.25)'
-                  e.currentTarget.style.boxShadow = '0 0 24px rgba(249,115,22,0.08)'
+                  e.currentTarget.style.borderColor = 'rgba(212,160,74,0.25)'
+                  e.currentTarget.style.boxShadow = '0 0 24px rgba(212,160,74,0.08)'
                 }}
                 onMouseLeave={e => {
-                  e.currentTarget.style.borderColor = 'rgba(249,115,22,0.1)'
+                  e.currentTarget.style.borderColor = 'rgba(212,160,74,0.1)'
                   e.currentTarget.style.boxShadow = 'none'
                 }}
               >
@@ -296,9 +296,9 @@ export default function TrendingSection() {
                     className="text-[9px] tracking-[0.2em] uppercase px-2 py-1 rounded-full"
                     style={{
                       fontFamily: 'var(--font-heading)',
-                      background: 'rgba(249,115,22,0.08)',
-                      border: '1px solid rgba(249,115,22,0.15)',
-                      color: '#f97316',
+                      background: 'rgba(212,160,74,0.08)',
+                      border: '1px solid rgba(212,160,74,0.15)',
+                      color: '#D4A04A',
                     }}
                   >
                     {trend.type}
@@ -311,7 +311,7 @@ export default function TrendingSection() {
                     fontFamily: 'var(--font-heading)',
                     fontSize: '0.95rem',
                     fontWeight: 700,
-                    color: 'rgba(244,244,245,0.9)',
+                    color: 'rgba(253,248,240,0.9)',
                   }}
                 >
                   {trend.title}
@@ -319,7 +319,7 @@ export default function TrendingSection() {
 
                 <p
                   className="text-xs leading-relaxed mb-4"
-                  style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.4)' }}
+                  style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.4)' }}
                 >
                   {trend.why}
                 </p>
@@ -328,13 +328,13 @@ export default function TrendingSection() {
                   <div className="flex items-center justify-between mb-1.5">
                     <span
                       className="text-[8px] tracking-[0.2em] uppercase"
-                      style={{ fontFamily: 'var(--font-heading)', color: 'rgba(249,115,22,0.5)' }}
+                      style={{ fontFamily: 'var(--font-heading)', color: 'rgba(212,160,74,0.5)' }}
                     >
                       Momentum score
                     </span>
                     <span
                       className="text-[9px]"
-                      style={{ fontFamily: 'var(--font-heading)', color: 'rgba(244,244,245,0.2)' }}
+                      style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.2)' }}
                     >
                       {trend.fire}/100
                     </span>
@@ -353,7 +353,7 @@ export default function TrendingSection() {
           viewport={{ once: true }}
           transition={{ delay: 0.4 }}
           className="text-center mt-8 text-[10px] tracking-[0.2em] uppercase"
-          style={{ fontFamily: 'var(--font-heading)', color: 'rgba(244,244,245,0.15)' }}
+          style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.15)' }}
         >
           Signals updated weekly by Seven AI · Last update: March 2026
         </motion.p>

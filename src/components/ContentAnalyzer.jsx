@@ -4,7 +4,7 @@ import { llmFetch } from '../lib/llmFetch'
 import { saveSession, loadSession } from '../lib/sessionStore'
 
 // Color theme for the analyzer tab
-const COLOR = '#fb923c'
+const COLOR = '#D4A04A'
 const COLOR_RGB = '251,146,60'
 
 // Platform icons (text-based, no extra deps)
@@ -176,7 +176,7 @@ Return ONLY valid JSON, no markdown, no explanation:
             <div
               className="rounded-2xl border p-8"
               style={{
-                background: 'rgba(17,17,22,0.9)',
+                background: 'rgba(22,19,15,0.9)',
                 borderColor: `rgba(${COLOR_RGB},0.15)`,
                 backdropFilter: 'blur(12px)',
               }}
@@ -199,9 +199,9 @@ Return ONLY valid JSON, no markdown, no explanation:
                   className="w-full rounded-xl px-4 py-3.5 text-sm outline-none transition-all duration-200"
                   style={{
                     fontFamily: 'var(--font-body)',
-                    background: 'rgba(244,244,245,0.04)',
+                    background: 'rgba(253,248,240,0.04)',
                     border: `1px solid rgba(${COLOR_RGB},0.15)`,
-                    color: '#f4f4f5',
+                    color: '#FDF8F0',
                     caretColor: COLOR,
                   }}
                 />
@@ -211,13 +211,13 @@ Return ONLY valid JSON, no markdown, no explanation:
               <div className="flex items-center gap-3 mb-6">
                 {[
                   { icon: '▶', label: 'YouTube', color: '#ef4444' },
-                  { icon: '✕', label: 'X / Twitter', color: '#f4f4f5' },
-                  { icon: '◈', label: 'Instagram*', color: '#ec4899' },
+                  { icon: '✕', label: 'X / Twitter', color: '#FDF8F0' },
+                  { icon: '◈', label: 'Instagram*', color: '#D4A04A' },
                 ].map(({ icon, label, color }) => (
                   <span
                     key={label}
                     className="inline-flex items-center gap-1.5 text-[10px]"
-                    style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.3)' }}
+                    style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.3)' }}
                   >
                     <span style={{ color }}>{icon}</span>
                     {label}
@@ -255,10 +255,10 @@ Return ONLY valid JSON, no markdown, no explanation:
                   fontFamily: 'var(--font-heading)',
                   background:
                     url.trim() && !fetching
-                      ? `linear-gradient(135deg, ${COLOR}, #ec4899)`
-                      : 'rgba(244,244,245,0.04)',
-                  border: `1px solid ${url.trim() && !fetching ? 'transparent' : 'rgba(244,244,245,0.06)'}`,
-                  color: url.trim() && !fetching ? '#fff' : 'rgba(244,244,245,0.2)',
+                      ? `linear-gradient(135deg, ${COLOR}, #D4A04A)`
+                      : 'rgba(253,248,240,0.04)',
+                  border: `1px solid ${url.trim() && !fetching ? 'transparent' : 'rgba(253,248,240,0.06)'}`,
+                  color: url.trim() && !fetching ? '#0D0B09' : 'rgba(253,248,240,0.2)',
                   cursor: url.trim() && !fetching ? 'pointer' : 'not-allowed',
                   boxShadow: url.trim() && !fetching ? `0 0 30px rgba(${COLOR_RGB},0.25)` : 'none',
                 }}
@@ -280,7 +280,7 @@ Return ONLY valid JSON, no markdown, no explanation:
 
               <p
                 className="text-center text-[10px] mt-4"
-                style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.15)' }}
+                style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.15)' }}
               >
                 *Instagram requires manual caption paste after fetch
               </p>
@@ -302,7 +302,7 @@ Return ONLY valid JSON, no markdown, no explanation:
             <div
               className="rounded-2xl border p-6"
               style={{
-                background: 'rgba(17,17,22,0.9)',
+                background: 'rgba(22,19,15,0.9)',
                 borderColor: `rgba(${COLOR_RGB},0.15)`,
                 backdropFilter: 'blur(12px)',
               }}
@@ -323,7 +323,7 @@ Return ONLY valid JSON, no markdown, no explanation:
                 <button
                   onClick={reset}
                   className="text-[10px] tracking-[0.2em] uppercase transition-colors duration-200"
-                  style={{ fontFamily: 'var(--font-heading)', color: 'rgba(244,244,245,0.25)' }}
+                  style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.25)' }}
                 >
                   ← New URL
                 </button>
@@ -341,13 +341,13 @@ Return ONLY valid JSON, no markdown, no explanation:
                   />
                   <p
                     className="font-semibold mb-1 leading-snug"
-                    style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', color: '#f4f4f5' }}
+                    style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', color: '#FDF8F0' }}
                   >
                     {contentData.title}
                   </p>
                   <p
                     className="text-xs"
-                    style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.4)' }}
+                    style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.4)' }}
                   >
                     {contentData.author}
                   </p>
@@ -363,19 +363,19 @@ Return ONLY valid JSON, no markdown, no explanation:
                         src={contentData.avatar}
                         alt={contentData.author}
                         className="w-10 h-10 rounded-full"
-                        style={{ border: '1px solid rgba(244,244,245,0.1)' }}
+                        style={{ border: '1px solid rgba(253,248,240,0.1)' }}
                       />
                     )}
                     <div>
                       <p
                         className="font-semibold text-sm"
-                        style={{ fontFamily: 'var(--font-heading)', color: '#f4f4f5' }}
+                        style={{ fontFamily: 'var(--font-heading)', color: '#FDF8F0' }}
                       >
                         {contentData.author}
                       </p>
                       <p
                         className="text-xs"
-                        style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.35)' }}
+                        style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.35)' }}
                       >
                         @{contentData.handle}
                       </p>
@@ -383,7 +383,7 @@ Return ONLY valid JSON, no markdown, no explanation:
                   </div>
                   <p
                     className="text-sm leading-relaxed mb-4"
-                    style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.8)' }}
+                    style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.8)' }}
                   >
                     {contentData.text}
                   </p>
@@ -397,13 +397,13 @@ Return ONLY valid JSON, no markdown, no explanation:
                       <div key={label} className="text-center">
                         <p
                           className="text-sm font-bold"
-                          style={{ fontFamily: 'var(--font-heading)', color: '#f4f4f5' }}
+                          style={{ fontFamily: 'var(--font-heading)', color: '#FDF8F0' }}
                         >
                           {val?.toLocaleString() || '—'}
                         </p>
                         <p
                           className="text-[9px] uppercase tracking-widest"
-                          style={{ fontFamily: 'var(--font-heading)', color: 'rgba(244,244,245,0.25)' }}
+                          style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.25)' }}
                         >
                           {label}
                         </p>
@@ -418,7 +418,7 @@ Return ONLY valid JSON, no markdown, no explanation:
                 <div>
                   <p
                     className="text-sm mb-4 leading-relaxed"
-                    style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.5)' }}
+                    style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.5)' }}
                   >
                     {contentData.message}
                   </p>
@@ -430,9 +430,9 @@ Return ONLY valid JSON, no markdown, no explanation:
                     className="w-full rounded-xl px-4 py-3 text-sm outline-none resize-none transition-all duration-200"
                     style={{
                       fontFamily: 'var(--font-body)',
-                      background: 'rgba(244,244,245,0.04)',
+                      background: 'rgba(253,248,240,0.04)',
                       border: `1px solid rgba(${COLOR_RGB},0.15)`,
-                      color: '#f4f4f5',
+                      color: '#FDF8F0',
                       caretColor: COLOR,
                     }}
                   />
@@ -450,10 +450,10 @@ Return ONLY valid JSON, no markdown, no explanation:
                 fontFamily: 'var(--font-heading)',
                 background:
                   !analyzing && (contentData.platform !== 'instagram' || manualText.trim())
-                    ? `linear-gradient(135deg, ${COLOR}, #ec4899)`
-                    : 'rgba(244,244,245,0.04)',
-                border: `1px solid ${!analyzing ? 'transparent' : 'rgba(244,244,245,0.06)'}`,
-                color: !analyzing ? '#fff' : 'rgba(244,244,245,0.2)',
+                    ? `linear-gradient(135deg, ${COLOR}, #D4A04A)`
+                    : 'rgba(253,248,240,0.04)',
+                border: `1px solid ${!analyzing ? 'transparent' : 'rgba(253,248,240,0.06)'}`,
+                color: !analyzing ? '#0D0B09' : 'rgba(253,248,240,0.2)',
                 cursor: !analyzing ? 'pointer' : 'not-allowed',
                 boxShadow: !analyzing ? `0 0 30px rgba(${COLOR_RGB},0.25)` : 'none',
               }}
@@ -510,7 +510,7 @@ Return ONLY valid JSON, no markdown, no explanation:
               <button
                 onClick={reset}
                 className="text-[10px] tracking-[0.2em] uppercase transition-colors duration-200"
-                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(244,244,245,0.25)' }}
+                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.25)' }}
               >
                 ← Analyze another
               </button>
@@ -546,13 +546,13 @@ Return ONLY valid JSON, no markdown, no explanation:
                 <div className="flex-1">
                   <p
                     className="font-semibold leading-snug mb-1"
-                    style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', color: '#f4f4f5' }}
+                    style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', color: '#FDF8F0' }}
                   >
                     {analysis.verdict}
                   </p>
                   <p
                     className="text-xs leading-relaxed"
-                    style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.4)' }}
+                    style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.4)' }}
                   >
                     {analysis.scoreReason}
                   </p>
@@ -578,7 +578,7 @@ Return ONLY valid JSON, no markdown, no explanation:
                       <span style={{ color: '#22c55e', fontSize: '0.6rem', marginTop: '0.25rem' }}>●</span>
                       <span
                         className="text-xs leading-relaxed"
-                        style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.55)' }}
+                        style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.55)' }}
                       >
                         {s}
                       </span>
@@ -603,7 +603,7 @@ Return ONLY valid JSON, no markdown, no explanation:
                       <span style={{ color: '#ef4444', fontSize: '0.6rem', marginTop: '0.25rem' }}>●</span>
                       <span
                         className="text-xs leading-relaxed"
-                        style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.55)' }}
+                        style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.55)' }}
                       >
                         {w}
                       </span>
@@ -629,7 +629,7 @@ Return ONLY valid JSON, no markdown, no explanation:
               </p>
               <p
                 className="text-sm leading-relaxed"
-                style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.6)' }}
+                style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.6)' }}
               >
                 {analysis.viralTrigger}
               </p>
@@ -641,15 +641,15 @@ Return ONLY valid JSON, no markdown, no explanation:
                 onClick={() => handleCopy(analysis.hook, 'hook')}
                 className="rounded-xl border p-5 cursor-pointer transition-all duration-200"
                 style={{
-                  background: copied === 'hook' ? 'rgba(124,58,237,0.08)' : 'rgba(124,58,237,0.04)',
-                  borderColor: copied === 'hook' ? 'rgba(167,139,250,0.4)' : 'rgba(124,58,237,0.15)',
+                  background: copied === 'hook' ? 'rgba(212,160,74,0.08)' : 'rgba(212,160,74,0.04)',
+                  borderColor: copied === 'hook' ? 'rgba(232,196,122,0.4)' : 'rgba(212,160,74,0.15)',
                 }}
                 whileTap={{ scale: 0.99 }}
               >
                 <div className="flex items-center justify-between mb-2">
                   <p
                     className="text-[9px] tracking-[0.25em] uppercase"
-                    style={{ fontFamily: 'var(--font-heading)', color: 'rgba(167,139,250,0.6)' }}
+                    style={{ fontFamily: 'var(--font-heading)', color: 'rgba(232,196,122,0.6)' }}
                   >
                     Strongest Hook for a Remake
                   </p>
@@ -657,7 +657,7 @@ Return ONLY valid JSON, no markdown, no explanation:
                     className="text-[9px] tracking-[0.2em] uppercase transition-colors duration-200"
                     style={{
                       fontFamily: 'var(--font-heading)',
-                      color: copied === 'hook' ? '#a78bfa' : 'rgba(244,244,245,0.2)',
+                      color: copied === 'hook' ? '#E8C47A' : 'rgba(253,248,240,0.2)',
                     }}
                   >
                     {copied === 'hook' ? 'Copied!' : 'Tap to copy'}
@@ -665,7 +665,7 @@ Return ONLY valid JSON, no markdown, no explanation:
                 </div>
                 <p
                   className="text-sm leading-relaxed font-medium"
-                  style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.8)' }}
+                  style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.8)' }}
                 >
                   "{analysis.hook}"
                 </p>
@@ -677,7 +677,7 @@ Return ONLY valid JSON, no markdown, no explanation:
               <div>
                 <p
                   className="text-[9px] tracking-[0.25em] uppercase mb-3"
-                  style={{ fontFamily: 'var(--font-heading)', color: 'rgba(244,244,245,0.25)' }}
+                  style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.25)' }}
                 >
                   Remake Angles
                 </p>
@@ -687,8 +687,8 @@ Return ONLY valid JSON, no markdown, no explanation:
                       key={idx}
                       className="rounded-xl border p-4"
                       style={{
-                        background: 'rgba(17,17,22,0.8)',
-                        borderColor: 'rgba(244,244,245,0.07)',
+                        background: 'rgba(22,19,15,0.8)',
+                        borderColor: 'rgba(253,248,240,0.07)',
                       }}
                     >
                       <p
@@ -699,7 +699,7 @@ Return ONLY valid JSON, no markdown, no explanation:
                       </p>
                       <p
                         className="text-xs leading-relaxed"
-                        style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.45)' }}
+                        style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.45)' }}
                       >
                         {angle.description}
                       </p>
@@ -714,7 +714,7 @@ Return ONLY valid JSON, no markdown, no explanation:
               <div className="flex items-center gap-3 flex-wrap">
                 <p
                   className="text-[9px] tracking-[0.2em] uppercase"
-                  style={{ fontFamily: 'var(--font-heading)', color: 'rgba(244,244,245,0.25)' }}
+                  style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.25)' }}
                 >
                   Best on:
                 </p>

@@ -22,7 +22,7 @@ function FloatingOrb({ mouse }) {
   return (
     <Sphere ref={meshRef} args={[1.2, 128, 128]} position={[0, 0, 0]}>
       <MeshDistortMaterial
-        color="#7c3aed"
+        color="#D4A04A"
         attach="material"
         distort={0.45}
         speed={2.5}
@@ -51,7 +51,7 @@ function InnerGlow({ mouse }) {
   return (
     <Sphere ref={meshRef} args={[0.75, 64, 64]} position={[0, 0, 0.3]}>
       <MeshDistortMaterial
-        color="#06b6d4"
+        color="#8a6a28"
         attach="material"
         distort={0.6}
         speed={3}
@@ -91,7 +91,7 @@ function ParticleRing() {
     <Points ref={pointsRef} positions={positions} stride={3} frustumCulled={false}>
       <PointMaterial
         transparent
-        color="#a78bfa"
+        color="#E8C47A"
         size={0.015}
         sizeAttenuation
         depthWrite={false}
@@ -104,10 +104,10 @@ function ParticleRing() {
 function Scene({ mouse }) {
   return (
     <>
-      <ambientLight intensity={0.3} />
-      <pointLight position={[5, 5, 5]} intensity={1.5} color="#7c3aed" />
-      <pointLight position={[-5, -3, -3]} intensity={0.8} color="#06b6d4" />
-      <pointLight position={[0, 0, 4]} intensity={0.5} color="#f9a8d4" />
+      <ambientLight intensity={0.35} />
+      <pointLight position={[5, 5, 5]} intensity={1.5} color="#D4A04A" />
+      <pointLight position={[-5, -3, -3]} intensity={0.8} color="#8a6a28" />
+      <pointLight position={[0, 0, 4]} intensity={0.5} color="#E8C47A" />
       <FloatingOrb mouse={mouse} />
       <InnerGlow mouse={mouse} />
       <ParticleRing />

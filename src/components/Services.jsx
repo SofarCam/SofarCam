@@ -10,8 +10,8 @@ const services = [
     price: '$500–1,500',
     recurring: '+ $150–300/mo',
     timeline: '1–2 weeks',
-    color: '#a78bfa',
-    colorRgb: '124,58,237',
+    color: '#E8C47A',
+    colorRgb: '212,160,74',
     description:
       'We build and deploy custom AI agents for your business. Sales follow-up? Customer support? Content brainstorming? We configure systems that handle repetitive work while you focus on growth.',
     includes: [
@@ -29,8 +29,8 @@ const services = [
     price: '$500–2,000',
     recurring: 'One-time',
     timeline: '5 business days',
-    color: '#67e8f9',
-    colorRgb: '6,182,212',
+    color: '#E8C47A',
+    colorRgb: '212,160,74',
     description:
       "You've got 12 AI subscriptions and nothing to show for it. We audit your stack, identify what's actually moving your business forward, and build a 90-day implementation roadmap you can execute.",
     includes: [
@@ -48,8 +48,8 @@ const services = [
     price: '$1,500–5,000+',
     recurring: '90-day support',
     timeline: '2–4 weeks',
-    color: '#f9a8d4',
-    colorRgb: '236,72,153',
+    color: '#E8C47A',
+    colorRgb: '212,160,74',
     description:
       'Static sites are dead. We build AI-powered websites that generate content, integrate your tools automatically, and turn visitors into leads without extra work on your end.',
     includes: [
@@ -67,7 +67,7 @@ export default function ServicesSection() {
     <section id="services" className="relative py-24 px-6 overflow-hidden">
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse 60% 50% at 80% 50%, rgba(236,72,153,0.04) 0%, transparent 60%)' }}
+        style={{ background: 'radial-gradient(ellipse 60% 50% at 80% 50%, rgba(212,160,74,0.04) 0%, transparent 60%)' }}
       />
 
       <div className="max-w-4xl mx-auto relative z-10">
@@ -78,18 +78,18 @@ export default function ServicesSection() {
           transition={{ duration: 0.7 }}
           className="mb-16"
         >
-          <div className="inline-flex items-center gap-2 mb-5 px-3 py-1 rounded-full" style={{ background: 'rgba(236,72,153,0.08)', border: '1px solid rgba(249,168,212,0.2)' }}>
-            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#f9a8d4' }} />
-            <span className="text-[10px] tracking-[0.25em] uppercase" style={{ color: '#f9a8d4', fontFamily: 'var(--font-heading)' }}>Work With Us</span>
+          <div className="inline-flex items-center gap-2 mb-5 px-3 py-1 rounded-full" style={{ background: 'rgba(212,160,74,0.08)', border: '1px solid rgba(232,196,122,0.2)' }}>
+            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#E8C47A' }} />
+            <span className="text-[10px] tracking-[0.25em] uppercase" style={{ color: '#E8C47A', fontFamily: 'var(--font-heading)' }}>Work With Us</span>
           </div>
           <h2
             className="mb-4 heading-glow"
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.2rem, 6vw, 3.5rem)', fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.03em', color: '#f4f4f5' }}
+            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.2rem, 6vw, 3.5rem)', fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.03em', color: '#FDF8F0' }}
           >
             Here is What We{' '}
-            <span className="gradient-text-warm" style={{ filter: 'drop-shadow(0 0 24px rgba(236,72,153,0.4))' }}>Do For You</span>
+            <span className="gradient-text-warm" style={{ filter: 'drop-shadow(0 0 24px rgba(212,160,74,0.4))' }}>Do For You</span>
           </h2>
-          <p className="max-w-lg leading-relaxed" style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'rgba(244,244,245,0.35)' }}>
+          <p className="max-w-lg leading-relaxed" style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'rgba(253,248,240,0.35)' }}>
             SofarContent sits between ChatGPT (too generic) and hiring a marketing agency (too expensive).
             We build solutions that feel like expertise you can actually use.
           </p>
@@ -109,30 +109,30 @@ export default function ServicesSection() {
           transition={{ duration: 0.7 }}
           className="relative rounded-2xl p-10 text-center overflow-hidden"
           style={{
-            background: 'rgba(9,9,11,0.8)',
-            border: '1px solid rgba(124,58,237,0.25)',
-            boxShadow: '0 0 60px rgba(124,58,237,0.1), inset 0 1px 0 rgba(255,255,255,0.04)',
+            background: 'rgba(13,11,9,0.8)',
+            border: '1px solid rgba(212,160,74,0.25)',
+            boxShadow: '0 0 60px rgba(212,160,74,0.1), inset 0 1px 0 rgba(255,255,255,0.04)',
           }}
         >
-          <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent 0%, #7c3aed 30%, #06b6d4 70%, transparent 100%)', opacity: 0.6 }} />
-          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,58,237,0.08) 0%, transparent 60%)' }} />
+          <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent 0%, #D4A04A 30%, #B8862E 70%, transparent 100%)', opacity: 0.6 }} />
+          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(212,160,74,0.08) 0%, transparent 60%)' }} />
 
-          <p className="text-[10px] tracking-[0.3em] uppercase mb-4 relative z-10" style={{ fontFamily: 'var(--font-heading)', color: 'rgba(167,139,250,0.5)' }}>
+          <p className="text-[10px] tracking-[0.3em] uppercase mb-4 relative z-10" style={{ fontFamily: 'var(--font-heading)', color: 'rgba(232,196,122,0.5)' }}>
             Not sure what you need?
           </p>
-          <h3 className="mb-3 relative z-10 heading-glow" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.4rem, 4vw, 2rem)', fontWeight: 700, letterSpacing: '-0.02em', color: '#f4f4f5' }}>
+          <h3 className="mb-3 relative z-10 heading-glow" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.4rem, 4vw, 2rem)', fontWeight: 700, letterSpacing: '-0.02em', color: '#FDF8F0' }}>
             Let's figure it out together.
           </h3>
-          <p className="mb-8 max-w-sm mx-auto text-sm leading-relaxed relative z-10" style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.35)' }}>
+          <p className="mb-8 max-w-sm mx-auto text-sm leading-relaxed relative z-10" style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.35)' }}>
             Book a free 15-minute discovery call. We'll tell you exactly what you need —
             and if we're not the right fit, we'll say that too.
           </p>
           <a
             href="mailto:shotbyseven@gmail.com?subject=SofarContent%20Discovery%20Call"
             className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-sm font-bold tracking-wide uppercase transition-all duration-300 relative z-10"
-            style={{ fontFamily: 'var(--font-heading)', background: 'linear-gradient(135deg, #7c3aed, #06b6d4)', color: '#fff', boxShadow: '0 0 40px rgba(124,58,237,0.5), 0 0 80px rgba(124,58,237,0.2)' }}
-            onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 0 60px rgba(124,58,237,0.7), 0 0 120px rgba(124,58,237,0.3)'; e.currentTarget.style.transform = 'translateY(-2px)' }}
-            onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 0 40px rgba(124,58,237,0.5), 0 0 80px rgba(124,58,237,0.2)'; e.currentTarget.style.transform = 'translateY(0)' }}
+            style={{ fontFamily: 'var(--font-heading)', background: 'linear-gradient(135deg, #D4A04A, #B8862E)', color: '#0D0B09', boxShadow: '0 0 40px rgba(212,160,74,0.5), 0 0 80px rgba(212,160,74,0.2)' }}
+            onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 0 60px rgba(212,160,74,0.7), 0 0 120px rgba(212,160,74,0.3)'; e.currentTarget.style.transform = 'translateY(-2px)' }}
+            onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 0 40px rgba(212,160,74,0.5), 0 0 80px rgba(212,160,74,0.2)'; e.currentTarget.style.transform = 'translateY(0)' }}
           >
             Book a Discovery Call
             <HiArrowUpRight size={14} />
@@ -179,24 +179,24 @@ function ServiceCard({ s, idx }) {
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <div>
           <p className="text-[9px] tracking-[0.3em] uppercase mb-2" style={{ fontFamily: 'var(--font-heading)', color: `${s.color}80` }}>{s.name}</p>
-          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.01em', color: '#f4f4f5', textShadow: `0 0 40px rgba(${s.colorRgb},0.2)` }}>
+          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.01em', color: '#FDF8F0', textShadow: `0 0 40px rgba(${s.colorRgb},0.2)` }}>
             {s.headline}
           </h3>
         </div>
         <div className="text-right shrink-0">
           <p className="font-bold" style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', color: s.color, textShadow: `0 0 12px ${s.color}60` }}>{s.price}</p>
-          <p className="text-xs mt-0.5" style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.3)' }}>{s.recurring}</p>
-          <p className="text-xs mt-0.5" style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.2)' }}>{s.timeline}</p>
+          <p className="text-xs mt-0.5" style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.3)' }}>{s.recurring}</p>
+          <p className="text-xs mt-0.5" style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.2)' }}>{s.timeline}</p>
         </div>
       </div>
 
-      <p className="mb-6 leading-relaxed" style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'rgba(244,244,245,0.45)' }}>{s.description}</p>
+      <p className="mb-6 leading-relaxed" style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'rgba(253,248,240,0.45)' }}>{s.description}</p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         {s.includes.map((item) => (
           <div key={item} className="flex items-center gap-2">
             <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: s.color, opacity: 0.6, boxShadow: `0 0 6px ${s.color}` }} />
-            <span className="text-xs" style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.35)' }}>{item}</span>
+            <span className="text-xs" style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.35)' }}>{item}</span>
           </div>
         ))}
       </div>

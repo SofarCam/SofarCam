@@ -16,13 +16,13 @@ export default function Footer() {
       {/* Top gradient separator */}
       <div
         className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(124,58,237,0.4) 30%, rgba(6,182,212,0.4) 70%, transparent 100%)' }}
+        style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(212,160,74,0.4) 30%, rgba(184,134,46,0.4) 70%, transparent 100%)' }}
       />
 
       {/* Ambient glow */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse 60% 40% at 50% 100%, rgba(124,58,237,0.06) 0%, transparent 60%)' }}
+        style={{ background: 'radial-gradient(ellipse 60% 40% at 50% 100%, rgba(212,160,74,0.06) 0%, transparent 60%)' }}
       />
 
       <div className="max-w-4xl mx-auto relative z-10">
@@ -34,7 +34,7 @@ export default function Footer() {
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           className="text-center mb-16"
         >
-          <p className="text-[10px] tracking-[0.35em] uppercase mb-6" style={{ fontFamily: 'var(--font-heading)', color: 'rgba(167,139,250,0.4)' }}>
+          <p className="text-[10px] tracking-[0.35em] uppercase mb-6" style={{ fontFamily: 'var(--font-heading)', color: 'rgba(232,196,122,0.4)' }}>
             Ready to grow?
           </p>
           <h2
@@ -45,8 +45,8 @@ export default function Footer() {
               fontWeight: 800,
               lineHeight: 0.95,
               letterSpacing: '-0.04em',
-              color: '#f4f4f5',
-              textShadow: '0 0 80px rgba(124,58,237,0.25)',
+              color: '#FDF8F0',
+              textShadow: '0 0 80px rgba(212,160,74,0.25)',
             }}
           >
             Stop scrolling.
@@ -59,12 +59,12 @@ export default function Footer() {
               className="px-8 py-4 rounded-xl text-sm font-bold tracking-wide uppercase transition-all duration-300"
               style={{
                 fontFamily: 'var(--font-heading)',
-                background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
-                color: '#fff',
-                boxShadow: '0 0 40px rgba(124,58,237,0.5)',
+                background: 'linear-gradient(135deg, #D4A04A, #B8862E)',
+                color: '#0D0B09',
+                boxShadow: '0 0 40px rgba(212,160,74,0.5)',
               }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 0 60px rgba(124,58,237,0.7)' }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 0 40px rgba(124,58,237,0.5)' }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 0 60px rgba(212,160,74,0.7)' }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 0 40px rgba(212,160,74,0.5)' }}
             >
               Try Free Tools →
             </a>
@@ -73,12 +73,12 @@ export default function Footer() {
               className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-sm font-medium tracking-wide uppercase transition-all duration-300"
               style={{
                 fontFamily: 'var(--font-heading)',
-                background: 'rgba(244,244,245,0.04)',
-                border: '1px solid rgba(244,244,245,0.1)',
-                color: 'rgba(244,244,245,0.5)',
+                background: 'rgba(253,248,240,0.04)',
+                border: '1px solid rgba(253,248,240,0.1)',
+                color: 'rgba(253,248,240,0.5)',
               }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(167,139,250,0.3)'; e.currentTarget.style.color = 'rgba(244,244,245,0.8)' }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(244,244,245,0.1)'; e.currentTarget.style.color = 'rgba(244,244,245,0.5)' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(232,196,122,0.3)'; e.currentTarget.style.color = 'rgba(253,248,240,0.8)' }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(253,248,240,0.1)'; e.currentTarget.style.color = 'rgba(253,248,240,0.5)' }}
             >
               Work With Us <HiArrowUpRight size={12} />
             </a>
@@ -86,7 +86,7 @@ export default function Footer() {
         </motion.div>
 
         {/* Divider */}
-        <div className="w-full h-px mb-12" style={{ background: 'linear-gradient(90deg, transparent, rgba(244,244,245,0.06), transparent)' }} />
+        <div className="w-full h-px mb-12" style={{ background: 'linear-gradient(90deg, transparent, rgba(253,248,240,0.06), transparent)' }} />
 
         {/* Bottom row */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-8">
@@ -98,7 +98,7 @@ export default function Footer() {
             >
               SofarContent
             </span>
-            <span className="text-[9px] tracking-[0.3em] uppercase" style={{ fontFamily: 'var(--font-heading)', color: 'rgba(244,244,245,0.18)' }}>
+            <span className="text-[9px] tracking-[0.3em] uppercase" style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.18)' }}>
               Charlotte, NC · {year}
             </span>
           </motion.div>
@@ -116,9 +116,9 @@ export default function Footer() {
                   whileHover={{ scale: 1.2, y: -2 }}
                   transition={{ duration: 0.15 }}
                   className="flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-300"
-                  style={{ background: 'rgba(244,244,245,0.04)', border: '1px solid rgba(244,244,245,0.07)', color: 'rgba(244,244,245,0.3)' }}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(124,58,237,0.12)'; e.currentTarget.style.borderColor = 'rgba(167,139,250,0.3)'; e.currentTarget.style.color = '#a78bfa'; e.currentTarget.style.boxShadow = '0 0 16px rgba(124,58,237,0.3)' }}
-                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(244,244,245,0.04)'; e.currentTarget.style.borderColor = 'rgba(244,244,245,0.07)'; e.currentTarget.style.color = 'rgba(244,244,245,0.3)'; e.currentTarget.style.boxShadow = 'none' }}
+                  style={{ background: 'rgba(253,248,240,0.04)', border: '1px solid rgba(253,248,240,0.07)', color: 'rgba(253,248,240,0.3)' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(212,160,74,0.12)'; e.currentTarget.style.borderColor = 'rgba(232,196,122,0.3)'; e.currentTarget.style.color = '#E8C47A'; e.currentTarget.style.boxShadow = '0 0 16px rgba(212,160,74,0.3)' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(253,248,240,0.04)'; e.currentTarget.style.borderColor = 'rgba(253,248,240,0.07)'; e.currentTarget.style.color = 'rgba(253,248,240,0.3)'; e.currentTarget.style.boxShadow = 'none' }}
                   aria-label={s.label}
                 >
                   <Icon size={15} />
@@ -128,9 +128,9 @@ export default function Footer() {
           </div>
 
           {/* Credit */}
-          <p className="text-[10px]" style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.12)' }}>
+          <p className="text-[10px]" style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.12)' }}>
             Built by{' '}
-            <a href="https://shotbyseven.com" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(167,139,250,0.35)' }}>
+            <a href="https://shotbyseven.com" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(232,196,122,0.35)' }}>
               Cam
             </a>{' '}
             &amp; SofarSeven

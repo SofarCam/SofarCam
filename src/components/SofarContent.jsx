@@ -12,11 +12,11 @@ const PLATFORMS = ['Instagram', 'TikTok', 'YouTube', 'YouTube Shorts', 'Pinteres
 const STYLES = ['Educational', 'Raw & Real', 'Aesthetic', 'Funny', 'Motivational', 'Behind the Scenes']
 
 const TABS = [
-  { id: 'concepts', label: 'Concept Generator', sub: '3 viral concepts in 30s', color: '#a78bfa', colorRgb: '124,58,237' },
-  { id: 'hooks', label: 'Hook Writer', sub: '10 scroll-stopping hooks', color: '#67e8f9', colorRgb: '6,182,212' },
-  { id: 'captions', label: 'Caption Writer', sub: '5 platform-ready captions', color: '#f9a8d4', colorRgb: '236,72,153' },
-  { id: 'linkedin', label: 'LinkedIn Writer', sub: '3 authority-building posts', color: '#60a5fa', colorRgb: '96,165,250' },
-  { id: 'analyzer', label: 'Content Analyzer', sub: 'Break down any post', color: '#fb923c', colorRgb: '251,146,60' },
+  { id: 'concepts', label: 'Concept Generator', sub: '3 viral concepts in 30s', color: '#E8C47A', colorRgb: '212,160,74' },
+  { id: 'hooks', label: 'Hook Writer', sub: '10 scroll-stopping hooks', color: '#E8C47A', colorRgb: '212,160,74' },
+  { id: 'captions', label: 'Caption Writer', sub: '5 platform-ready captions', color: '#E8C47A', colorRgb: '212,160,74' },
+  { id: 'linkedin', label: 'LinkedIn Writer', sub: '3 authority-building posts', color: '#D4A04A', colorRgb: '212,160,74' },
+  { id: 'analyzer', label: 'Content Analyzer', sub: 'Break down any post', color: '#D4A04A', colorRgb: '212,160,74' },
 ]
 
 export default function SofarContent() {
@@ -108,7 +108,7 @@ Return ONLY valid JSON, no markdown, no explanation:
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse 60% 50% at 50% 0%, rgba(124,58,237,0.08) 0%, transparent 60%)',
+          background: 'radial-gradient(ellipse 60% 50% at 50% 0%, rgba(212,160,74,0.08) 0%, transparent 60%)',
         }}
       />
 
@@ -121,8 +121,8 @@ Return ONLY valid JSON, no markdown, no explanation:
           transition={{ duration: 0.7 }}
           className="text-center mb-12"
         >
-          <div className="inline-flex items-center gap-2 mb-5 px-3 py-1 rounded-full" style={{ background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(167,139,250,0.2)' }}>
-            <span className="text-[10px] tracking-[0.25em] uppercase" style={{ color: '#a78bfa', fontFamily: 'var(--font-heading)' }}>
+          <div className="inline-flex items-center gap-2 mb-5 px-3 py-1 rounded-full" style={{ background: 'rgba(212,160,74,0.1)', border: '1px solid rgba(232,196,122,0.2)' }}>
+            <span className="text-[10px] tracking-[0.25em] uppercase" style={{ color: '#E8C47A', fontFamily: 'var(--font-heading)' }}>
               Free Tools
             </span>
           </div>
@@ -134,7 +134,7 @@ Return ONLY valid JSON, no markdown, no explanation:
               fontWeight: 800,
               lineHeight: 1.05,
               letterSpacing: '-0.03em',
-              color: '#f4f4f5',
+              color: '#FDF8F0',
             }}
           >
             Pick a tool.{' '}
@@ -142,7 +142,7 @@ Return ONLY valid JSON, no markdown, no explanation:
           </h2>
           <p
             className="max-w-md mx-auto leading-relaxed"
-            style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'rgba(244,244,245,0.4)' }}
+            style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'rgba(253,248,240,0.4)' }}
           >
             AI tools that tell you exactly what to post and how to hook your audience. Free, forever.
           </p>
@@ -248,8 +248,8 @@ Return ONLY valid JSON, no markdown, no explanation:
           transition={{ duration: 0.7, delay: 0.1 }}
           className="rounded-2xl border p-10 mb-10"
           style={{
-            background: 'rgba(17,17,22,0.9)',
-            borderColor: 'rgba(124,58,237,0.15)',
+            background: 'rgba(22,19,15,0.9)',
+            borderColor: 'rgba(212,160,74,0.15)',
             backdropFilter: 'blur(12px)',
           }}
         >
@@ -258,7 +258,7 @@ Return ONLY valid JSON, no markdown, no explanation:
             <div>
               <label
                 className="block text-xs tracking-[0.2em] uppercase mb-4"
-                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(167,139,250,0.7)' }}
+                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(232,196,122,0.7)' }}
               >
                 Your Niche
               </label>
@@ -272,13 +272,13 @@ Return ONLY valid JSON, no markdown, no explanation:
                       className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
                       style={{
                         fontFamily: 'var(--font-heading)',
-                        background: sel ? 'rgba(124,58,237,0.2)' : 'rgba(244,244,245,0.04)',
-                        border: `1px solid ${sel ? 'rgba(167,139,250,0.5)' : 'rgba(244,244,245,0.09)'}`,
-                        color: sel ? '#a78bfa' : 'rgba(244,244,245,0.5)',
-                        boxShadow: sel ? '0 0 14px rgba(124,58,237,0.2)' : 'none',
+                        background: sel ? 'rgba(212,160,74,0.2)' : 'rgba(253,248,240,0.04)',
+                        border: `1px solid ${sel ? 'rgba(232,196,122,0.5)' : 'rgba(253,248,240,0.09)'}`,
+                        color: sel ? '#E8C47A' : 'rgba(253,248,240,0.5)',
+                        boxShadow: sel ? '0 0 14px rgba(212,160,74,0.2)' : 'none',
                       }}
                     >
-                      {sel && <span style={{ color: '#a78bfa', fontSize: '0.7rem' }}>✓</span>}
+                      {sel && <span style={{ color: '#E8C47A', fontSize: '0.7rem' }}>✓</span>}
                       {n}
                     </button>
                   )
@@ -290,7 +290,7 @@ Return ONLY valid JSON, no markdown, no explanation:
             <div>
               <label
                 className="block text-xs tracking-[0.2em] uppercase mb-4"
-                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(167,139,250,0.7)' }}
+                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(232,196,122,0.7)' }}
               >
                 Platform
               </label>
@@ -304,13 +304,13 @@ Return ONLY valid JSON, no markdown, no explanation:
                       className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
                       style={{
                         fontFamily: 'var(--font-heading)',
-                        background: sel ? 'rgba(124,58,237,0.2)' : 'rgba(244,244,245,0.04)',
-                        border: `1px solid ${sel ? 'rgba(167,139,250,0.5)' : 'rgba(244,244,245,0.09)'}`,
-                        color: sel ? '#a78bfa' : 'rgba(244,244,245,0.5)',
-                        boxShadow: sel ? '0 0 14px rgba(124,58,237,0.2)' : 'none',
+                        background: sel ? 'rgba(212,160,74,0.2)' : 'rgba(253,248,240,0.04)',
+                        border: `1px solid ${sel ? 'rgba(232,196,122,0.5)' : 'rgba(253,248,240,0.09)'}`,
+                        color: sel ? '#E8C47A' : 'rgba(253,248,240,0.5)',
+                        boxShadow: sel ? '0 0 14px rgba(212,160,74,0.2)' : 'none',
                       }}
                     >
-                      {sel && <span style={{ color: '#a78bfa', fontSize: '0.7rem' }}>✓</span>}
+                      {sel && <span style={{ color: '#E8C47A', fontSize: '0.7rem' }}>✓</span>}
                       {p}
                     </button>
                   )
@@ -322,7 +322,7 @@ Return ONLY valid JSON, no markdown, no explanation:
             <div>
               <label
                 className="block text-xs tracking-[0.2em] uppercase mb-4"
-                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(167,139,250,0.7)' }}
+                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(232,196,122,0.7)' }}
               >
                 Your Style
               </label>
@@ -336,13 +336,13 @@ Return ONLY valid JSON, no markdown, no explanation:
                       className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
                       style={{
                         fontFamily: 'var(--font-heading)',
-                        background: sel ? 'rgba(124,58,237,0.2)' : 'rgba(244,244,245,0.04)',
-                        border: `1px solid ${sel ? 'rgba(167,139,250,0.5)' : 'rgba(244,244,245,0.09)'}`,
-                        color: sel ? '#a78bfa' : 'rgba(244,244,245,0.5)',
-                        boxShadow: sel ? '0 0 14px rgba(124,58,237,0.2)' : 'none',
+                        background: sel ? 'rgba(212,160,74,0.2)' : 'rgba(253,248,240,0.04)',
+                        border: `1px solid ${sel ? 'rgba(232,196,122,0.5)' : 'rgba(253,248,240,0.09)'}`,
+                        color: sel ? '#E8C47A' : 'rgba(253,248,240,0.5)',
+                        boxShadow: sel ? '0 0 14px rgba(212,160,74,0.2)' : 'none',
                       }}
                     >
-                      {sel && <span style={{ color: '#a78bfa', fontSize: '0.7rem' }}>✓</span>}
+                      {sel && <span style={{ color: '#E8C47A', fontSize: '0.7rem' }}>✓</span>}
                       {s}
                     </button>
                   )
@@ -359,12 +359,12 @@ Return ONLY valid JSON, no markdown, no explanation:
               style={{
                 fontFamily: 'var(--font-heading)',
                 background: ready && !loading
-                  ? 'linear-gradient(135deg, #7c3aed, #06b6d4)'
-                  : 'rgba(244,244,245,0.04)',
-                border: `1px solid ${ready && !loading ? 'transparent' : 'rgba(244,244,245,0.06)'}`,
-                color: ready && !loading ? '#fff' : 'rgba(244,244,245,0.2)',
+                  ? 'linear-gradient(135deg, #D4A04A, #B8862E)'
+                  : 'rgba(253,248,240,0.04)',
+                border: `1px solid ${ready && !loading ? 'transparent' : 'rgba(253,248,240,0.06)'}`,
+                color: ready && !loading ? '#0D0B09' : 'rgba(253,248,240,0.2)',
                 cursor: ready && !loading ? 'pointer' : 'not-allowed',
-                boxShadow: ready && !loading ? '0 0 30px rgba(124,58,237,0.3)' : 'none',
+                boxShadow: ready && !loading ? '0 0 30px rgba(212,160,74,0.3)' : 'none',
               }}
             >
               {loading ? (
@@ -373,7 +373,7 @@ Return ONLY valid JSON, no markdown, no explanation:
                     animate={{ rotate: 360 }}
                     transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
                     className="inline-block w-4 h-4 rounded-full"
-                    style={{ border: '2px solid rgba(167,139,250,0.3)', borderTopColor: '#a78bfa' }}
+                    style={{ border: '2px solid rgba(232,196,122,0.3)', borderTopColor: '#E8C47A' }}
                   />
                   Generating concepts...
                 </span>
@@ -410,7 +410,7 @@ Return ONLY valid JSON, no markdown, no explanation:
               <div className="flex items-center justify-center gap-3 mb-6">
                 <p
                   className="text-[10px] tracking-[0.3em] uppercase"
-                  style={{ fontFamily: 'var(--font-heading)', color: 'rgba(167,139,250,0.5)' }}
+                  style={{ fontFamily: 'var(--font-heading)', color: 'rgba(232,196,122,0.5)' }}
                 >
                   3 concepts · tap to copy
                 </p>
@@ -418,9 +418,9 @@ Return ONLY valid JSON, no markdown, no explanation:
                   <span
                     className="text-[9px] tracking-widest uppercase px-2 py-0.5 rounded-full"
                     style={{
-                      background: 'rgba(249,115,22,0.08)',
-                      color: 'rgba(249,115,22,0.6)',
-                      border: '1px solid rgba(249,115,22,0.15)',
+                      background: 'rgba(212,160,74,0.08)',
+                      color: 'rgba(212,160,74,0.6)',
+                      border: '1px solid rgba(212,160,74,0.15)',
                     }}
                   >
                     backup model
@@ -435,15 +435,15 @@ Return ONLY valid JSON, no markdown, no explanation:
                   transition={{ delay: idx * 0.1 }}
                   className="rounded-xl border p-6 transition-all duration-300"
                   style={{
-                    background: copied === idx ? 'rgba(124,58,237,0.08)' : 'rgba(17,17,22,0.8)',
-                    borderColor: copied === idx ? 'rgba(167,139,250,0.4)' : 'rgba(124,58,237,0.15)',
+                    background: copied === idx ? 'rgba(212,160,74,0.08)' : 'rgba(22,19,15,0.8)',
+                    borderColor: copied === idx ? 'rgba(232,196,122,0.4)' : 'rgba(212,160,74,0.15)',
                     backdropFilter: 'blur(8px)',
                   }}
                 >
                   <div className="flex items-start justify-between mb-4">
                     <span
                       className="text-[9px] tracking-[0.3em] uppercase"
-                      style={{ fontFamily: 'var(--font-heading)', color: 'rgba(167,139,250,0.6)' }}
+                      style={{ fontFamily: 'var(--font-heading)', color: 'rgba(232,196,122,0.6)' }}
                     >
                       Concept {idx + 1}
                     </span>
@@ -452,7 +452,7 @@ Return ONLY valid JSON, no markdown, no explanation:
                       className="text-[9px] tracking-[0.2em] uppercase transition-colors duration-200"
                       style={{
                         fontFamily: 'var(--font-heading)',
-                        color: copied === idx ? '#a78bfa' : 'rgba(244,244,245,0.2)',
+                        color: copied === idx ? '#E8C47A' : 'rgba(253,248,240,0.2)',
                       }}
                     >
                       {copied === idx ? 'Copied ✓' : 'Copy'}
@@ -463,13 +463,13 @@ Return ONLY valid JSON, no markdown, no explanation:
                     <div>
                       <span
                         className="text-[9px] tracking-[0.2em] uppercase block mb-1"
-                        style={{ fontFamily: 'var(--font-heading)', color: 'rgba(244,244,245,0.25)' }}
+                        style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.25)' }}
                       >
                         Hook
                       </span>
                       <p
                         className="leading-relaxed"
-                        style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'rgba(244,244,245,0.85)' }}
+                        style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'rgba(253,248,240,0.85)' }}
                       >
                         {concept.hook}
                       </p>
@@ -483,15 +483,15 @@ Return ONLY valid JSON, no markdown, no explanation:
                         <div
                           key={label}
                           className="rounded-lg p-3"
-                          style={{ background: 'rgba(124,58,237,0.06)', border: '1px solid rgba(124,58,237,0.1)' }}
+                          style={{ background: 'rgba(212,160,74,0.06)', border: '1px solid rgba(212,160,74,0.1)' }}
                         >
                           <span
                             className="text-[8px] tracking-[0.2em] uppercase block mb-1"
-                            style={{ fontFamily: 'var(--font-heading)', color: 'rgba(167,139,250,0.5)' }}
+                            style={{ fontFamily: 'var(--font-heading)', color: 'rgba(232,196,122,0.5)' }}
                           >
                             {label}
                           </span>
-                          <p className="text-xs leading-relaxed" style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.55)' }}>
+                          <p className="text-xs leading-relaxed" style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.55)' }}>
                             {value}
                           </p>
                         </div>
@@ -505,13 +505,13 @@ Return ONLY valid JSON, no markdown, no explanation:
                         className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold tracking-wide uppercase transition-all duration-200"
                         style={{
                           fontFamily: 'var(--font-heading)',
-                          background: 'linear-gradient(135deg, rgba(124,58,237,0.2), rgba(6,182,212,0.15))',
-                          border: '1px solid rgba(124,58,237,0.35)',
-                          color: '#a78bfa',
-                          boxShadow: '0 0 12px rgba(124,58,237,0.15)',
+                          background: 'linear-gradient(135deg, rgba(212,160,74,0.2), rgba(184,134,46,0.15))',
+                          border: '1px solid rgba(212,160,74,0.35)',
+                          color: '#E8C47A',
+                          boxShadow: '0 0 12px rgba(212,160,74,0.15)',
                         }}
-                        onMouseEnter={e => e.currentTarget.style.boxShadow = '0 0 20px rgba(124,58,237,0.3)'}
-                        onMouseLeave={e => e.currentTarget.style.boxShadow = '0 0 12px rgba(124,58,237,0.15)'}
+                        onMouseEnter={e => e.currentTarget.style.boxShadow = '0 0 20px rgba(212,160,74,0.3)'}
+                        onMouseLeave={e => e.currentTarget.style.boxShadow = '0 0 12px rgba(212,160,74,0.15)'}
                       >
                         <span>⚡</span>
                         Write Hooks for this →
@@ -525,12 +525,12 @@ Return ONLY valid JSON, no markdown, no explanation:
                         className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold tracking-wide uppercase transition-all duration-200"
                         style={{
                           fontFamily: 'var(--font-heading)',
-                          background: 'rgba(236,72,153,0.08)',
-                          border: '1px solid rgba(236,72,153,0.2)',
-                          color: 'rgba(249,168,212,0.7)',
+                          background: 'rgba(212,160,74,0.08)',
+                          border: '1px solid rgba(212,160,74,0.2)',
+                          color: 'rgba(232,196,122,0.7)',
                         }}
-                        onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(236,72,153,0.4)'}
-                        onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(236,72,153,0.2)'}
+                        onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(212,160,74,0.4)'}
+                        onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(212,160,74,0.2)'}
                       >
                         <span>✍️</span>
                         Write Caption →
@@ -551,7 +551,7 @@ Return ONLY valid JSON, no markdown, no explanation:
                     saveSession('concepts_form', null)
                   }}
                   className="text-[10px] tracking-[0.25em] uppercase transition-colors duration-200"
-                  style={{ fontFamily: 'var(--font-heading)', color: 'rgba(244,244,245,0.25)' }}
+                  style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.25)' }}
                 >
                   Start over
                 </button>
@@ -599,8 +599,8 @@ function TabCard({ tab, isActive, onClick }) {
       onMouseLeave={handleMouseLeave}
       className="py-4 px-4 rounded-2xl text-left tilt-card"
       style={{
-        background: isActive ? `rgba(${tab.colorRgb},0.12)` : 'rgba(244,244,245,0.03)',
-        border: `1px solid ${isActive ? tab.color + '40' : 'rgba(244,244,245,0.07)'}`,
+        background: isActive ? `rgba(${tab.colorRgb},0.12)` : 'rgba(253,248,240,0.03)',
+        border: `1px solid ${isActive ? tab.color + '40' : 'rgba(253,248,240,0.07)'}`,
         boxShadow: isActive ? `0 0 24px rgba(${tab.colorRgb},0.25), inset 0 1px 0 rgba(255,255,255,0.06)` : 'none',
       }}
     >
@@ -608,7 +608,7 @@ function TabCard({ tab, isActive, onClick }) {
         className="text-sm font-bold mb-1"
         style={{
           fontFamily: 'var(--font-heading)',
-          color: isActive ? tab.color : 'rgba(244,244,245,0.5)',
+          color: isActive ? tab.color : 'rgba(253,248,240,0.5)',
           textShadow: isActive ? `0 0 14px ${tab.color}80` : 'none',
           lineHeight: 1.3,
         }}
@@ -619,7 +619,7 @@ function TabCard({ tab, isActive, onClick }) {
         className="text-xs"
         style={{
           fontFamily: 'var(--font-body)',
-          color: isActive ? tab.color + '90' : 'rgba(244,244,245,0.25)',
+          color: isActive ? tab.color + '90' : 'rgba(253,248,240,0.25)',
           lineHeight: 1.4,
         }}
       >

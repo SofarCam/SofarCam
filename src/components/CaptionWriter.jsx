@@ -145,8 +145,8 @@ Return ONLY valid JSON, no markdown, no explanation:
         transition={{ duration: 0.5 }}
         className="rounded-2xl border p-8 mb-6"
         style={{
-          background: 'rgba(20,20,20,0.8)',
-          borderColor: 'rgba(240,235,226,0.07)',
+          background: 'rgba(22,19,15,0.8)',
+          borderColor: 'rgba(253,248,240,0.07)',
           backdropFilter: 'blur(12px)',
         }}
       >
@@ -158,23 +158,23 @@ Return ONLY valid JSON, no markdown, no explanation:
               animate={{ opacity: 1, y: 0 }}
               className="flex items-start gap-3 px-4 py-3 rounded-xl"
               style={{
-                background: 'linear-gradient(135deg, rgba(236,72,153,0.08), rgba(124,58,237,0.06))',
-                border: '1px solid rgba(236,72,153,0.2)',
+                background: 'linear-gradient(135deg, rgba(212,160,74,0.08), rgba(212,160,74,0.06))',
+                border: '1px solid rgba(212,160,74,0.2)',
               }}
             >
               <span className="text-base mt-0.5">✍️</span>
               <div>
-                <p className="text-[9px] tracking-[0.25em] uppercase mb-1" style={{ fontFamily: 'var(--font-heading)', color: 'rgba(249,168,212,0.7)' }}>
+                <p className="text-[9px] tracking-[0.25em] uppercase mb-1" style={{ fontFamily: 'var(--font-heading)', color: 'rgba(232,196,122,0.7)' }}>
                   Pre-filled from your concept
                 </p>
-                <p className="text-xs leading-relaxed" style={{ fontFamily: 'var(--font-body)', color: 'rgba(244,244,245,0.5)' }}>
+                <p className="text-xs leading-relaxed" style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.5)' }}>
                   {fromConcept.hook}
                 </p>
               </div>
               <button
                 onClick={() => { setFromConcept(null); setForm(f => ({ ...f, concept: '', platform: '' })) }}
                 className="ml-auto text-[9px] tracking-wider uppercase shrink-0"
-                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(244,244,245,0.2)' }}
+                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.2)' }}
               >
                 Clear
               </button>
@@ -197,13 +197,13 @@ Return ONLY valid JSON, no markdown, no explanation:
               className="w-full rounded-xl px-4 py-3 text-sm resize-none outline-none transition-all duration-200"
               style={{
                 fontFamily: 'var(--font-body)',
-                background: 'rgba(240,235,226,0.04)',
-                border: '1px solid rgba(240,235,226,0.08)',
-                color: 'rgba(240,235,226,0.8)',
+                background: 'rgba(253,248,240,0.04)',
+                border: '1px solid rgba(253,248,240,0.08)',
+                color: 'rgba(253,248,240,0.8)',
                 fontSize: '0.88rem',
               }}
-              onFocus={(e) => (e.target.style.borderColor = 'rgba(201,168,76,0.35)')}
-              onBlur={(e) => (e.target.style.borderColor = 'rgba(240,235,226,0.08)')}
+              onFocus={(e) => (e.target.style.borderColor = 'rgba(212,160,74,0.35)')}
+              onBlur={(e) => (e.target.style.borderColor = 'rgba(253,248,240,0.08)')}
             />
           </div>
 
@@ -224,9 +224,9 @@ Return ONLY valid JSON, no markdown, no explanation:
                     className="px-3 py-1.5 rounded-full text-xs transition-all duration-200"
                     style={{
                       fontFamily: 'var(--font-heading)',
-                      background: form.platform === p ? 'rgba(201,168,76,0.15)' : 'rgba(240,235,226,0.04)',
-                      border: `1px solid ${form.platform === p ? 'rgba(201,168,76,0.5)' : 'rgba(240,235,226,0.08)'}`,
-                      color: form.platform === p ? 'var(--color-gold)' : 'rgba(240,235,226,0.4)',
+                      background: form.platform === p ? 'rgba(212,160,74,0.15)' : 'rgba(253,248,240,0.04)',
+                      border: `1px solid ${form.platform === p ? 'rgba(212,160,74,0.5)' : 'rgba(253,248,240,0.08)'}`,
+                      color: form.platform === p ? 'var(--color-gold)' : 'rgba(253,248,240,0.4)',
                     }}
                   >
                     {p}
@@ -250,9 +250,9 @@ Return ONLY valid JSON, no markdown, no explanation:
                     className="px-3 py-1.5 rounded-full text-xs transition-all duration-200"
                     style={{
                       fontFamily: 'var(--font-heading)',
-                      background: form.tone === t ? 'rgba(201,168,76,0.15)' : 'rgba(240,235,226,0.04)',
-                      border: `1px solid ${form.tone === t ? 'rgba(201,168,76,0.5)' : 'rgba(240,235,226,0.08)'}`,
-                      color: form.tone === t ? 'var(--color-gold)' : 'rgba(240,235,226,0.4)',
+                      background: form.tone === t ? 'rgba(212,160,74,0.15)' : 'rgba(253,248,240,0.04)',
+                      border: `1px solid ${form.tone === t ? 'rgba(212,160,74,0.5)' : 'rgba(253,248,240,0.08)'}`,
+                      color: form.tone === t ? 'var(--color-gold)' : 'rgba(253,248,240,0.4)',
                     }}
                   >
                     {t}
@@ -268,15 +268,15 @@ Return ONLY valid JSON, no markdown, no explanation:
               onClick={() => setForm((f) => ({ ...f, includeCta: !f.includeCta }))}
               className="w-10 h-5 rounded-full transition-all duration-300 relative"
               style={{
-                background: form.includeCta ? 'rgba(201,168,76,0.4)' : 'rgba(240,235,226,0.08)',
-                border: `1px solid ${form.includeCta ? 'rgba(201,168,76,0.6)' : 'rgba(240,235,226,0.1)'}`,
+                background: form.includeCta ? 'rgba(212,160,74,0.4)' : 'rgba(253,248,240,0.08)',
+                border: `1px solid ${form.includeCta ? 'rgba(212,160,74,0.6)' : 'rgba(253,248,240,0.1)'}`,
               }}
             >
               <motion.div
                 animate={{ x: form.includeCta ? 20 : 2 }}
                 transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                 className="absolute top-0.5 w-3.5 h-3.5 rounded-full"
-                style={{ background: form.includeCta ? 'var(--color-gold)' : 'rgba(240,235,226,0.3)' }}
+                style={{ background: form.includeCta ? 'var(--color-gold)' : 'rgba(253,248,240,0.3)' }}
               />
             </button>
             <span
@@ -295,9 +295,9 @@ Return ONLY valid JSON, no markdown, no explanation:
             className="w-full py-4 rounded-xl text-sm font-medium tracking-widest uppercase transition-all duration-300"
             style={{
               fontFamily: 'var(--font-heading)',
-              background: ready && !loading ? 'rgba(201,168,76,0.12)' : 'rgba(240,235,226,0.03)',
-              border: `1px solid ${ready && !loading ? 'rgba(201,168,76,0.4)' : 'rgba(240,235,226,0.06)'}`,
-              color: ready && !loading ? 'var(--color-gold)' : 'rgba(240,235,226,0.2)',
+              background: ready && !loading ? 'rgba(212,160,74,0.12)' : 'rgba(253,248,240,0.03)',
+              border: `1px solid ${ready && !loading ? 'rgba(212,160,74,0.4)' : 'rgba(253,248,240,0.06)'}`,
+              color: ready && !loading ? 'var(--color-gold)' : 'rgba(253,248,240,0.2)',
               cursor: ready && !loading ? 'pointer' : 'not-allowed',
             }}
           >
@@ -307,7 +307,7 @@ Return ONLY valid JSON, no markdown, no explanation:
                   animate={{ rotate: 360 }}
                   transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
                   className="inline-block w-3.5 h-3.5 rounded-full"
-                  style={{ border: '1.5px solid rgba(201,168,76,0.3)', borderTopColor: 'var(--color-gold)' }}
+                  style={{ border: '1.5px solid rgba(212,160,74,0.3)', borderTopColor: 'var(--color-gold)' }}
                 />
                 Writing captions...
               </span>
@@ -346,9 +346,9 @@ Return ONLY valid JSON, no markdown, no explanation:
                 <span
                   className="text-[9px] tracking-widest uppercase px-2 py-0.5 rounded-full"
                   style={{
-                    background: 'rgba(255,165,0,0.08)',
-                    color: 'rgba(255,165,0,0.5)',
-                    border: '1px solid rgba(255,165,0,0.12)',
+                    background: 'rgba(212,160,74,0.08)',
+                    color: 'rgba(212,160,74,0.5)',
+                    border: '1px solid rgba(212,160,74,0.12)',
                   }}
                 >
                   Using backup model
@@ -364,8 +364,8 @@ Return ONLY valid JSON, no markdown, no explanation:
                 transition={{ delay: 0.2 }}
                 className="rounded-xl border p-4 mb-4"
                 style={{
-                  background: 'rgba(201,168,76,0.04)',
-                  borderColor: 'rgba(201,168,76,0.12)',
+                  background: 'rgba(212,160,74,0.04)',
+                  borderColor: 'rgba(212,160,74,0.12)',
                 }}
               >
                 <p
@@ -395,12 +395,12 @@ Return ONLY valid JSON, no markdown, no explanation:
                     transition={{ delay: idx * 0.07 }}
                     className="rounded-xl border p-5"
                     style={{
-                      background: isBest ? 'rgba(201,168,76,0.04)' : 'rgba(20,20,20,0.6)',
+                      background: isBest ? 'rgba(212,160,74,0.04)' : 'rgba(22,19,15,0.6)',
                       borderColor: copied === idx
-                        ? 'rgba(201,168,76,0.4)'
+                        ? 'rgba(212,160,74,0.4)'
                         : isBest
-                        ? 'rgba(201,168,76,0.18)'
-                        : 'rgba(240,235,226,0.06)',
+                        ? 'rgba(212,160,74,0.18)'
+                        : 'rgba(253,248,240,0.06)',
                     }}
                   >
                     {/* Header row */}
@@ -413,7 +413,7 @@ Return ONLY valid JSON, no markdown, no explanation:
                           className="text-[9px] tracking-[0.2em] uppercase"
                           style={{
                             fontFamily: 'var(--font-heading)',
-                            color: isBest ? 'rgba(201,168,76,0.8)' : 'rgba(240,235,226,0.3)',
+                            color: isBest ? 'rgba(212,160,74,0.8)' : 'rgba(253,248,240,0.3)',
                           }}
                         >
                           {caption.style}
@@ -423,9 +423,9 @@ Return ONLY valid JSON, no markdown, no explanation:
                             className="text-[8px] tracking-widest uppercase px-1.5 py-0.5 rounded-full"
                             style={{
                               fontFamily: 'var(--font-heading)',
-                              background: 'rgba(201,168,76,0.12)',
-                              color: 'rgba(201,168,76,0.7)',
-                              border: '1px solid rgba(201,168,76,0.2)',
+                              background: 'rgba(212,160,74,0.12)',
+                              color: 'rgba(212,160,74,0.7)',
+                              border: '1px solid rgba(212,160,74,0.2)',
                             }}
                           >
                             Best Pick
@@ -444,9 +444,9 @@ Return ONLY valid JSON, no markdown, no explanation:
                           className="text-[9px] tracking-[0.2em] uppercase transition-colors duration-200 px-2.5 py-1 rounded-lg"
                           style={{
                             fontFamily: 'var(--font-heading)',
-                            background: copied === idx ? 'rgba(201,168,76,0.12)' : 'rgba(240,235,226,0.04)',
-                            border: `1px solid ${copied === idx ? 'rgba(201,168,76,0.3)' : 'rgba(240,235,226,0.08)'}`,
-                            color: copied === idx ? 'var(--color-gold)' : 'rgba(240,235,226,0.3)',
+                            background: copied === idx ? 'rgba(212,160,74,0.12)' : 'rgba(253,248,240,0.04)',
+                            border: `1px solid ${copied === idx ? 'rgba(212,160,74,0.3)' : 'rgba(253,248,240,0.08)'}`,
+                            color: copied === idx ? 'var(--color-gold)' : 'rgba(253,248,240,0.3)',
                           }}
                         >
                           {copied === idx ? 'Copied!' : 'Copy'}
@@ -489,9 +489,9 @@ Return ONLY valid JSON, no markdown, no explanation:
                 className="px-5 py-2.5 rounded-xl text-xs tracking-widest uppercase transition-all duration-200"
                 style={{
                   fontFamily: 'var(--font-heading)',
-                  background: 'rgba(201,168,76,0.1)',
-                  border: '1px solid rgba(201,168,76,0.3)',
-                  color: copied === 'all' ? 'var(--color-gold)' : 'rgba(201,168,76,0.6)',
+                  background: 'rgba(212,160,74,0.1)',
+                  border: '1px solid rgba(212,160,74,0.3)',
+                  color: copied === 'all' ? 'var(--color-gold)' : 'rgba(212,160,74,0.6)',
                 }}
               >
                 {copied === 'all' ? 'Copied!' : 'Copy All 5'}

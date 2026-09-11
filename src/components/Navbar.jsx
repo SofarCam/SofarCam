@@ -29,11 +29,11 @@ export default function Navbar() {
       <div
         className="w-full max-w-3xl rounded-2xl px-5 py-3 flex items-center justify-between transition-all duration-500"
         style={{
-          background: scrolled ? 'rgba(9,9,11,0.85)' : 'rgba(9,9,11,0.4)',
+          background: scrolled ? 'rgba(13,11,9,0.85)' : 'rgba(13,11,9,0.4)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
-          border: scrolled ? '1px solid rgba(167,139,250,0.15)' : '1px solid rgba(167,139,250,0.06)',
-          boxShadow: scrolled ? '0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(124,58,237,0.05)' : 'none',
+          border: scrolled ? '1px solid rgba(232,196,122,0.15)' : '1px solid rgba(232,196,122,0.06)',
+          boxShadow: scrolled ? '0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(212,160,74,0.05)' : 'none',
         }}
       >
         {/* Logo */}
@@ -60,14 +60,14 @@ export default function Navbar() {
               className="px-4 py-1.5 rounded-lg text-xs font-medium tracking-wide uppercase transition-all duration-200 no-underline"
               style={{
                 fontFamily: 'var(--font-heading)',
-                color: 'rgba(244,244,245,0.45)',
+                color: 'rgba(253,248,240,0.45)',
               }}
               onMouseEnter={e => {
-                e.currentTarget.style.color = 'rgba(244,244,245,0.9)'
-                e.currentTarget.style.background = 'rgba(167,139,250,0.08)'
+                e.currentTarget.style.color = 'rgba(253,248,240,0.9)'
+                e.currentTarget.style.background = 'rgba(232,196,122,0.08)'
               }}
               onMouseLeave={e => {
-                e.currentTarget.style.color = 'rgba(244,244,245,0.45)'
+                e.currentTarget.style.color = 'rgba(253,248,240,0.45)'
                 e.currentTarget.style.background = 'transparent'
               }}
             >
@@ -79,9 +79,9 @@ export default function Navbar() {
             className="ml-2 px-4 py-1.5 rounded-lg text-xs font-bold tracking-wide uppercase no-underline transition-all duration-300"
             style={{
               fontFamily: 'var(--font-heading)',
-              background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
-              color: '#fff',
-              boxShadow: '0 0 16px rgba(124,58,237,0.35)',
+              background: 'linear-gradient(135deg, #D4A04A, #B8862E)',
+              color: '#0D0B09',
+              boxShadow: '0 0 16px rgba(212,160,74,0.35)',
             }}
           >
             Work With Us
@@ -102,7 +102,7 @@ export default function Navbar() {
                 : { rotate: 0, y: 0, opacity: 1 }
               }
               className="block w-5 h-px"
-              style={{ background: 'rgba(244,244,245,0.5)' }}
+              style={{ background: 'rgba(253,248,240,0.5)' }}
             />
           ))}
         </button>
@@ -118,9 +118,9 @@ export default function Navbar() {
             transition={{ duration: 0.2 }}
             className="absolute top-full mt-2 left-4 right-4 rounded-2xl p-4 flex flex-col gap-1"
             style={{
-              background: 'rgba(9,9,11,0.95)',
+              background: 'rgba(13,11,9,0.95)',
               backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(167,139,250,0.15)',
+              border: '1px solid rgba(232,196,122,0.15)',
               boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
             }}
           >
@@ -132,7 +132,7 @@ export default function Navbar() {
                 className="px-4 py-3 rounded-xl text-sm no-underline transition-colors duration-200"
                 style={{
                   fontFamily: 'var(--font-heading)',
-                  color: 'rgba(244,244,245,0.6)',
+                  color: 'rgba(253,248,240,0.6)',
                 }}
               >
                 {l.label}
@@ -144,8 +144,8 @@ export default function Navbar() {
               className="mt-1 px-4 py-3 rounded-xl text-sm font-bold text-center no-underline"
               style={{
                 fontFamily: 'var(--font-heading)',
-                background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
-                color: '#fff',
+                background: 'linear-gradient(135deg, #D4A04A, #B8862E)',
+                color: '#0D0B09',
               }}
             >
               Work With Us

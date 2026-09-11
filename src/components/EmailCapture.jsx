@@ -41,7 +41,7 @@ export default function EmailCapture() {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse 70% 60% at 50% 100%, rgba(124,58,237,0.07) 0%, transparent 65%)',
+          background: 'radial-gradient(ellipse 70% 60% at 50% 100%, rgba(212,160,74,0.07) 0%, transparent 65%)',
         }}
       />
 
@@ -50,7 +50,7 @@ export default function EmailCapture() {
         className="absolute top-0 left-1/2 -translate-x-1/2 w-px"
         style={{
           height: '80px',
-          background: 'linear-gradient(to bottom, transparent, rgba(124,58,237,0.3), transparent)',
+          background: 'linear-gradient(to bottom, transparent, rgba(212,160,74,0.3), transparent)',
         }}
       />
 
@@ -67,11 +67,11 @@ export default function EmailCapture() {
               {/* Badge */}
               <div
                 className="inline-flex items-center gap-2 mb-6 px-3 py-1 rounded-full"
-                style={{ background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(167,139,250,0.2)' }}
+                style={{ background: 'rgba(212,160,74,0.1)', border: '1px solid rgba(232,196,122,0.2)' }}
               >
                 <span
                   className="text-[10px] tracking-[0.25em] uppercase"
-                  style={{ color: '#a78bfa', fontFamily: 'var(--font-heading)' }}
+                  style={{ color: '#E8C47A', fontFamily: 'var(--font-heading)' }}
                 >
                   🚀 Early Access
                 </span>
@@ -86,13 +86,13 @@ export default function EmailCapture() {
                   fontWeight: 800,
                   lineHeight: 1.05,
                   letterSpacing: '-0.03em',
-                  color: '#f4f4f5',
+                  color: '#FDF8F0',
                 }}
               >
                 Get the tools before{' '}
                 <span
                   style={{
-                    background: 'linear-gradient(135deg, #a78bfa, #67e8f9)',
+                    background: 'linear-gradient(135deg, #E8C47A, #E8C47A)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                   }}
@@ -103,7 +103,7 @@ export default function EmailCapture() {
 
               <p
                 className="mb-8 max-w-sm mx-auto leading-relaxed"
-                style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'rgba(244,244,245,0.4)' }}
+                style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'rgba(253,248,240,0.4)' }}
               >
                 New tools drop weekly. Subscribers get them first — plus tips on what's actually working on each platform.
               </p>
@@ -118,13 +118,13 @@ export default function EmailCapture() {
                   <div key={label} className="text-center">
                     <p
                       className="text-lg font-bold"
-                      style={{ fontFamily: 'var(--font-heading)', color: '#a78bfa' }}
+                      style={{ fontFamily: 'var(--font-heading)', color: '#E8C47A' }}
                     >
                       {stat}
                     </p>
                     <p
                       className="text-[10px] tracking-[0.15em] uppercase"
-                      style={{ fontFamily: 'var(--font-heading)', color: 'rgba(244,244,245,0.25)' }}
+                      style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.25)' }}
                     >
                       {label}
                     </p>
@@ -143,13 +143,13 @@ export default function EmailCapture() {
                   className="flex-1 px-5 py-3.5 rounded-xl text-sm outline-none transition-all duration-200"
                   style={{
                     fontFamily: 'var(--font-body)',
-                    background: 'rgba(244,244,245,0.05)',
-                    border: `1px solid ${isValid ? 'rgba(167,139,250,0.35)' : 'rgba(244,244,245,0.08)'}`,
-                    color: 'rgba(244,244,245,0.85)',
+                    background: 'rgba(253,248,240,0.05)',
+                    border: `1px solid ${isValid ? 'rgba(232,196,122,0.35)' : 'rgba(253,248,240,0.08)'}`,
+                    color: 'rgba(253,248,240,0.85)',
                     fontSize: '0.9rem',
                   }}
-                  onFocus={e => (e.target.style.borderColor = 'rgba(167,139,250,0.4)')}
-                  onBlur={e => (e.target.style.borderColor = isValid ? 'rgba(167,139,250,0.35)' : 'rgba(244,244,245,0.08)')}
+                  onFocus={e => (e.target.style.borderColor = 'rgba(232,196,122,0.4)')}
+                  onBlur={e => (e.target.style.borderColor = isValid ? 'rgba(232,196,122,0.35)' : 'rgba(253,248,240,0.08)')}
                 />
 
                 <motion.button
@@ -160,12 +160,12 @@ export default function EmailCapture() {
                   style={{
                     fontFamily: 'var(--font-heading)',
                     background: isValid && !loading
-                      ? 'linear-gradient(135deg, #7c3aed, #06b6d4)'
-                      : 'rgba(244,244,245,0.04)',
-                    border: `1px solid ${isValid && !loading ? 'transparent' : 'rgba(244,244,245,0.06)'}`,
-                    color: isValid && !loading ? '#fff' : 'rgba(244,244,245,0.2)',
+                      ? 'linear-gradient(135deg, #D4A04A, #B8862E)'
+                      : 'rgba(253,248,240,0.04)',
+                    border: `1px solid ${isValid && !loading ? 'transparent' : 'rgba(253,248,240,0.06)'}`,
+                    color: isValid && !loading ? '#0D0B09' : 'rgba(253,248,240,0.2)',
                     cursor: isValid && !loading ? 'pointer' : 'not-allowed',
-                    boxShadow: isValid && !loading ? '0 0 24px rgba(124,58,237,0.35)' : 'none',
+                    boxShadow: isValid && !loading ? '0 0 24px rgba(212,160,74,0.35)' : 'none',
                   }}
                 >
                   {loading ? (
@@ -199,7 +199,7 @@ export default function EmailCapture() {
 
               <p
                 className="mt-4 text-[10px] tracking-[0.15em] uppercase"
-                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(244,244,245,0.2)' }}
+                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.2)' }}
               >
                 No spam. Unsubscribe anytime.
               </p>
@@ -226,23 +226,23 @@ export default function EmailCapture() {
                   fontFamily: 'var(--font-display)',
                   fontSize: 'clamp(1.6rem, 4vw, 2.4rem)',
                   fontWeight: 800,
-                  color: '#f4f4f5',
+                  color: '#FDF8F0',
                 }}
               >
                 You're in.
               </h3>
               <p
                 className="max-w-xs mx-auto leading-relaxed"
-                style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'rgba(244,244,245,0.4)' }}
+                style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'rgba(253,248,240,0.4)' }}
               >
                 Check your inbox for a confirmation. New tools and platform tips drop every week.
               </p>
 
               <div
                 className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full"
-                style={{ background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.2)' }}
+                style={{ background: 'rgba(212,160,74,0.08)', border: '1px solid rgba(212,160,74,0.2)' }}
               >
-                <span className="text-xs" style={{ fontFamily: 'var(--font-body)', color: 'rgba(167,139,250,0.7)' }}>
+                <span className="text-xs" style={{ fontFamily: 'var(--font-body)', color: 'rgba(232,196,122,0.7)' }}>
                   {email}
                 </span>
               </div>

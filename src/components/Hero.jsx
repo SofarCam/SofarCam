@@ -5,9 +5,9 @@ import { Suspense, lazy } from 'react'
 const HeroScene = lazy(() => import('./HeroScene'))
 
 const tools = [
-  { label: 'Concept Generator', color: '#a78bfa', desc: '3 viral ideas in 30s' },
-  { label: 'Hook Writer', color: '#67e8f9', desc: '10 scroll-stopping hooks' },
-  { label: 'Caption Writer', color: '#f9a8d4', desc: '5 ready-to-post captions' },
+  { label: 'Concept Generator', color: '#E8C47A', desc: '3 viral ideas in 30s' },
+  { label: 'Hook Writer', color: '#E8C47A', desc: '10 scroll-stopping hooks' },
+  { label: 'Caption Writer', color: '#E8C47A', desc: '5 ready-to-post captions' },
 ]
 
 export default function Hero() {
@@ -29,7 +29,7 @@ export default function Hero() {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(124,58,237,0.1) 0%, rgba(6,182,212,0.04) 50%, transparent 70%)',
+          background: 'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(212,160,74,0.1) 0%, rgba(184,134,46,0.04) 50%, transparent 70%)',
         }}
       />
 
@@ -54,7 +54,7 @@ export default function Hero() {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'linear-gradient(to right, rgba(9,9,11,0.85) 0%, rgba(9,9,11,0.5) 45%, transparent 70%)',
+          background: 'linear-gradient(to right, rgba(13,11,9,0.85) 0%, rgba(13,11,9,0.5) 45%, transparent 70%)',
         }}
       />
 
@@ -67,12 +67,12 @@ export default function Hero() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="inline-flex items-center gap-2 mb-8 px-4 py-1.5 rounded-full"
           style={{
-            background: 'rgba(124,58,237,0.1)',
-            border: '1px solid rgba(167,139,250,0.25)',
+            background: 'rgba(212,160,74,0.1)',
+            border: '1px solid rgba(232,196,122,0.25)',
           }}
         >
-          <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#a78bfa' }} />
-          <span className="text-[11px] tracking-[0.2em] uppercase" style={{ color: '#a78bfa', fontFamily: 'var(--font-heading)' }}>
+          <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#E8C47A' }} />
+          <span className="text-[11px] tracking-[0.2em] uppercase" style={{ color: '#E8C47A', fontFamily: 'var(--font-heading)' }}>
             Free Tools · Beta
           </span>
         </motion.div>
@@ -89,8 +89,8 @@ export default function Hero() {
             fontWeight: 800,
             lineHeight: 1.0,
             letterSpacing: '-0.03em',
-            color: '#f4f4f5',
-            textShadow: '0 0 80px rgba(124,58,237,0.25), 0 2px 40px rgba(0,0,0,0.5)',
+            color: '#FDF8F0',
+            textShadow: '0 0 80px rgba(212,160,74,0.25), 0 2px 40px rgba(0,0,0,0.5)',
           }}
         >
           Stop Guessing.
@@ -98,7 +98,7 @@ export default function Hero() {
           <span
             className="gradient-text"
             style={{
-              filter: 'drop-shadow(0 0 30px rgba(124,58,237,0.5))',
+              filter: 'drop-shadow(0 0 30px rgba(212,160,74,0.5))',
             }}
           >
             Start Going Viral.
@@ -114,7 +114,7 @@ export default function Hero() {
           style={{
             fontFamily: 'var(--font-body)',
             fontSize: 'clamp(1rem, 2.5vw, 1.2rem)',
-            color: 'rgba(244,244,245,0.55)',
+            color: 'rgba(253,248,240,0.55)',
           }}
         >
           Free AI tools that tell you exactly what to post, how to hook your audience,
@@ -145,9 +145,9 @@ export default function Hero() {
             className="px-8 py-4 rounded-xl text-sm font-bold tracking-wide uppercase transition-all duration-300"
             style={{
               fontFamily: 'var(--font-heading)',
-              background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
-              color: '#fff',
-              boxShadow: '0 0 40px rgba(124,58,237,0.5), 0 0 80px rgba(124,58,237,0.2)',
+              background: 'linear-gradient(135deg, #D4A04A, #B8862E)',
+              color: '#0D0B09',
+              boxShadow: '0 0 40px rgba(212,160,74,0.5), 0 0 80px rgba(212,160,74,0.2)',
             }}
           >
             Try Free Tools →
@@ -157,9 +157,9 @@ export default function Hero() {
             className="px-8 py-4 rounded-xl text-sm font-medium tracking-wide uppercase transition-all duration-300"
             style={{
               fontFamily: 'var(--font-heading)',
-              background: 'rgba(244,244,245,0.04)',
-              border: '1px solid rgba(244,244,245,0.1)',
-              color: 'rgba(244,244,245,0.5)',
+              background: 'rgba(253,248,240,0.04)',
+              border: '1px solid rgba(253,248,240,0.1)',
+              color: 'rgba(253,248,240,0.5)',
             }}
           >
             Work With Us
@@ -173,7 +173,7 @@ export default function Hero() {
           transition={{ delay: 1.2, duration: 0.8 }}
           className="flex items-center justify-center gap-2 flex-wrap mt-12"
         >
-          <span className="text-[9px] tracking-[0.3em] uppercase mr-1" style={{ color: 'rgba(244,244,245,0.2)', fontFamily: 'var(--font-heading)' }}>
+          <span className="text-[9px] tracking-[0.3em] uppercase mr-1" style={{ color: 'rgba(253,248,240,0.2)', fontFamily: 'var(--font-heading)' }}>
             Works on
           </span>
           {['Instagram', 'TikTok', 'YouTube', 'X', 'LinkedIn'].map((p) => (
@@ -182,9 +182,9 @@ export default function Hero() {
               className="text-[10px] px-2.5 py-1 rounded-full"
               style={{
                 fontFamily: 'var(--font-heading)',
-                color: 'rgba(244,244,245,0.3)',
-                border: '1px solid rgba(244,244,245,0.07)',
-                background: 'rgba(244,244,245,0.02)',
+                color: 'rgba(253,248,240,0.3)',
+                border: '1px solid rgba(253,248,240,0.07)',
+                background: 'rgba(253,248,240,0.02)',
               }}
             >
               {p}
@@ -204,7 +204,7 @@ export default function Hero() {
           animate={{ y: [0, 6, 0] }}
           transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
           className="w-px h-8"
-          style={{ background: 'linear-gradient(to bottom, rgba(124,58,237,0.5), transparent)' }}
+          style={{ background: 'linear-gradient(to bottom, rgba(212,160,74,0.5), transparent)' }}
         />
       </motion.div>
     </section>
@@ -233,7 +233,7 @@ function TiltCard({ tool, delay }) {
     }
   }
 
-  const colorRgb = tool.color === '#a78bfa' ? '124,58,237' : tool.color === '#67e8f9' ? '6,182,212' : '236,72,153'
+  const colorRgb = tool.color === '#E8C47A' ? '124,58,237' : tool.color === '#E8C47A' ? '6,182,212' : '236,72,153'
 
   return (
     <motion.a
@@ -259,7 +259,7 @@ function TiltCard({ tool, delay }) {
       >
         {tool.label}
       </span>
-      <span className="text-xs" style={{ color: 'rgba(244,244,245,0.4)', fontFamily: 'var(--font-body)' }}>
+      <span className="text-xs" style={{ color: 'rgba(253,248,240,0.4)', fontFamily: 'var(--font-body)' }}>
         {tool.desc}
       </span>
     </motion.a>
