@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  const { email } = req.body || {}
+  const { email, source } = req.body || {}
 
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return res.status(400).json({ error: 'Invalid email' })
@@ -55,8 +55,8 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         from: 'SofarContent <onboarding@resend.dev>',
         to: ['camcurrence@gmail.com'],
-        subject: `🎉 New SofarContent subscriber: ${email}`,
-        html: `<p>New waitlist signup on sofarcam.vercel.app</p><p><strong>${email}</strong></p><p><em>${new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })} ET</em></p>`,
+        subject: `🎉 New ${source || 'SofarContent'} subscriber: ${email}`,
+        html: `<p>New signup on sofarcam.vercel.app${source ? ` (${source})` : ''}</p><p><strong>${email}</strong></p><p><em>${new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })} ET</em></p>`,
       }),
     }).catch(() => {}) // non-blocking, don't fail the response
 

@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const links = [
-  { label: 'Tools', href: '#sofarcontent' },
-  { label: 'Trending', href: '#trending' },
-  { label: 'Toolkit', href: '#tools' },
-  { label: 'Services', href: '#services' },
+  { label: 'Tools', href: '/#sofarcontent' },
+  { label: 'Trending', href: '/#trending' },
+  { label: 'Toolkit', href: '/#tools' },
+  { label: 'Guides', href: '/guides' },
+  { label: 'Services', href: '/#services' },
 ]
 
 export default function Navbar() {
@@ -36,7 +37,7 @@ export default function Navbar() {
         }}
       >
         {/* Logo */}
-        <a href="#" className="no-underline">
+        <a href="/" className="no-underline">
           <span
             className="gradient-text-glow"
             style={{
