@@ -73,7 +73,7 @@ export default function EmailCapture() {
                   className="text-[10px] tracking-[0.25em] uppercase"
                   style={{ color: '#E8C47A', fontFamily: 'var(--font-heading)' }}
                 >
-                  🚀 Early Access
+                  Early Access
                 </span>
               </div>
 

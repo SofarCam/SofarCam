@@ -5,7 +5,7 @@ import { saveSession, loadSession } from '../lib/sessionStore'
 
 // Color theme for the analyzer tab
 const COLOR = '#D4A04A'
-const COLOR_RGB = '251,146,60'
+const COLOR_RGB = '212,160,74'
 
 // Platform icons (text-based, no extra deps)
 const PLATFORM_ICONS = {

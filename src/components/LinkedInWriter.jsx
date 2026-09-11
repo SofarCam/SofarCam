@@ -92,7 +92,7 @@ Return ONLY valid JSON, no markdown, no explanation:
   const RANK_MEDALS = ['🥇', '🥈', '🥉']
   // LinkedIn blue-ish accent color
   const accent = '#D4A04A'
-  const accentRgb = '96,165,250'
+  const accentRgb = '212,160,74'
 
   return (
     <div>
