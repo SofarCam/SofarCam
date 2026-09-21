@@ -4,6 +4,7 @@ import HookWriter from './HookWriter'
 import CaptionWriter from './CaptionWriter'
 import LinkedInWriter from './LinkedInWriter'
 import ContentAnalyzer from './ContentAnalyzer'
+import VideoGenerator from './VideoGenerator'
 import { llmFetch } from '../lib/llmFetch'
 import { saveSession, loadSession, setActiveConcept } from '../lib/sessionStore'
 
@@ -17,6 +18,7 @@ const TABS = [
   { id: 'captions', label: 'Caption Writer', sub: '5 platform-ready captions', color: '#E8C47A', colorRgb: '212,160,74' },
   { id: 'linkedin', label: 'LinkedIn Writer', sub: '3 authority-building posts', color: '#D4A04A', colorRgb: '212,160,74' },
   { id: 'analyzer', label: 'Content Analyzer', sub: 'Break down any post', color: '#D4A04A', colorRgb: '212,160,74' },
+  { id: 'video', label: 'Video Generator', sub: 'Text-to-video with AI', color: '#D4A04A', colorRgb: '212,160,74' },
 ]
 
 export default function SofarContent() {
@@ -195,6 +197,21 @@ Return ONLY valid JSON, no markdown, no explanation:
               transition={{ duration: 0.3 }}
             >
               <ContentAnalyzer />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Video Generator tab */}
+        <AnimatePresence mode="wait">
+          {activeTab === 'video' && (
+            <motion.div
+              key="video"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+            >
+              <VideoGenerator />
             </motion.div>
           )}
         </AnimatePresence>

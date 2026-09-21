@@ -60,6 +60,24 @@ Current placeholders:
 
 ---
 
+## Environment Variables
+
+Set these in Vercel → Project → Settings → Environment Variables:
+
+| Variable | Used by | Where to get it |
+|---|---|---|
+| `ANTHROPIC_API_KEY` | `/api/generate-content` | console.anthropic.com |
+| `VITE_OPENROUTER_API_KEY` | Concept/Hook/Caption/LinkedIn writers | openrouter.ai/keys |
+| `RESEND_API_KEY`, `RESEND_AUDIENCE_ID` | `/api/subscribe` | resend.com |
+| `HIGGSFIELD_API_KEY`, `HIGGSFIELD_SECRET` | Video Generator (Higgsfield) | platform.higgsfield.ai |
+| `FAL_KEY` | Video Generator (Seedance, via fal.ai) | fal.ai/dashboard/keys |
+
+Video generation is billed per clip by each provider (no meaningful free tier —
+fal.ai/Higgsfield give small one-time signup credits, then it's pay-per-second).
+Without these keys set, the Video Generator tool's form still renders but
+generation requests fail with a clear "not configured" error instead of a
+silent crash.
+
 ## Stack
 - React 19 + Vite 7 + Tailwind 4 + Framer Motion 12
 - Same stack as shotbyseven.com

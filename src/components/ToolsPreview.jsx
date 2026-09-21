@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { motion } from 'framer-motion'
-import { HiLightBulb, HiMegaphone, HiPencilSquare, HiUserCircle, HiCalendarDays } from 'react-icons/hi2'
+import { HiLightBulb, HiMegaphone, HiPencilSquare, HiUserCircle, HiCalendarDays, HiFilm } from 'react-icons/hi2'
 
 const TOOLS = [
   {
@@ -29,6 +29,16 @@ const TOOLS = [
     description: '5 platform-optimized captions from your concept — formatting, hashtags, and CTA included.',
     status: 'live',
     icon: HiPencilSquare,
+    color: '#E8C47A',
+    colorRgb: '212,160,74',
+    href: '#sofarcontent',
+  },
+  {
+    id: 'video-generator',
+    name: 'Video Generator',
+    description: 'Text-to-video powered by Higgsfield and Seedance — describe a shot, get a clip.',
+    status: 'live',
+    icon: HiFilm,
     color: '#E8C47A',
     colorRgb: '212,160,74',
     href: '#sofarcontent',
