@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useId, useState } from 'react'
 
 export default function EmailCapture() {
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const inputId = useId()
 
   const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 
@@ -14,241 +14,61 @@ export default function EmailCapture() {
     if (!isValid || loading) return
     setLoading(true)
     setError(null)
-
     try {
       const res = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, source: 'Homepage' }),
       })
-
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || 'Failed to subscribe')
+        throw new Error(data.error || 'That email didn’t go through. Check it and try again.')
       }
-
       setSubmitted(true)
     } catch (err) {
-      setError(err.message || 'Something went wrong. Try again.')
+      setError(err.message || 'That email didn’t go through. Check it and try again.')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <section id="waitlist" className="relative py-24 px-6 overflow-hidden">
-      {/* Background */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse 70% 60% at 50% 100%, rgba(212,160,74,0.07) 0%, transparent 65%)',
-        }}
-      />
-
-      {/* Top divider line */}
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-px"
-        style={{
-          height: '80px',
-          background: 'linear-gradient(to bottom, transparent, rgba(212,160,74,0.3), transparent)',
-        }}
-      />
-
-      <div className="max-w-2xl mx-auto relative z-10 text-center">
-        <AnimatePresence mode="wait">
-          {!submitted ? (
-            <motion.div
-              key="form"
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
-            >
-              {/* Badge */}
-              <div
-                className="inline-flex items-center gap-2 mb-6 px-3 py-1 rounded-full"
-                style={{ background: 'rgba(212,160,74,0.1)', border: '1px solid rgba(232,196,122,0.2)' }}
-              >
-                <span
-                  className="text-[10px] tracking-[0.25em] uppercase"
-                  style={{ color: '#E8C47A', fontFamily: 'var(--font-heading)' }}
-                >
-                  Early Access
-                </span>
-              </div>
-
-              {/* Headline */}
-              <h2
-                className="mb-4"
-                style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(2rem, 5.5vw, 3.2rem)',
-                  fontWeight: 800,
-                  lineHeight: 1.05,
-                  letterSpacing: '-0.03em',
-                  color: '#FDF8F0',
-                }}
-              >
-                Get the tools before{' '}
-                <span
-                  style={{
-                    background: 'linear-gradient(135deg, #E8C47A, #E8C47A)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                  }}
-                >
-                  everyone else.
-                </span>
-              </h2>
-
-              <p
-                className="mb-8 max-w-sm mx-auto leading-relaxed"
-                style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'rgba(253,248,240,0.4)' }}
-              >
-                New tools drop weekly. Subscribers get them first — plus tips on what's actually working on each platform.
+    <section id="waitlist" className="border-t border-rule">
+      <div className="container-page grid gap-10 py-20 lg:grid-cols-12 lg:gap-10 lg:py-28">
+        <div className="lg:col-span-5">
+          <h2 className="type-display text-[clamp(48px,5.4vw,76px)] text-silver">New tools, when they ship</h2>
+        </div>
+        <div className="lg:col-span-6 lg:col-start-7">
+          {submitted ? (
+            <div role="status">
+              <p className="text-[21px] font-semibold text-silver">You’re subscribed.</p>
+              <p className="mt-2 text-[17px] text-[#c9c9c4]">The next email goes to {email}.</p>
+            </div>
+          ) : (
+            <>
+              <p className="max-w-[46ch] text-[17px] text-[#c9c9c4]">
+                One email when a new tool goes live, plus the occasional note on what’s working. Unsubscribe any time.
               </p>
-
-              {/* Social proof */}
-              <div className="flex items-center justify-center gap-6 mb-8">
-                {[
-                  { stat: 'Free', label: 'always' },
-                  { stat: 'Weekly', label: 'drops' },
-                  { stat: 'No spam', label: 'ever' },
-                ].map(({ stat, label }) => (
-                  <div key={label} className="text-center">
-                    <p
-                      className="text-lg font-bold"
-                      style={{ fontFamily: 'var(--font-heading)', color: '#E8C47A' }}
-                    >
-                      {stat}
-                    </p>
-                    <p
-                      className="text-[10px] tracking-[0.15em] uppercase"
-                      style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.25)' }}
-                    >
-                      {label}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Form */}
-              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+              <form onSubmit={handleSubmit} className="mt-8 grid gap-3 sm:grid-cols-[1fr_auto]">
+                <label htmlFor={inputId} className="sr-only">Email address</label>
                 <input
+                  id={inputId}
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your@email.com"
+                  placeholder="you@example.com"
+                  autoComplete="email"
                   required
-                  className="flex-1 px-5 py-3.5 rounded-xl text-sm outline-none transition-all duration-200"
-                  style={{
-                    fontFamily: 'var(--font-body)',
-                    background: 'rgba(253,248,240,0.05)',
-                    border: `1px solid ${isValid ? 'rgba(232,196,122,0.35)' : 'rgba(253,248,240,0.08)'}`,
-                    color: 'rgba(253,248,240,0.85)',
-                    fontSize: '0.9rem',
-                  }}
-                  onFocus={e => (e.target.style.borderColor = 'rgba(232,196,122,0.4)')}
-                  onBlur={e => (e.target.style.borderColor = isValid ? 'rgba(232,196,122,0.35)' : 'rgba(253,248,240,0.08)')}
+                  className="tool-input"
                 />
-
-                <motion.button
-                  type="submit"
-                  disabled={!isValid || loading}
-                  whileTap={{ scale: 0.97 }}
-                  className="px-6 py-3.5 rounded-xl text-sm font-bold tracking-wide uppercase transition-all duration-300 shrink-0"
-                  style={{
-                    fontFamily: 'var(--font-heading)',
-                    background: isValid && !loading
-                      ? 'linear-gradient(135deg, #D4A04A, #B8862E)'
-                      : 'rgba(253,248,240,0.04)',
-                    border: `1px solid ${isValid && !loading ? 'transparent' : 'rgba(253,248,240,0.06)'}`,
-                    color: isValid && !loading ? '#0D0B09' : 'rgba(253,248,240,0.2)',
-                    cursor: isValid && !loading ? 'pointer' : 'not-allowed',
-                    boxShadow: isValid && !loading ? '0 0 24px rgba(212,160,74,0.35)' : 'none',
-                  }}
-                >
-                  {loading ? (
-                    <span className="flex items-center gap-2">
-                      <motion.span
-                        animate={{ rotate: 360 }}
-                        transition={{ repeat: Infinity, duration: 0.9, ease: 'linear' }}
-                        className="inline-block w-3.5 h-3.5 rounded-full"
-                        style={{ border: '1.5px solid rgba(255,255,255,0.3)', borderTopColor: '#fff' }}
-                      />
-                      Joining...
-                    </span>
-                  ) : 'Get Early Access →'}
-                </motion.button>
+                <button type="submit" className="btn-gold justify-center" disabled={!isValid || loading}>
+                  {loading ? 'Subscribing…' : 'Subscribe'}
+                </button>
               </form>
-
-              {/* Error */}
-              <AnimatePresence>
-                {error && (
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="mt-4 text-xs"
-                    style={{ color: 'rgba(255,100,100,0.6)', fontFamily: 'var(--font-body)' }}
-                  >
-                    {error}
-                  </motion.p>
-                )}
-              </AnimatePresence>
-
-              <p
-                className="mt-4 text-[10px] tracking-[0.15em] uppercase"
-                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.2)' }}
-              >
-                No spam. Unsubscribe anytime.
-              </p>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="success"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="py-8"
-            >
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.1 }}
-                className="text-5xl mb-6"
-              >
-                🎉
-              </motion.div>
-              <h3
-                className="mb-3"
-                style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(1.6rem, 4vw, 2.4rem)',
-                  fontWeight: 800,
-                  color: '#FDF8F0',
-                }}
-              >
-                You're in.
-              </h3>
-              <p
-                className="max-w-xs mx-auto leading-relaxed"
-                style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'rgba(253,248,240,0.4)' }}
-              >
-                Check your inbox for a confirmation. New tools and platform tips drop every week.
-              </p>
-
-              <div
-                className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full"
-                style={{ background: 'rgba(212,160,74,0.08)', border: '1px solid rgba(212,160,74,0.2)' }}
-              >
-                <span className="text-xs" style={{ fontFamily: 'var(--font-body)', color: 'rgba(232,196,122,0.7)' }}>
-                  {email}
-                </span>
-              </div>
-            </motion.div>
+              {error && <p role="alert" className="mt-3 text-[15px] text-[#ff8a7a]">{error}</p>}
+            </>
           )}
-        </AnimatePresence>
+        </div>
       </div>
     </section>
   )

@@ -1,33 +1,13 @@
-import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import {
-  HiCalendarDays,
-  HiAcademicCap,
-  HiPencilSquare,
-  HiBriefcase,
-  HiSparkles,
-  HiBanknotes,
-  HiLockClosed,
-  HiArrowUpRight,
-} from 'react-icons/hi2'
+import { useState, useEffect, useRef, useId } from 'react'
 import Navbar from './Navbar'
 import Footer from './Footer'
 
-// NOTE: index.css has an unlayered `* { margin: 0; padding: 0; }` reset that
-// (per CSS cascade layer rules) silently wins over every Tailwind spacing
-// utility site-wide. Hero.jsx works around it with inline styles for its top
-// padding — this file does the same throughout rather than touching the
-// shared reset, since fixing it globally would visibly change the rest of
-// the already-live site.
 const STORAGE_KEY = 'sofarcam_guides_unlocked'
 
 const GUIDES = [
   {
     id: 'daily-planning',
-    icon: HiCalendarDays,
-    color: '#E8C47A',
-    colorRgb: '212,160,74',
-    title: 'Claude for Daily Planning & Decisions',
+    title: 'Planning your day and making decisions',
     teaser: 'Turn a scattered brain dump into a clear list of what actually matters today.',
     tips: [
       {
@@ -47,10 +27,7 @@ const GUIDES = [
   },
   {
     id: 'learning',
-    icon: HiAcademicCap,
-    color: '#E8C47A',
-    colorRgb: '212,160,74',
-    title: 'Claude for Learning Anything Faster',
+    title: 'Learning anything faster',
     teaser: 'Turn Claude into a tutor that explains, then checks you actually understood.',
     tips: [
       {
@@ -70,10 +47,7 @@ const GUIDES = [
   },
   {
     id: 'writing',
-    icon: HiPencilSquare,
-    color: '#E8C47A',
-    colorRgb: '212,160,74',
-    title: 'Claude for Writing & Hard Conversations',
+    title: 'Writing and hard conversations',
     teaser: "Draft the message you're avoiding, then practice how the other person might respond.",
     tips: [
       {
@@ -93,10 +67,7 @@ const GUIDES = [
   },
   {
     id: 'freelance',
-    icon: HiBriefcase,
-    color: '#E8C47A',
-    colorRgb: '212,160,74',
-    title: 'Claude for Freelance & Client Work',
+    title: 'Freelance and client work',
     teaser: 'Catch scope creep, draft proposals, and read contracts before you sign anything.',
     tips: [
       {
@@ -116,10 +87,7 @@ const GUIDES = [
   },
   {
     id: 'content',
-    icon: HiSparkles,
-    color: '#E8C47A',
-    colorRgb: '212,160,74',
-    title: 'Claude for Content Creators',
+    title: 'Making content',
     teaser: 'Turn one idea into a week of angles, and figure out why your best post actually worked.',
     tips: [
       {
@@ -135,16 +103,13 @@ const GUIDES = [
         body: 'Feed Claude context on 5 shoots or ideas in one sitting and get captions for all of them at once — faster than writing one at a time.',
       },
     ],
-    prompt: 'Already live on this site — the Concept Generator, Hook Writer, and Caption Writer above are the fast version of this.',
-    ctaHref: '/#sofarcontent',
-    ctaLabel: 'Try the free tools →',
+    prompt: "Here's my post idea: [idea]. Give me five ways to frame it — a before-and-after, a myth-bust, a story, a tutorial, and a hot take.",
+    ctaHref: '/#concepts',
+    ctaLabel: 'Try the free tools',
   },
   {
     id: 'money',
-    icon: HiBanknotes,
-    color: '#E8C47A',
-    colorRgb: '212,160,74',
-    title: 'Claude for Getting Your Finances Organized',
+    title: 'Getting your money organized',
     teaser: 'Turn a messy bank export into a clear picture of where your money actually goes.',
     tips: [
       {
@@ -165,16 +130,16 @@ const GUIDES = [
   },
 ]
 
-function useUnlocked() {
-  const [unlocked, setUnlocked] = useState(false)
+function readUnlocked() {
+  try {
+    return localStorage.getItem(STORAGE_KEY) === '1'
+  } catch {
+    return false // private browsing / blocked storage — just leave it locked
+  }
+}
 
-  useEffect(() => {
-    try {
-      if (localStorage.getItem(STORAGE_KEY) === '1') setUnlocked(true)
-    } catch {
-      // private browsing / blocked storage — just leave it locked
-    }
-  }, [])
+function useUnlocked() {
+  const [unlocked, setUnlocked] = useState(readUnlocked)
 
   function unlock() {
     setUnlocked(true)
@@ -207,191 +172,82 @@ function UnlockForm({ onUnlocked, inputRef }) {
       })
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || 'Failed to unlock')
+        throw new Error(data.error || 'That email didn’t go through. Check it and try again.')
       }
       onUnlocked()
     } catch (err) {
-      setError(err.message || 'Something went wrong. Try again.')
+      setError(err.message || 'That email didn’t go through. Check it and try again.')
     } finally {
       setLoading(false)
     }
   }
 
+  const inputId = useId()
   return (
-    <div>
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col sm:flex-row"
-        style={{ gap: '12px', maxWidth: '448px', margin: '0 auto' }}
-      >
+    <div className="grid gap-3">
+      <form onSubmit={handleSubmit} className="grid gap-3 sm:grid-cols-[1fr_auto]">
+        <label htmlFor={inputId} className="sr-only">Email address</label>
         <input
+          id={inputId}
           ref={inputRef}
           type="email"
           value={email}
           onChange={e => setEmail(e.target.value)}
-          placeholder="your@email.com"
+          placeholder="you@example.com"
+          autoComplete="email"
           required
-          className="flex-1 rounded-xl text-sm outline-none transition-all duration-200"
-          style={{
-            fontFamily: 'var(--font-body)',
-            background: 'rgba(253,248,240,0.05)',
-            border: `1px solid ${isValid ? 'rgba(232,196,122,0.35)' : 'rgba(253,248,240,0.08)'}`,
-            color: 'rgba(253,248,240,0.85)',
-            fontSize: '0.9rem',
-            padding: '14px 20px',
-          }}
+          className="tool-input"
         />
-        <motion.button
-          type="submit"
-          disabled={!isValid || loading}
-          whileTap={{ scale: 0.97 }}
-          className="rounded-xl text-sm font-bold tracking-wide uppercase transition-all duration-300 shrink-0"
-          style={{
-            fontFamily: 'var(--font-heading)',
-            background: isValid && !loading ? 'linear-gradient(135deg, #D4A04A, #B8862E)' : 'rgba(253,248,240,0.04)',
-            border: `1px solid ${isValid && !loading ? 'transparent' : 'rgba(253,248,240,0.06)'}`,
-            color: isValid && !loading ? '#0D0B09' : 'rgba(253,248,240,0.2)',
-            cursor: isValid && !loading ? 'pointer' : 'not-allowed',
-            boxShadow: isValid && !loading ? '0 0 24px rgba(212,160,74,0.35)' : 'none',
-            padding: '14px 24px',
-          }}
-        >
-          {loading ? 'Unlocking...' : 'Unlock All Guides →'}
-        </motion.button>
+        <button type="submit" className="btn-gold justify-center" disabled={!isValid || loading}>
+          {loading ? 'Unlocking…' : 'Unlock all six'}
+        </button>
       </form>
-      <AnimatePresence>
-        {error && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="text-xs text-center"
-            style={{ color: 'rgba(255,100,100,0.6)', fontFamily: 'var(--font-body)', marginTop: '12px' }}
-          >
-            {error}
-          </motion.p>
-        )}
-      </AnimatePresence>
-      <p
-        className="text-[10px] tracking-[0.15em] uppercase text-center"
-        style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.2)', marginTop: '16px' }}
-      >
-        Free forever. No spam. Unsubscribe anytime.
-      </p>
+      {error && <p role="alert" className="text-[15px] text-[#ff8a7a]">{error}</p>}
+      <p className="tool-hint">Free. You’ll also get an email when new guides or tools go up. Unsubscribe any time.</p>
     </div>
   )
 }
 
-function GuideCard({ guide, unlocked, index, onLockedClick }) {
-  const Icon = guide.icon
-
+function GuideItem({ guide, unlocked, onLockedClick }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, delay: (index % 2) * 0.08 }}
-      className="relative rounded-2xl flex flex-col overflow-hidden"
-      style={{
-        background: 'rgba(22,19,15,0.85)',
-        border: `1px solid ${guide.color}25`,
-        backdropFilter: 'blur(12px)',
-        padding: '28px',
-        gap: '16px',
-      }}
-    >
-      <div className="flex items-center" style={{ gap: '12px' }}>
-        <div
-          className="flex items-center justify-center rounded-xl shrink-0"
-          style={{ background: `rgba(${guide.colorRgb},0.12)`, border: `1px solid ${guide.color}30`, width: '40px', height: '40px' }}
-        >
-          <Icon size={18} color={guide.color} />
-        </div>
-        <h3
-          className="text-base font-bold leading-snug"
-          style={{ fontFamily: 'var(--font-heading)', color: guide.color, textShadow: `0 0 16px ${guide.color}40` }}
-        >
-          {guide.title}
-        </h3>
+    <li className="grid gap-4 border-b border-rule py-10">
+      <div className="grid gap-2">
+        <h2 className="text-[26px] font-semibold leading-tight text-silver">{guide.title}</h2>
+        <p className="max-w-[56ch] text-[17px] text-[#c9c9c4]">{guide.teaser}</p>
       </div>
 
-      <p className="text-sm leading-relaxed" style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.55)' }}>
-        {guide.teaser}
-      </p>
-
       <div className="relative">
-        <div className={unlocked ? '' : 'pointer-events-none select-none'} style={unlocked ? {} : { filter: 'blur(5px)', opacity: 0.5 }}>
-          <div className="flex flex-col" style={{ gap: '12px', paddingTop: '4px' }}>
+        <div
+          aria-hidden={!unlocked}
+          className={unlocked ? 'grid gap-5' : 'grid gap-5 select-none pointer-events-none blur-[5px] opacity-40'}
+        >
+          <ul className="grid gap-4">
             {guide.tips.map(tip => (
-              <div key={tip.label}>
-                <p
-                  className="text-[10px] tracking-[0.15em] uppercase font-semibold"
-                  style={{ fontFamily: 'var(--font-heading)', color: guide.color, marginBottom: '4px' }}
-                >
-                  {tip.label}
-                </p>
-                <p className="text-xs leading-relaxed" style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.5)' }}>
-                  {tip.body}
-                </p>
-              </div>
+              <li key={tip.label} className="grid gap-1">
+                <p className="text-[16px] font-semibold text-silver">{tip.label}</p>
+                <p className="max-w-[62ch] text-[16px] leading-[1.55] text-[#c9c9c4]">{tip.body}</p>
+              </li>
             ))}
+          </ul>
+          <div className="grid gap-1 border-l-2 border-gold pl-4">
+            <p className="text-[14px] text-graphite">Try this prompt</p>
+            <p className="max-w-[62ch] text-[17px] leading-[1.5] text-silver">{guide.prompt}</p>
           </div>
-
-          <div
-            className="rounded-lg"
-            style={{ background: `rgba(${guide.colorRgb},0.06)`, border: `1px solid ${guide.color}20`, padding: '12px', marginTop: '16px' }}
-          >
-            <p
-              className="text-[9px] tracking-[0.2em] uppercase font-semibold"
-              style={{ fontFamily: 'var(--font-heading)', color: `${guide.color}`, marginBottom: '4px' }}
-            >
-              Try this prompt
-            </p>
-            <p className="text-xs leading-relaxed italic" style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.6)' }}>
-              "{guide.prompt}"
-            </p>
-          </div>
-
-          {guide.note && (
-            <p className="text-[10px] leading-relaxed" style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.3)', marginTop: '12px' }}>
-              {guide.note}
-            </p>
-          )}
-
+          {guide.note && <p className="text-[14px] text-graphite">{guide.note}</p>}
           {guide.ctaHref && (
-            <a
-              href={guide.ctaHref}
-              className="inline-flex items-center text-xs font-bold tracking-wide uppercase no-underline"
-              style={{ fontFamily: 'var(--font-heading)', color: guide.color, gap: '4px', marginTop: '16px' }}
-            >
-              {guide.ctaLabel} <HiArrowUpRight size={12} />
-            </a>
+            <p><a href={guide.ctaHref} className="link-quiet text-[16px] text-silver">{guide.ctaLabel}</a></p>
           )}
         </div>
 
         {!unlocked && (
-          <button
-            onClick={onLockedClick}
-            className="absolute inset-0 flex flex-col items-center justify-center rounded-xl"
-            style={{ background: 'rgba(13,11,9,0.35)', gap: '8px' }}
-          >
-            <HiLockClosed size={18} color="rgba(253,248,240,0.6)" />
-            <span
-              className="text-[10px] tracking-[0.2em] uppercase font-semibold rounded-full"
-              style={{
-                fontFamily: 'var(--font-heading)',
-                color: '#0D0B09',
-                background: 'linear-gradient(135deg, #D4A04A, #B8862E)',
-                boxShadow: '0 0 20px rgba(212,160,74,0.4)',
-                padding: '6px 12px',
-              }}
-            >
-              Unlock free
-            </span>
-          </button>
+          <div className="absolute inset-0 flex items-center">
+            <button type="button" className="btn-plain bg-film" onClick={onLockedClick}>
+              Unlock with your email to read this
+            </button>
+          </div>
         )}
       </div>
-    </motion.div>
+    </li>
   )
 }
 
@@ -401,7 +257,7 @@ export default function Guides() {
 
   useEffect(() => {
     const prevTitle = document.title
-    document.title = 'Free Guides — Claude for Real Life | Cam'
+    document.title = 'Claude, for real life — six free guides from SofarContent'
     return () => { document.title = prevTitle }
   }, [])
 
@@ -413,70 +269,34 @@ export default function Guides() {
   return (
     <>
       <Navbar />
-
-      <main className="min-h-screen" style={{ paddingTop: 'clamp(96px, 16vh, 140px)', paddingBottom: '96px', paddingLeft: '24px', paddingRight: '24px' }}>
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="text-center"
-          style={{ maxWidth: '672px', margin: '0 auto', marginBottom: '56px' }}
-        >
-          <div
-            className="inline-flex items-center rounded-full"
-            style={{ background: 'rgba(212,160,74,0.1)', border: '1px solid rgba(232,196,122,0.2)', gap: '8px', padding: '4px 12px', marginBottom: '24px' }}
-          >
-            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#E8C47A' }} />
-            <span className="text-[10px] tracking-[0.25em] uppercase" style={{ color: '#E8C47A', fontFamily: 'var(--font-heading)' }}>
-              6 Free Guides
-            </span>
+      <main>
+        <section className="container-page grid gap-12 pt-10 pb-16 md:pt-16 lg:grid-cols-12 lg:gap-10">
+          <div className="lg:col-span-7">
+            <h1 className="type-display text-[clamp(60px,8vw,112px)] text-silver">
+              <span className="block text-balance">Claude, for real life.</span>
+            </h1>
+            <p className="mt-8 max-w-[44ch] text-[19px] leading-[1.5] text-[#c9c9c4]">
+              Six short guides on using Claude for planning, learning, hard conversations, freelance work,
+              content, and money — each with a prompt you can copy.
+            </p>
           </div>
-          <h1
-            className="heading-glow"
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(2.4rem, 6vw, 3.8rem)',
-              fontWeight: 800,
-              lineHeight: 1.05,
-              letterSpacing: '-0.03em',
-              color: '#FDF8F0',
-              marginBottom: '20px',
-            }}
-          >
-            Claude, for <span className="gradient-text-glow">real life.</span>
-          </h1>
-          <p
-            className="leading-relaxed"
-            style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', color: 'rgba(253,248,240,0.45)', marginBottom: '40px' }}
-          >
-            Not another "10 AI prompts" list. Actual ways to use Claude for planning,
-            learning, hard conversations, freelance work, content, and getting your
-            money organized — with prompts you can copy right now.
-          </p>
+          <div className="lg:col-span-5 lg:self-end">
+            {unlocked ? (
+              <p role="status" className="text-[17px] text-silver">All six guides are unlocked below.</p>
+            ) : (
+              <UnlockForm onUnlocked={unlock} inputRef={emailRef} />
+            )}
+          </div>
+        </section>
 
-          {!unlocked && <UnlockForm onUnlocked={unlock} inputRef={emailRef} />}
-
-          {unlocked && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-sm font-semibold"
-              style={{ fontFamily: 'var(--font-heading)', color: '#6b6b6b' }}
-            >
-              ✓ Unlocked — all 6 guides below.
-            </motion.p>
-          )}
-        </motion.div>
-
-        {/* Guides grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2" style={{ maxWidth: '1024px', margin: '0 auto', gap: '24px' }}>
-          {GUIDES.map((guide, i) => (
-            <GuideCard key={guide.id} guide={guide} unlocked={unlocked} index={i} onLockedClick={scrollToUnlock} />
-          ))}
-        </div>
+        <section className="container-page pb-24">
+          <ul className="border-t border-rule lg:w-8/12">
+            {GUIDES.map((guide) => (
+              <GuideItem key={guide.id} guide={guide} unlocked={unlocked} onLockedClick={scrollToUnlock} />
+            ))}
+          </ul>
+        </section>
       </main>
-
       <Footer />
     </>
   )

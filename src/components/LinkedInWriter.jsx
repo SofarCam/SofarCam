@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import { llmFetch } from '../lib/llmFetch'
 import { saveSession, loadSession } from '../lib/sessionStore'
+import { TextArea, ChipGroup, GenerateButton, ErrorText, FallbackNote, ResultRow, CopyButton } from './ui/ToolKit'
 
 const GOALS = ['Attract Clients', 'Build Authority', 'Get Hired', 'Grow Network', 'Drive Traffic']
 const INDUSTRIES = ['Photography', 'Tech', 'Marketing', 'Design', 'Consulting', 'Finance', 'Healthcare', 'Real Estate', 'Education', 'Other']
@@ -13,8 +13,8 @@ export default function LinkedInWriter() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [copied, setCopied] = useState(null)
+  const [picked, setPicked] = useState(null)
   const [usedFallback, setUsedFallback] = useState(false)
-  const [activePost, setActivePost] = useState(0)
 
   // Restore last session on mount
   useEffect(() => {
@@ -31,7 +31,7 @@ export default function LinkedInWriter() {
     setLoading(true)
     setError(null)
     setResults(null)
-    setActivePost(0)
+    setPicked(null)
 
     const prompt = `You are a LinkedIn content strategist who understands what builds authority and attracts clients in 2026.
 
@@ -77,7 +77,7 @@ Return ONLY valid JSON, no markdown, no explanation:
       saveSession('linkedin_results', parsed)
       saveSession('linkedin_form', form)
     } catch {
-      setError('Something went wrong. Try again.')
+      setError('The posts didn’t come back. Try again in a moment.')
     } finally {
       setLoading(false)
     }
@@ -86,327 +86,63 @@ Return ONLY valid JSON, no markdown, no explanation:
   function copyPost(text, idx) {
     navigator.clipboard.writeText(text)
     setCopied(idx)
+    setPicked(idx)
     setTimeout(() => setCopied(null), 2000)
   }
 
-  const RANK_MEDALS = ['🥇', '🥈', '🥉']
-  // LinkedIn blue-ish accent color
-  const accent = '#D4A04A'
-  const accentRgb = '212,160,74'
+  function startOver() {
+    setResults(null)
+    setPicked(null)
+    setForm({ topic: '', goal: '', industry: '', format: '' })
+    saveSession('linkedin_results', null)
+    saveSession('linkedin_form', null)
+  }
 
   return (
-    <div>
-      {/* Form */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="rounded-2xl border p-8 mb-6"
-        style={{
-          background: 'rgba(22,19,15,0.8)',
-          borderColor: `rgba(${accentRgb},0.12)`,
-          backdropFilter: 'blur(12px)',
-        }}
-      >
-        <div className="grid gap-5">
-          {/* Topic */}
-          <div>
-            <label
-              className="block text-[10px] tracking-[0.25em] uppercase mb-3"
-              style={{ fontFamily: 'var(--font-heading)', color: `rgba(${accentRgb},0.5)` }}
-            >
-              What do you want to post about?
-            </label>
-            <textarea
-              value={form.topic}
-              onChange={(e) => setForm((f) => ({ ...f, topic: e.target.value }))}
-              placeholder="e.g. How I landed 3 clients from one LinkedIn post, a lesson I learned the hard way, my take on AI in photography..."
-              rows={3}
-              className="w-full rounded-xl px-4 py-3 text-sm resize-none outline-none transition-all duration-200"
-              style={{
-                fontFamily: 'var(--font-body)',
-                background: 'rgba(253,248,240,0.04)',
-                border: '1px solid rgba(253,248,240,0.08)',
-                color: 'rgba(253,248,240,0.8)',
-                fontSize: '0.88rem',
-              }}
-              onFocus={(e) => (e.target.style.borderColor = `rgba(${accentRgb},0.35)`)}
-              onBlur={(e) => (e.target.style.borderColor = 'rgba(253,248,240,0.08)')}
-            />
-          </div>
+    <div className="grid gap-8">
+      <TextArea
+        label="What do you want to post about?"
+        value={form.topic}
+        onChange={(v) => setForm((f) => ({ ...f, topic: v }))}
+        placeholder="e.g. How I landed 3 clients from one post, a lesson I learned the hard way, my take on AI in photography"
+      />
+      <ChipGroup label="Goal" options={GOALS} value={form.goal} onChange={(v) => setForm((f) => ({ ...f, goal: v }))} />
+      <ChipGroup label="Industry" options={INDUSTRIES} value={form.industry} onChange={(v) => setForm((f) => ({ ...f, industry: v }))} />
+      <ChipGroup label="Format (optional)" options={FORMATS} value={form.format} optional onChange={(v) => setForm((f) => ({ ...f, format: v }))} />
 
-          {/* Goal + Industry row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div>
-              <label
-                className="block text-[10px] tracking-[0.25em] uppercase mb-3"
-                style={{ fontFamily: 'var(--font-heading)', color: `rgba(${accentRgb},0.5)` }}
+      <GenerateButton ready={ready} loading={loading} onClick={handleGenerate} idleLabel="Write 3 posts" loadingLabel="Writing posts…" />
+      <ErrorText>{error}</ErrorText>
+
+      {results && (
+        <div className="grid gap-6">
+          <FallbackNote show={usedFallback} />
+          {results.profile_tip && (
+            <div className="grid gap-1">
+              <p className="tool-label">Profile tip</p>
+              <p className="max-w-[62ch] text-[16px] text-[#c9c9c4]">{results.profile_tip}</p>
+            </div>
+          )}
+
+          <ol className="result-list">
+            {results.posts.map((post, idx) => (
+              <ResultRow
+                key={idx}
+                index={idx}
+                picked={picked === idx}
+                aside={<CopyButton copied={copied === idx} onClick={() => copyPost(post.full_post, idx)} />}
               >
-                Goal
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {GOALS.map((g) => (
-                  <button
-                    key={g}
-                    onClick={() => setForm((f) => ({ ...f, goal: g }))}
-                    className="px-3 py-1.5 rounded-full text-xs transition-all duration-200"
-                    style={{
-                      fontFamily: 'var(--font-heading)',
-                      background: form.goal === g ? `rgba(${accentRgb},0.15)` : 'rgba(253,248,240,0.04)',
-                      border: `1px solid ${form.goal === g ? `rgba(${accentRgb},0.5)` : 'rgba(253,248,240,0.08)'}`,
-                      color: form.goal === g ? accent : 'rgba(253,248,240,0.4)',
-                    }}
-                  >
-                    {g}
-                  </button>
-                ))}
-              </div>
-            </div>
+                <p className="text-[14px] text-graphite">Scored {post.score} out of 100, best for {post.best_for}</p>
+                <p className="whitespace-pre-wrap text-[17px] leading-[1.55] text-silver">{post.full_post}</p>
+                <p className="text-[15px] text-[#c9c9c4]">{post.why_it_works}</p>
+              </ResultRow>
+            ))}
+          </ol>
 
-            <div>
-              <label
-                className="block text-[10px] tracking-[0.25em] uppercase mb-3"
-                style={{ fontFamily: 'var(--font-heading)', color: `rgba(${accentRgb},0.5)` }}
-              >
-                Industry
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {INDUSTRIES.map((i) => (
-                  <button
-                    key={i}
-                    onClick={() => setForm((f) => ({ ...f, industry: i }))}
-                    className="px-3 py-1.5 rounded-full text-xs transition-all duration-200"
-                    style={{
-                      fontFamily: 'var(--font-heading)',
-                      background: form.industry === i ? `rgba(${accentRgb},0.15)` : 'rgba(253,248,240,0.04)',
-                      border: `1px solid ${form.industry === i ? `rgba(${accentRgb},0.5)` : 'rgba(253,248,240,0.08)'}`,
-                      color: form.industry === i ? accent : 'rgba(253,248,240,0.4)',
-                    }}
-                  >
-                    {i}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Format (optional) */}
           <div>
-            <label
-              className="block text-[10px] tracking-[0.25em] uppercase mb-3"
-              style={{ fontFamily: 'var(--font-heading)', color: `rgba(${accentRgb},0.5)` }}
-            >
-              Format (optional)
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {FORMATS.map((f) => (
-                <button
-                  key={f}
-                  onClick={() => setForm((prev) => ({ ...prev, format: prev.format === f ? '' : f }))}
-                  className="px-3 py-1.5 rounded-full text-xs transition-all duration-200"
-                  style={{
-                    fontFamily: 'var(--font-heading)',
-                    background: form.format === f ? `rgba(${accentRgb},0.15)` : 'rgba(253,248,240,0.04)',
-                    border: `1px solid ${form.format === f ? `rgba(${accentRgb},0.5)` : 'rgba(253,248,240,0.08)'}`,
-                    color: form.format === f ? accent : 'rgba(253,248,240,0.4)',
-                  }}
-                >
-                  {f}
-                </button>
-              ))}
-            </div>
+            <button type="button" className="btn-text" onClick={startOver}>Start over</button>
           </div>
-
-          {/* Generate button */}
-          <motion.button
-            onClick={handleGenerate}
-            disabled={!ready || loading}
-            whileTap={{ scale: 0.98 }}
-            className="w-full py-4 rounded-xl text-sm font-medium tracking-widest uppercase transition-all duration-300"
-            style={{
-              fontFamily: 'var(--font-heading)',
-              background: ready && !loading ? `rgba(${accentRgb},0.12)` : 'rgba(253,248,240,0.03)',
-              border: `1px solid ${ready && !loading ? `rgba(${accentRgb},0.4)` : 'rgba(253,248,240,0.06)'}`,
-              color: ready && !loading ? accent : 'rgba(253,248,240,0.2)',
-              cursor: ready && !loading ? 'pointer' : 'not-allowed',
-            }}
-          >
-            {loading ? (
-              <span className="flex items-center justify-center gap-3">
-                <motion.span
-                  animate={{ rotate: 360 }}
-                  transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
-                  className="inline-block w-3.5 h-3.5 rounded-full"
-                  style={{ border: `1.5px solid rgba(${accentRgb},0.3)`, borderTopColor: accent }}
-                />
-                Writing posts...
-              </span>
-            ) : 'Generate LinkedIn Posts'}
-          </motion.button>
         </div>
-      </motion.div>
-
-      {/* Error */}
-      <AnimatePresence>
-        {error && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="text-center text-sm mb-6"
-            style={{ color: 'rgba(255,100,100,0.7)', fontFamily: 'var(--font-body)' }}
-          >
-            {error}
-          </motion.p>
-        )}
-      </AnimatePresence>
-
-      {/* Results */}
-      <AnimatePresence>
-        {results && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            {/* Fallback badge */}
-            {usedFallback && (
-              <div className="flex justify-center mb-4">
-                <span
-                  className="text-[9px] tracking-widest uppercase px-2 py-0.5 rounded-full"
-                  style={{
-                    background: 'rgba(212,160,74,0.08)',
-                    color: 'rgba(212,160,74,0.5)',
-                    border: '1px solid rgba(212,160,74,0.12)',
-                  }}
-                >
-                  Using backup model
-                </span>
-              </div>
-            )}
-
-            {/* Profile tip */}
-            {results.profile_tip && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="rounded-xl border p-4 mb-5"
-                style={{
-                  background: `rgba(${accentRgb},0.04)`,
-                  borderColor: `rgba(${accentRgb},0.12)`,
-                }}
-              >
-                <p
-                  className="text-[9px] tracking-[0.25em] uppercase mb-1"
-                  style={{ fontFamily: 'var(--font-heading)', color: `rgba(${accentRgb},0.5)` }}
-                >
-                  Profile Tip
-                </p>
-                <p
-                  className="text-cream/40 text-xs leading-relaxed"
-                  style={{ fontFamily: 'var(--font-body)' }}
-                >
-                  {results.profile_tip}
-                </p>
-              </motion.div>
-            )}
-
-            {/* Post selector tabs */}
-            <div className="flex gap-2 mb-4">
-              {results.posts.map((post, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setActivePost(idx)}
-                  className="flex-1 py-2.5 rounded-xl text-xs transition-all duration-200"
-                  style={{
-                    fontFamily: 'var(--font-heading)',
-                    background: activePost === idx ? `rgba(${accentRgb},0.12)` : 'rgba(253,248,240,0.03)',
-                    border: `1px solid ${activePost === idx ? `rgba(${accentRgb},0.4)` : 'rgba(253,248,240,0.06)'}`,
-                    color: activePost === idx ? accent : 'rgba(253,248,240,0.3)',
-                  }}
-                >
-                  {RANK_MEDALS[idx]} {post.score}/100
-                </button>
-              ))}
-            </div>
-
-            {/* Active post */}
-            {results.posts[activePost] && (
-              <motion.div
-                key={activePost}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                className="rounded-xl border p-6 mb-4"
-                style={{
-                  background: 'rgba(22,19,15,0.6)',
-                  borderColor: `rgba(${accentRgb},0.1)`,
-                }}
-              >
-                {/* Meta row */}
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm">{RANK_MEDALS[activePost]}</span>
-                    <span
-                      className="text-[9px] tracking-[0.2em] uppercase"
-                      style={{ fontFamily: 'var(--font-heading)', color: `rgba(${accentRgb},0.5)` }}
-                    >
-                      {results.posts[activePost].score}/100 · {results.posts[activePost].best_for}
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => copyPost(results.posts[activePost].full_post, activePost)}
-                    className="text-[9px] tracking-[0.2em] uppercase px-3 py-1.5 rounded-lg transition-all duration-200"
-                    style={{
-                      fontFamily: 'var(--font-heading)',
-                      background: copied === activePost ? `rgba(${accentRgb},0.15)` : 'rgba(253,248,240,0.04)',
-                      border: `1px solid ${copied === activePost ? `rgba(${accentRgb},0.4)` : 'rgba(253,248,240,0.08)'}`,
-                      color: copied === activePost ? accent : 'rgba(253,248,240,0.3)',
-                    }}
-                  >
-                    {copied === activePost ? 'Copied!' : 'Copy Post'}
-                  </button>
-                </div>
-
-                {/* Full post text */}
-                <div
-                  className="rounded-lg p-4 mb-3 whitespace-pre-wrap text-sm leading-relaxed"
-                  style={{
-                    fontFamily: 'var(--font-body)',
-                    background: 'rgba(253,248,240,0.03)',
-                    border: '1px solid rgba(253,248,240,0.05)',
-                    color: 'rgba(253,248,240,0.75)',
-                    fontSize: '0.88rem',
-                  }}
-                >
-                  {results.posts[activePost].full_post}
-                </div>
-
-                {/* Why it works */}
-                <p
-                  className="text-[10px] leading-relaxed"
-                  style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.25)' }}
-                >
-                  ✦ {results.posts[activePost].why_it_works}
-                </p>
-              </motion.div>
-            )}
-
-            {/* Start over */}
-            <div className="flex justify-center pt-2">
-              <button
-                onClick={() => { setResults(null); setForm({ topic: '', goal: '', industry: '', format: '' }); setActivePost(0); saveSession('linkedin_results', null); saveSession('linkedin_form', null) }}
-                className="text-[10px] tracking-[0.2em] uppercase text-cream/20 hover:text-cream/40 transition-colors duration-200"
-                style={{ fontFamily: 'var(--font-heading)' }}
-              >
-                Start over
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      )}
     </div>
   )
 }

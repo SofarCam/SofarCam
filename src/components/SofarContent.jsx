@@ -1,35 +1,59 @@
-import { useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useEffect, useRef } from 'react'
 import HookWriter from './HookWriter'
 import CaptionWriter from './CaptionWriter'
 import LinkedInWriter from './LinkedInWriter'
 import ContentAnalyzer from './ContentAnalyzer'
 import { llmFetch } from '../lib/llmFetch'
 import { saveSession, loadSession, setActiveConcept } from '../lib/sessionStore'
+import { TOOL_IDS } from '../lib/openTool'
+import { ChipGroup, GenerateButton, ErrorText, FallbackNote, ResultRow, CopyButton } from './ui/ToolKit'
 
 const NICHES = ['Photography', 'Fitness', 'Fashion', 'Food', 'Travel', 'Music', 'Art', 'Business', 'Gaming', 'Lifestyle']
 const PLATFORMS = ['Instagram', 'TikTok', 'YouTube', 'YouTube Shorts', 'Pinterest', 'Etsy']
 const STYLES = ['Educational', 'Raw & Real', 'Aesthetic', 'Funny', 'Motivational', 'Behind the Scenes']
 
-const TABS = [
-  { id: 'concepts', label: 'Concept Generator', sub: '3 viral concepts in 30s', color: '#E8C47A', colorRgb: '212,160,74' },
-  { id: 'hooks', label: 'Hook Writer', sub: '10 scroll-stopping hooks', color: '#E8C47A', colorRgb: '212,160,74' },
-  { id: 'captions', label: 'Caption Writer', sub: '5 platform-ready captions', color: '#E8C47A', colorRgb: '212,160,74' },
-  { id: 'linkedin', label: 'LinkedIn Writer', sub: '3 authority-building posts', color: '#D4A04A', colorRgb: '212,160,74' },
-  { id: 'analyzer', label: 'Content Analyzer', sub: 'Break down any post', color: '#D4A04A', colorRgb: '212,160,74' },
+const TOOLS = [
+  {
+    id: 'concepts',
+    name: 'Concept Generator',
+    yields: '3 post ideas',
+    desc: 'Pick your niche, platform, and style. Get three post ideas, each with an opening line, a format, and a call to action.',
+  },
+  {
+    id: 'hooks',
+    name: 'Hook Writer',
+    yields: '10 hooks, scored',
+    desc: 'Describe your post. Get ten opening lines, scored and ranked, with a note on why each one works.',
+  },
+  {
+    id: 'captions',
+    name: 'Caption Writer',
+    yields: '5 captions',
+    desc: 'Get five captions written for the platform you pick, with line breaks, hashtags, and a call to action.',
+  },
+  {
+    id: 'linkedin',
+    name: 'LinkedIn Writer',
+    yields: '3 posts',
+    desc: 'Turn a story, lesson, or opinion into three LinkedIn posts, each written a different way.',
+  },
+  {
+    id: 'analyzer',
+    name: 'Content Analyzer',
+    yields: '1 breakdown',
+    desc: 'Paste a YouTube or X link. See what works in the post, what it misses, and how you could remake it.',
+  },
 ]
 
-export default function SofarContent() {
-  const [activeTab, setActiveTab] = useState('concepts')
+function ConceptGenerator({ onUseConcept }) {
   const [form, setForm] = useState({ niche: '', platform: '', style: '' })
   const [results, setResults] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [copied, setCopied] = useState(null)
+  const [picked, setPicked] = useState(null)
   const [usedFallback, setUsedFallback] = useState(false)
-  const [chainedConcept, setChainedConcept] = useState(null)
 
-  // Restore last session on mount
   useEffect(() => {
     const saved = loadSession('concepts_results')
     if (saved) setResults(saved)
@@ -44,6 +68,7 @@ export default function SofarContent() {
     setLoading(true)
     setError(null)
     setResults(null)
+    setPicked(null)
 
     const prompt = `You are a viral content strategist who deeply understands what performs on social media in 2026.
 
@@ -83,548 +108,169 @@ Return ONLY valid JSON, no markdown, no explanation:
       saveSession('concepts_results', parsed.concepts)
       saveSession('concepts_form', form)
     } catch {
-      setError('Something went wrong. Try again.')
+      setError('The ideas didn’t come back. Try again in a moment.')
     } finally {
       setLoading(false)
     }
   }
 
-  function handleCopy(text, idx) {
-    navigator.clipboard.writeText(text)
+  function handleCopy(concept, idx) {
+    navigator.clipboard.writeText(`Hook: ${concept.hook}\n\nFormat: ${concept.format}\n\nWhy it works: ${concept.angle}\n\nCTA: ${concept.cta}`)
     setCopied(idx)
+    setPicked(idx)
     setTimeout(() => setCopied(null), 2000)
   }
 
-  function handleUseConcept(concept) {
-    // Save concept to sessionStore so HookWriter/CaptionWriter can pick it up
+  function handleUse(concept, idx, target) {
+    setPicked(idx)
     setActiveConcept({ hook: concept.hook, format: concept.format, angle: concept.angle, platform: form.platform })
-    setChainedConcept(concept)
-    setActiveTab('hooks')
+    onUseConcept(target)
+  }
+
+  function startOver() {
+    setResults(null)
+    setPicked(null)
+    setForm({ niche: '', platform: '', style: '' })
+    saveSession('concepts_results', null)
+    saveSession('concepts_form', null)
   }
 
   return (
-    <section id="sofarcontent" className="relative py-24 px-6 overflow-hidden">
-      {/* Background */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse 60% 50% at 50% 0%, rgba(212,160,74,0.08) 0%, transparent 60%)',
-        }}
+    <div className="grid gap-8">
+      <ChipGroup label="Your niche" options={NICHES} value={form.niche} onChange={(v) => setForm((f) => ({ ...f, niche: v }))} />
+      <ChipGroup label="Platform" options={PLATFORMS} value={form.platform} onChange={(v) => setForm((f) => ({ ...f, platform: v }))} />
+      <ChipGroup label="Style" options={STYLES} value={form.style} onChange={(v) => setForm((f) => ({ ...f, style: v }))} />
+      <GenerateButton
+        ready={ready}
+        loading={loading}
+        onClick={handleGenerate}
+        idleLabel="Write 3 ideas"
+        loadingLabel="Writing ideas…"
       />
+      <ErrorText>{error}</ErrorText>
 
-      <div className="max-w-5xl mx-auto relative z-10">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="text-center mb-12"
-        >
-          <div className="inline-flex items-center gap-2 mb-5 px-3 py-1 rounded-full" style={{ background: 'rgba(212,160,74,0.1)', border: '1px solid rgba(232,196,122,0.2)' }}>
-            <span className="text-[10px] tracking-[0.25em] uppercase" style={{ color: '#E8C47A', fontFamily: 'var(--font-heading)' }}>
-              Free Tools
-            </span>
+      {results && (
+        <div className="grid gap-4">
+          <FallbackNote show={usedFallback} />
+          <ol className="result-list">
+            {results.map((c, idx) => (
+              <ResultRow
+                key={idx}
+                index={idx}
+                picked={picked === idx}
+                aside={<CopyButton copied={copied === idx} onClick={() => handleCopy(c, idx)} />}
+              >
+                <p className="text-[19px] leading-[1.45] text-silver">{c.hook}</p>
+                <dl className="grid gap-1 text-[15px] leading-[1.5]">
+                  <div><dt className="inline text-graphite">Format: </dt><dd className="inline text-[#c9c9c4]">{c.format}</dd></div>
+                  <div><dt className="inline text-graphite">Why it works: </dt><dd className="inline text-[#c9c9c4]">{c.angle}</dd></div>
+                  <div><dt className="inline text-graphite">Call to action: </dt><dd className="inline text-[#c9c9c4]">{c.cta}</dd></div>
+                </dl>
+                <div className="mt-2 flex flex-wrap gap-3">
+                  <button type="button" className="btn-plain" onClick={() => handleUse(c, idx, 'hooks')}>
+                    Write hooks for this
+                  </button>
+                  <button type="button" className="btn-plain" onClick={() => handleUse(c, idx, 'captions')}>
+                    Write a caption for this
+                  </button>
+                </div>
+              </ResultRow>
+            ))}
+          </ol>
+          <div>
+            <button type="button" className="btn-text" onClick={startOver}>Start over</button>
           </div>
-          <h2
-            className="mb-4 heading-glow"
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(2.2rem, 6vw, 3.5rem)',
-              fontWeight: 800,
-              lineHeight: 1.05,
-              letterSpacing: '-0.03em',
-              color: '#FDF8F0',
-            }}
-          >
-            Pick a tool.{' '}
-            <span className="gradient-text-glow">Start creating.</span>
-          </h2>
-          <p
-            className="max-w-md mx-auto leading-relaxed"
-            style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'rgba(253,248,240,0.4)' }}
-          >
-            AI tools that tell you exactly what to post and how to hook your audience. Free, forever.
-          </p>
-        </motion.div>
-
-        {/* Tabs */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-10"
-        >
-          {TABS.map((tab) => {
-            const isActive = activeTab === tab.id
-            return (
-              <TabCard
-                key={tab.id}
-                tab={tab}
-                isActive={isActive}
-                onClick={() => { setActiveTab(tab.id); setResults(null) }}
-              />
-            )
-          })}
-        </motion.div>
-
-        {/* LinkedIn Writer tab */}
-        <AnimatePresence mode="wait">
-          {activeTab === 'linkedin' && (
-            <motion.div
-              key="linkedin"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-            >
-              <LinkedInWriter />
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Content Analyzer tab */}
-        <AnimatePresence mode="wait">
-          {activeTab === 'analyzer' && (
-            <motion.div
-              key="analyzer"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-            >
-              <ContentAnalyzer />
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Hook Writer tab */}
-        <AnimatePresence mode="wait">
-          {activeTab === 'hooks' && (
-            <motion.div
-              key="hooks"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-            >
-              <HookWriter />
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Caption Writer tab */}
-        <AnimatePresence mode="wait">
-          {activeTab === 'captions' && (
-            <motion.div
-              key="captions"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-            >
-              <CaptionWriter />
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Concepts tab */}
-        <AnimatePresence mode="wait">
-        {activeTab === 'concepts' && (
-        <motion.div
-          key="concepts"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.3 }}
-        >
-
-        {/* Form */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="rounded-2xl border p-10 mb-10"
-          style={{
-            background: 'rgba(22,19,15,0.9)',
-            borderColor: 'rgba(212,160,74,0.15)',
-            backdropFilter: 'blur(12px)',
-          }}
-        >
-          <div className="grid gap-8">
-            {/* Niche */}
-            <div>
-              <label
-                className="block text-xs tracking-[0.2em] uppercase mb-4"
-                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(232,196,122,0.7)' }}
-              >
-                Your Niche
-              </label>
-              <div className="flex flex-wrap gap-3">
-                {NICHES.map((n) => {
-                  const sel = form.niche === n
-                  return (
-                    <button
-                      key={n}
-                      onClick={() => setForm((f) => ({ ...f, niche: n }))}
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
-                      style={{
-                        fontFamily: 'var(--font-heading)',
-                        background: sel ? 'rgba(212,160,74,0.2)' : 'rgba(253,248,240,0.04)',
-                        border: `1px solid ${sel ? 'rgba(232,196,122,0.5)' : 'rgba(253,248,240,0.09)'}`,
-                        color: sel ? '#E8C47A' : 'rgba(253,248,240,0.5)',
-                        boxShadow: sel ? '0 0 14px rgba(212,160,74,0.2)' : 'none',
-                      }}
-                    >
-                      {sel && <span style={{ color: '#E8C47A', fontSize: '0.7rem' }}>✓</span>}
-                      {n}
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* Platform */}
-            <div>
-              <label
-                className="block text-xs tracking-[0.2em] uppercase mb-4"
-                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(232,196,122,0.7)' }}
-              >
-                Platform
-              </label>
-              <div className="flex flex-wrap gap-3">
-                {PLATFORMS.map((p) => {
-                  const sel = form.platform === p
-                  return (
-                    <button
-                      key={p}
-                      onClick={() => setForm((f) => ({ ...f, platform: p }))}
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
-                      style={{
-                        fontFamily: 'var(--font-heading)',
-                        background: sel ? 'rgba(212,160,74,0.2)' : 'rgba(253,248,240,0.04)',
-                        border: `1px solid ${sel ? 'rgba(232,196,122,0.5)' : 'rgba(253,248,240,0.09)'}`,
-                        color: sel ? '#E8C47A' : 'rgba(253,248,240,0.5)',
-                        boxShadow: sel ? '0 0 14px rgba(212,160,74,0.2)' : 'none',
-                      }}
-                    >
-                      {sel && <span style={{ color: '#E8C47A', fontSize: '0.7rem' }}>✓</span>}
-                      {p}
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* Style */}
-            <div>
-              <label
-                className="block text-xs tracking-[0.2em] uppercase mb-4"
-                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(232,196,122,0.7)' }}
-              >
-                Your Style
-              </label>
-              <div className="flex flex-wrap gap-3">
-                {STYLES.map((s) => {
-                  const sel = form.style === s
-                  return (
-                    <button
-                      key={s}
-                      onClick={() => setForm((f) => ({ ...f, style: s }))}
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
-                      style={{
-                        fontFamily: 'var(--font-heading)',
-                        background: sel ? 'rgba(212,160,74,0.2)' : 'rgba(253,248,240,0.04)',
-                        border: `1px solid ${sel ? 'rgba(232,196,122,0.5)' : 'rgba(253,248,240,0.09)'}`,
-                        color: sel ? '#E8C47A' : 'rgba(253,248,240,0.5)',
-                        boxShadow: sel ? '0 0 14px rgba(212,160,74,0.2)' : 'none',
-                      }}
-                    >
-                      {sel && <span style={{ color: '#E8C47A', fontSize: '0.7rem' }}>✓</span>}
-                      {s}
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* Generate button */}
-            <motion.button
-              onClick={handleGenerate}
-              disabled={!ready || loading}
-              whileTap={{ scale: 0.98 }}
-              className="w-full py-5 rounded-xl text-sm font-bold tracking-wide uppercase transition-all duration-300 mt-2"
-              style={{
-                fontFamily: 'var(--font-heading)',
-                background: ready && !loading
-                  ? 'linear-gradient(135deg, #D4A04A, #B8862E)'
-                  : 'rgba(253,248,240,0.04)',
-                border: `1px solid ${ready && !loading ? 'transparent' : 'rgba(253,248,240,0.06)'}`,
-                color: ready && !loading ? '#0D0B09' : 'rgba(253,248,240,0.2)',
-                cursor: ready && !loading ? 'pointer' : 'not-allowed',
-                boxShadow: ready && !loading ? '0 0 30px rgba(212,160,74,0.3)' : 'none',
-              }}
-            >
-              {loading ? (
-                <span className="flex items-center justify-center gap-3">
-                  <motion.span
-                    animate={{ rotate: 360 }}
-                    transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
-                    className="inline-block w-4 h-4 rounded-full"
-                    style={{ border: '2px solid rgba(232,196,122,0.3)', borderTopColor: '#E8C47A' }}
-                  />
-                  Generating concepts...
-                </span>
-              ) : 'Generate Concepts →'}
-            </motion.button>
-          </div>
-        </motion.div>
-
-        {/* Error */}
-        <AnimatePresence>
-          {error && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="text-center text-sm mb-6"
-              style={{ color: 'rgba(255,100,100,0.7)', fontFamily: 'var(--font-body)' }}
-            >
-              {error}
-            </motion.p>
-          )}
-        </AnimatePresence>
-
-        {/* Results */}
-        <AnimatePresence>
-          {results && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-              className="space-y-4"
-            >
-              <div className="flex items-center justify-center gap-3 mb-6">
-                <p
-                  className="text-[10px] tracking-[0.3em] uppercase"
-                  style={{ fontFamily: 'var(--font-heading)', color: 'rgba(232,196,122,0.5)' }}
-                >
-                  3 concepts · tap to copy
-                </p>
-                {usedFallback && (
-                  <span
-                    className="text-[9px] tracking-widest uppercase px-2 py-0.5 rounded-full"
-                    style={{
-                      background: 'rgba(212,160,74,0.08)',
-                      color: 'rgba(212,160,74,0.6)',
-                      border: '1px solid rgba(212,160,74,0.15)',
-                    }}
-                  >
-                    backup model
-                  </span>
-                )}
-              </div>
-              {results.map((concept, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.1 }}
-                  className="rounded-xl border p-6 transition-all duration-300"
-                  style={{
-                    background: copied === idx ? 'rgba(212,160,74,0.08)' : 'rgba(22,19,15,0.8)',
-                    borderColor: copied === idx ? 'rgba(232,196,122,0.4)' : 'rgba(212,160,74,0.15)',
-                    backdropFilter: 'blur(8px)',
-                  }}
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <span
-                      className="text-[9px] tracking-[0.3em] uppercase"
-                      style={{ fontFamily: 'var(--font-heading)', color: 'rgba(232,196,122,0.6)' }}
-                    >
-                      Concept {idx + 1}
-                    </span>
-                    <button
-                      onClick={() => handleCopy(`Hook: ${concept.hook}\n\nFormat: ${concept.format}\n\nAngle: ${concept.angle}\n\nCTA: ${concept.cta}`, idx)}
-                      className="text-[9px] tracking-[0.2em] uppercase transition-colors duration-200"
-                      style={{
-                        fontFamily: 'var(--font-heading)',
-                        color: copied === idx ? '#E8C47A' : 'rgba(253,248,240,0.2)',
-                      }}
-                    >
-                      {copied === idx ? 'Copied ✓' : 'Copy'}
-                    </button>
-                  </div>
-
-                  <div className="space-y-3">
-                    <div>
-                      <span
-                        className="text-[9px] tracking-[0.2em] uppercase block mb-1"
-                        style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.25)' }}
-                      >
-                        Hook
-                      </span>
-                      <p
-                        className="leading-relaxed"
-                        style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'rgba(253,248,240,0.85)' }}
-                      >
-                        {concept.hook}
-                      </p>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-                      {[
-                        { label: 'Format', value: concept.format },
-                        { label: 'Angle', value: concept.angle },
-                        { label: 'CTA', value: concept.cta },
-                      ].map(({ label, value }) => (
-                        <div
-                          key={label}
-                          className="rounded-lg p-3"
-                          style={{ background: 'rgba(212,160,74,0.06)', border: '1px solid rgba(212,160,74,0.1)' }}
-                        >
-                          <span
-                            className="text-[8px] tracking-[0.2em] uppercase block mb-1"
-                            style={{ fontFamily: 'var(--font-heading)', color: 'rgba(232,196,122,0.5)' }}
-                          >
-                            {label}
-                          </span>
-                          <p className="text-xs leading-relaxed" style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.55)' }}>
-                            {value}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Chained workflow CTA */}
-                    <div className="flex items-center gap-3 pt-2">
-                      <button
-                        onClick={() => handleUseConcept(concept)}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold tracking-wide uppercase transition-all duration-200"
-                        style={{
-                          fontFamily: 'var(--font-heading)',
-                          background: 'linear-gradient(135deg, rgba(212,160,74,0.2), rgba(184,134,46,0.15))',
-                          border: '1px solid rgba(212,160,74,0.35)',
-                          color: '#E8C47A',
-                          boxShadow: '0 0 12px rgba(212,160,74,0.15)',
-                        }}
-                        onMouseEnter={e => e.currentTarget.style.boxShadow = '0 0 20px rgba(212,160,74,0.3)'}
-                        onMouseLeave={e => e.currentTarget.style.boxShadow = '0 0 12px rgba(212,160,74,0.15)'}
-                      >
-                        <span>⚡</span>
-                        Write Hooks for this →
-                      </button>
-                      <button
-                        onClick={() => {
-                          setActiveConcept({ hook: concept.hook, format: concept.format, angle: concept.angle, platform: form.platform })
-                          setChainedConcept(concept)
-                          setActiveTab('captions')
-                        }}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold tracking-wide uppercase transition-all duration-200"
-                        style={{
-                          fontFamily: 'var(--font-heading)',
-                          background: 'rgba(212,160,74,0.08)',
-                          border: '1px solid rgba(212,160,74,0.2)',
-                          color: 'rgba(232,196,122,0.7)',
-                        }}
-                        onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(212,160,74,0.4)'}
-                        onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(212,160,74,0.2)'}
-                      >
-                        <span>✍️</span>
-                        Write Caption →
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-
-              {/* Start over */}
-              <div className="text-center pt-4">
-                <button
-                  onClick={() => {
-                    setResults(null)
-                    setForm({ niche: '', platform: '', style: '' })
-                    setChainedConcept(null)
-                    saveSession('concepts_results', null)
-                    saveSession('concepts_form', null)
-                  }}
-                  className="text-[10px] tracking-[0.25em] uppercase transition-colors duration-200"
-                  style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.25)' }}
-                >
-                  Start over
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        </motion.div>
-        )}
-        </AnimatePresence>
-
-      </div>
-    </section>
+        </div>
+      )}
+    </div>
   )
 }
 
-function TabCard({ tab, isActive, onClick }) {
-  const ref = useRef(null)
+export default function SofarContent() {
+  const [active, setActive] = useState('concepts')
+  const sectionRef = useRef(null)
+  const panelRef = useRef(null)
+  const tabRefs = useRef({})
+  const tool = TOOLS.find((t) => t.id === active)
 
-  function handleMouseMove(e) {
-    const el = ref.current
-    if (!el) return
-    const rect = el.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    const cx = rect.width / 2
-    const cy = rect.height / 2
-    const rotX = ((y - cy) / cy) * -8
-    const rotY = ((x - cx) / cx) * 8
-    el.style.transform = `perspective(500px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.03,1.03,1.03)`
-  }
+  useEffect(() => {
+    function open(id) {
+      if (!TOOL_IDS.includes(id)) return
+      setActive(id)
+      sectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+    const fromHash = () => open(window.location.hash.slice(1))
+    const fromEvent = (e) => open(e.detail)
+    fromHash()
+    window.addEventListener('hashchange', fromHash)
+    window.addEventListener('open-tool', fromEvent)
+    return () => {
+      window.removeEventListener('hashchange', fromHash)
+      window.removeEventListener('open-tool', fromEvent)
+    }
+  }, [])
 
-  function handleMouseLeave() {
-    if (ref.current) {
-      ref.current.style.transform = 'perspective(500px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)'
+  // On narrow screens the panel sits below the list, so bring it into view.
+  function selectTab(id) {
+    setActive(id)
+    if (window.matchMedia('(max-width: 1023px)').matches) {
+      requestAnimationFrame(() => panelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
     }
   }
 
+  function onTabKey(e, idx) {
+    const delta = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : 0
+    if (!delta) return
+    e.preventDefault()
+    const next = TOOLS[(idx + delta + TOOLS.length) % TOOLS.length]
+    setActive(next.id)
+    tabRefs.current[next.id]?.focus()
+  }
+
   return (
-    <button
-      ref={ref}
-      onClick={onClick}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="py-4 px-4 rounded-2xl text-left tilt-card"
-      style={{
-        background: isActive ? `rgba(${tab.colorRgb},0.12)` : 'rgba(253,248,240,0.03)',
-        border: `1px solid ${isActive ? tab.color + '40' : 'rgba(253,248,240,0.07)'}`,
-        boxShadow: isActive ? `0 0 24px rgba(${tab.colorRgb},0.25), inset 0 1px 0 rgba(255,255,255,0.06)` : 'none',
-      }}
-    >
-      <p
-        className="text-sm font-bold mb-1"
-        style={{
-          fontFamily: 'var(--font-heading)',
-          color: isActive ? tab.color : 'rgba(253,248,240,0.5)',
-          textShadow: isActive ? `0 0 14px ${tab.color}80` : 'none',
-          lineHeight: 1.3,
-        }}
-      >
-        {tab.label}
-      </p>
-      <p
-        className="text-xs"
-        style={{
-          fontFamily: 'var(--font-body)',
-          color: isActive ? tab.color + '90' : 'rgba(253,248,240,0.25)',
-          lineHeight: 1.4,
-        }}
-      >
-        {tab.sub}
-      </p>
-    </button>
+    <section id="tools" ref={sectionRef} className="scroll-mt-6 border-t border-rule">
+      <div className="container-page grid gap-12 py-20 lg:grid-cols-12 lg:gap-10 lg:py-28">
+        <div className="lg:col-span-4">
+          <h2 className="type-display text-[clamp(48px,5.4vw,76px)] text-silver">The tools</h2>
+          <p className="mt-5 max-w-[36ch] text-[17px] text-[#c9c9c4]">
+            Five of them, all free. Each one gives you a handful of options. You keep the one that fits.
+          </p>
+
+          <div role="tablist" aria-label="Tools" aria-orientation="vertical" className="mt-10 border-t border-rule">
+            {TOOLS.map((t, idx) => {
+              const selected = t.id === active
+              return (
+                <button
+                  key={t.id}
+                  ref={(el) => { tabRefs.current[t.id] = el }}
+                  role="tab"
+                  id={`tab-${t.id}`}
+                  aria-selected={selected}
+                  aria-controls="tool-panel"
+                  tabIndex={selected ? 0 : -1}
+                  onClick={() => selectTab(t.id)}
+                  onKeyDown={(e) => onTabKey(e, idx)}
+                  className={`tool-tab${selected ? ' is-active' : ''}`}
+                >
+                  <span className="tool-tab-name">{t.name}</span>
+                  <span className="tool-tab-yield">{t.yields}</span>
+                </button>
+              )
+            })}
+          </div>
+          <p className="mt-6 text-[15px] text-graphite">Coming next: a bio writer and a 30-day content calendar.</p>
+        </div>
+
+        <div id="tool-panel" ref={panelRef} role="tabpanel" aria-label={tool.name} className="scroll-mt-6 lg:col-span-8">
+          <h3 className="text-[28px] font-semibold leading-tight text-silver">{tool.name}</h3>
+          <p className="mt-2 mb-10 max-w-[60ch] text-[17px] text-[#c9c9c4]">{tool.desc}</p>
+          {active === 'concepts' && <ConceptGenerator onUseConcept={setActive} />}
+          {active === 'hooks' && <HookWriter />}
+          {active === 'captions' && <CaptionWriter />}
+          {active === 'linkedin' && <LinkedInWriter />}
+          {active === 'analyzer' && <ContentAnalyzer />}
+        </div>
+      </div>
+    </section>
   )
 }

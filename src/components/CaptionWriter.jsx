@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import { llmFetch } from '../lib/llmFetch'
 import { getActiveConcept, clearActiveConcept, saveSession, loadSession } from '../lib/sessionStore'
+import { TextArea, ChipGroup, Checkbox, GenerateButton, ErrorText, FallbackNote, ResultRow, CopyButton } from './ui/ToolKit'
 
 const PLATFORMS = ['Instagram', 'TikTok', 'YouTube', 'YouTube Shorts', 'Pinterest', 'Etsy', 'X (Twitter)', 'LinkedIn']
 const TONES = ['Bold', 'Casual', 'Professional', 'Inspirational', 'Humorous']
@@ -12,6 +12,7 @@ export default function CaptionWriter() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [copied, setCopied] = useState(null)
+  const [picked, setPicked] = useState(null)
   const [usedFallback, setUsedFallback] = useState(false)
   const [fromConcept, setFromConcept] = useState(null)
 
@@ -40,6 +41,7 @@ export default function CaptionWriter() {
     setLoading(true)
     setError(null)
     setResults(null)
+    setPicked(null)
 
     const charLimits = {
       Instagram: '2200 chars max, sweet spot 138–150 for feed posts',
@@ -117,7 +119,7 @@ Return ONLY valid JSON, no markdown, no explanation:
       saveSession('captions_results', parsed)
       saveSession('captions_form', form)
     } catch {
-      setError('Something went wrong. Try again.')
+      setError('The captions didn’t come back. Try again in a moment.')
     } finally {
       setLoading(false)
     }
@@ -126,6 +128,7 @@ Return ONLY valid JSON, no markdown, no explanation:
   function copyCaption(text, idx) {
     navigator.clipboard.writeText(text)
     setCopied(idx)
+    setPicked(idx)
     setTimeout(() => setCopied(null), 2000)
   }
 
@@ -136,383 +139,81 @@ Return ONLY valid JSON, no markdown, no explanation:
     setTimeout(() => setCopied(null), 2000)
   }
 
+  function startOver() {
+    setResults(null)
+    setPicked(null)
+    setFromConcept(null)
+    setForm({ concept: '', platform: '', tone: '', includeCta: true })
+    saveSession('captions_results', null)
+    saveSession('captions_form', null)
+  }
+
   return (
-    <div>
-      {/* Form */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="rounded-2xl border p-8 mb-6"
-        style={{
-          background: 'rgba(22,19,15,0.8)',
-          borderColor: 'rgba(253,248,240,0.07)',
-          backdropFilter: 'blur(12px)',
-        }}
-      >
-        <div className="grid gap-5">
-          {/* Chained concept banner */}
-          {fromConcept && (
-            <motion.div
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex items-start gap-3 px-4 py-3 rounded-xl"
-              style={{
-                background: 'linear-gradient(135deg, rgba(212,160,74,0.08), rgba(212,160,74,0.06))',
-                border: '1px solid rgba(212,160,74,0.2)',
-              }}
-            >
-              <span className="text-base mt-0.5">✍️</span>
-              <div>
-                <p className="text-[9px] tracking-[0.25em] uppercase mb-1" style={{ fontFamily: 'var(--font-heading)', color: 'rgba(232,196,122,0.7)' }}>
-                  Pre-filled from your concept
-                </p>
-                <p className="text-xs leading-relaxed" style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.5)' }}>
-                  {fromConcept.hook}
-                </p>
-              </div>
-              <button
-                onClick={() => { setFromConcept(null); setForm(f => ({ ...f, concept: '', platform: '' })) }}
-                className="ml-auto text-[9px] tracking-wider uppercase shrink-0"
-                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.2)' }}
-              >
-                Clear
-              </button>
-            </motion.div>
+    <div className="grid gap-8">
+      {fromConcept && (
+        <div className="flex flex-wrap items-baseline justify-between gap-3 border-l-2 border-gold pl-4">
+          <p className="text-[15px] text-[#c9c9c4]">Filled in from the post idea you picked.</p>
+          <button
+            type="button"
+            className="btn-text"
+            onClick={() => { setFromConcept(null); setForm(f => ({ ...f, concept: '', platform: '' })) }}
+          >
+            Clear
+          </button>
+        </div>
+      )}
+
+      <TextArea
+        label="What’s the post?"
+        value={form.concept}
+        onChange={(v) => setForm((f) => ({ ...f, concept: v }))}
+        placeholder="e.g. Behind the scenes of a studio portrait session with flower-covered boots"
+      />
+      <ChipGroup label="Platform" options={PLATFORMS} value={form.platform} onChange={(v) => setForm((f) => ({ ...f, platform: v }))} />
+      <ChipGroup label="Tone (optional)" options={TONES} value={form.tone} optional onChange={(v) => setForm((f) => ({ ...f, tone: v }))} />
+      <Checkbox label="End each caption with a call to action" checked={form.includeCta} onChange={(v) => setForm((f) => ({ ...f, includeCta: v }))} />
+
+      <GenerateButton ready={ready} loading={loading} onClick={handleGenerate} idleLabel="Write 5 captions" loadingLabel="Writing captions…" />
+      <ErrorText>{error}</ErrorText>
+
+      {results && (
+        <div className="grid gap-6">
+          <FallbackNote show={usedFallback} />
+          {results.posting_tip && (
+            <div className="grid gap-1">
+              <p className="tool-label">Posting tip for {form.platform}</p>
+              <p className="max-w-[62ch] text-[16px] text-[#c9c9c4]">{results.posting_tip}</p>
+            </div>
           )}
 
-          {/* Concept input */}
-          <div>
-            <label
-              className="block text-[10px] tracking-[0.25em] uppercase text-cream/40 mb-3"
-              style={{ fontFamily: 'var(--font-heading)' }}
-            >
-              Your Content Concept
-            </label>
-            <textarea
-              value={form.concept}
-              onChange={(e) => setForm((f) => ({ ...f, concept: e.target.value }))}
-              placeholder="e.g. How I doubled my engagement by posting at 3am — and the data behind it..."
-              rows={3}
-              className="w-full rounded-xl px-4 py-3 text-sm resize-none outline-none transition-all duration-200"
-              style={{
-                fontFamily: 'var(--font-body)',
-                background: 'rgba(253,248,240,0.04)',
-                border: '1px solid rgba(253,248,240,0.08)',
-                color: 'rgba(253,248,240,0.8)',
-                fontSize: '0.88rem',
-              }}
-              onFocus={(e) => (e.target.style.borderColor = 'rgba(212,160,74,0.35)')}
-              onBlur={(e) => (e.target.style.borderColor = 'rgba(253,248,240,0.08)')}
-            />
-          </div>
+          <ol className="result-list">
+            {results.captions.map((caption, idx) => {
+              const isSuggested = results.best_pick === caption.number
+              return (
+                <ResultRow
+                  key={idx}
+                  index={idx}
+                  picked={picked === idx}
+                  aside={<CopyButton copied={copied === idx} onClick={() => copyCaption(caption.full_caption, idx)} />}
+                >
+                  <p className="text-[14px] text-graphite">
+                    {caption.style}, {caption.char_count} characters{isSuggested ? ', suggested pick' : ''}
+                  </p>
+                  <p className="whitespace-pre-line text-[17px] leading-[1.55] text-silver">{caption.full_caption}</p>
+                  <p className="text-[15px] text-[#c9c9c4]">{caption.why_it_works}</p>
+                </ResultRow>
+              )
+            })}
+          </ol>
 
-          {/* Platform + Tone row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label
-                className="block text-[10px] tracking-[0.25em] uppercase text-cream/40 mb-3"
-                style={{ fontFamily: 'var(--font-heading)' }}
-              >
-                Platform
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {PLATFORMS.map((p) => (
-                  <button
-                    key={p}
-                    onClick={() => setForm((f) => ({ ...f, platform: p }))}
-                    className="px-3 py-1.5 rounded-full text-xs transition-all duration-200"
-                    style={{
-                      fontFamily: 'var(--font-heading)',
-                      background: form.platform === p ? 'rgba(212,160,74,0.15)' : 'rgba(253,248,240,0.04)',
-                      border: `1px solid ${form.platform === p ? 'rgba(212,160,74,0.5)' : 'rgba(253,248,240,0.08)'}`,
-                      color: form.platform === p ? 'var(--color-gold)' : 'rgba(253,248,240,0.4)',
-                    }}
-                  >
-                    {p}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label
-                className="block text-[10px] tracking-[0.25em] uppercase text-cream/40 mb-3"
-                style={{ fontFamily: 'var(--font-heading)' }}
-              >
-                Tone (optional)
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {TONES.map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => setForm((f) => ({ ...f, tone: f.tone === t ? '' : t }))}
-                    className="px-3 py-1.5 rounded-full text-xs transition-all duration-200"
-                    style={{
-                      fontFamily: 'var(--font-heading)',
-                      background: form.tone === t ? 'rgba(212,160,74,0.15)' : 'rgba(253,248,240,0.04)',
-                      border: `1px solid ${form.tone === t ? 'rgba(212,160,74,0.5)' : 'rgba(253,248,240,0.08)'}`,
-                      color: form.tone === t ? 'var(--color-gold)' : 'rgba(253,248,240,0.4)',
-                    }}
-                  >
-                    {t}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* CTA toggle */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setForm((f) => ({ ...f, includeCta: !f.includeCta }))}
-              className="w-10 h-5 rounded-full transition-all duration-300 relative"
-              style={{
-                background: form.includeCta ? 'rgba(212,160,74,0.4)' : 'rgba(253,248,240,0.08)',
-                border: `1px solid ${form.includeCta ? 'rgba(212,160,74,0.6)' : 'rgba(253,248,240,0.1)'}`,
-              }}
-            >
-              <motion.div
-                animate={{ x: form.includeCta ? 20 : 2 }}
-                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                className="absolute top-0.5 w-3.5 h-3.5 rounded-full"
-                style={{ background: form.includeCta ? 'var(--color-gold)' : 'rgba(253,248,240,0.3)' }}
-              />
+          <div className="flex flex-wrap items-center gap-3">
+            <button type="button" className="btn-plain" onClick={copyAll}>
+              {copied === 'all' ? 'Copied all 5' : 'Copy all 5'}
             </button>
-            <span
-              className="text-xs text-cream/35"
-              style={{ fontFamily: 'var(--font-body)' }}
-            >
-              Include call to action
-            </span>
+            <button type="button" className="btn-text ml-2" onClick={startOver}>Start over</button>
           </div>
-
-          {/* Generate button */}
-          <motion.button
-            onClick={handleGenerate}
-            disabled={!ready || loading}
-            whileTap={{ scale: 0.98 }}
-            className="w-full py-4 rounded-xl text-sm font-medium tracking-widest uppercase transition-all duration-300"
-            style={{
-              fontFamily: 'var(--font-heading)',
-              background: ready && !loading ? 'rgba(212,160,74,0.12)' : 'rgba(253,248,240,0.03)',
-              border: `1px solid ${ready && !loading ? 'rgba(212,160,74,0.4)' : 'rgba(253,248,240,0.06)'}`,
-              color: ready && !loading ? 'var(--color-gold)' : 'rgba(253,248,240,0.2)',
-              cursor: ready && !loading ? 'pointer' : 'not-allowed',
-            }}
-          >
-            {loading ? (
-              <span className="flex items-center justify-center gap-3">
-                <motion.span
-                  animate={{ rotate: 360 }}
-                  transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
-                  className="inline-block w-3.5 h-3.5 rounded-full"
-                  style={{ border: '1.5px solid rgba(212,160,74,0.3)', borderTopColor: 'var(--color-gold)' }}
-                />
-                Writing captions...
-              </span>
-            ) : 'Generate Captions'}
-          </motion.button>
         </div>
-      </motion.div>
-
-      {/* Error */}
-      <AnimatePresence>
-        {error && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="text-center text-sm mb-6"
-            style={{ color: 'rgba(255,100,100,0.7)', fontFamily: 'var(--font-body)' }}
-          >
-            {error}
-          </motion.p>
-        )}
-      </AnimatePresence>
-
-      {/* Results */}
-      <AnimatePresence>
-        {results && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            {/* Fallback badge */}
-            {usedFallback && (
-              <div className="flex justify-center mb-4">
-                <span
-                  className="text-[9px] tracking-widest uppercase px-2 py-0.5 rounded-full"
-                  style={{
-                    background: 'rgba(212,160,74,0.08)',
-                    color: 'rgba(212,160,74,0.5)',
-                    border: '1px solid rgba(212,160,74,0.12)',
-                  }}
-                >
-                  Using backup model
-                </span>
-              </div>
-            )}
-
-            {/* Posting tip */}
-            {results.posting_tip && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="rounded-xl border p-4 mb-4"
-                style={{
-                  background: 'rgba(212,160,74,0.04)',
-                  borderColor: 'rgba(212,160,74,0.12)',
-                }}
-              >
-                <p
-                  className="text-[9px] tracking-[0.25em] uppercase text-gold/50 mb-1"
-                  style={{ fontFamily: 'var(--font-heading)' }}
-                >
-                  {form.platform} Tip
-                </p>
-                <p
-                  className="text-cream/40 text-xs leading-relaxed"
-                  style={{ fontFamily: 'var(--font-body)' }}
-                >
-                  {results.posting_tip}
-                </p>
-              </motion.div>
-            )}
-
-            {/* Caption cards */}
-            <div className="space-y-4 mb-4">
-              {results.captions.map((caption, idx) => {
-                const isBest = results.best_pick === caption.number
-                return (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.07 }}
-                    className="rounded-xl border p-5"
-                    style={{
-                      background: isBest ? 'rgba(212,160,74,0.04)' : 'rgba(22,19,15,0.6)',
-                      borderColor: copied === idx
-                        ? 'rgba(212,160,74,0.4)'
-                        : isBest
-                        ? 'rgba(212,160,74,0.18)'
-                        : 'rgba(253,248,240,0.06)',
-                    }}
-                  >
-                    {/* Header row */}
-                    <div className="flex items-start justify-between gap-3 mb-3">
-                      <div className="flex items-center gap-2">
-                        {isBest && (
-                          <span className="text-sm">🏆</span>
-                        )}
-                        <span
-                          className="text-[9px] tracking-[0.2em] uppercase"
-                          style={{
-                            fontFamily: 'var(--font-heading)',
-                            color: isBest ? 'rgba(212,160,74,0.8)' : 'rgba(253,248,240,0.3)',
-                          }}
-                        >
-                          {caption.style}
-                        </span>
-                        {isBest && (
-                          <span
-                            className="text-[8px] tracking-widest uppercase px-1.5 py-0.5 rounded-full"
-                            style={{
-                              fontFamily: 'var(--font-heading)',
-                              background: 'rgba(212,160,74,0.12)',
-                              color: 'rgba(212,160,74,0.7)',
-                              border: '1px solid rgba(212,160,74,0.2)',
-                            }}
-                          >
-                            Best Pick
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-3 shrink-0">
-                        <span
-                          className="text-[9px] tracking-[0.15em] uppercase text-cream/20"
-                          style={{ fontFamily: 'var(--font-heading)' }}
-                        >
-                          {caption.char_count} chars
-                        </span>
-                        <button
-                          onClick={() => copyCaption(caption.full_caption, idx)}
-                          className="text-[9px] tracking-[0.2em] uppercase transition-colors duration-200 px-2.5 py-1 rounded-lg"
-                          style={{
-                            fontFamily: 'var(--font-heading)',
-                            background: copied === idx ? 'rgba(212,160,74,0.12)' : 'rgba(253,248,240,0.04)',
-                            border: `1px solid ${copied === idx ? 'rgba(212,160,74,0.3)' : 'rgba(253,248,240,0.08)'}`,
-                            color: copied === idx ? 'var(--color-gold)' : 'rgba(253,248,240,0.3)',
-                          }}
-                        >
-                          {copied === idx ? 'Copied!' : 'Copy'}
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* First line highlight */}
-                    <p
-                      className="text-cream/70 text-xs mb-1"
-                      style={{ fontFamily: 'var(--font-heading)', letterSpacing: '0.02em' }}
-                    >
-                      ↳ <span className="text-cream/90 font-medium">{caption.first_line}</span>
-                    </p>
-
-                    {/* Full caption */}
-                    <p
-                      className="text-cream/50 leading-relaxed text-xs mb-3 whitespace-pre-line"
-                      style={{ fontFamily: 'var(--font-body)' }}
-                    >
-                      {caption.full_caption}
-                    </p>
-
-                    {/* Why it works */}
-                    <p
-                      className="text-cream/25 text-xs"
-                      style={{ fontFamily: 'var(--font-body)' }}
-                    >
-                      {caption.why_it_works}
-                    </p>
-                  </motion.div>
-                )
-              })}
-            </div>
-
-            {/* Action buttons */}
-            <div className="flex items-center justify-center gap-4 flex-wrap pt-2">
-              <button
-                onClick={copyAll}
-                className="px-5 py-2.5 rounded-xl text-xs tracking-widest uppercase transition-all duration-200"
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  background: 'rgba(212,160,74,0.1)',
-                  border: '1px solid rgba(212,160,74,0.3)',
-                  color: copied === 'all' ? 'var(--color-gold)' : 'rgba(212,160,74,0.6)',
-                }}
-              >
-                {copied === 'all' ? 'Copied!' : 'Copy All 5'}
-              </button>
-              <button
-                onClick={() => {
-                  setResults(null)
-                  setFromConcept(null)
-                  setForm({ concept: '', platform: '', tone: '', includeCta: true })
-                  saveSession('captions_results', null)
-                  saveSession('captions_form', null)
-                }}
-                className="text-[10px] tracking-[0.2em] uppercase text-cream/20 hover:text-cream/40 transition-colors duration-200"
-                style={{ fontFamily: 'var(--font-heading)' }}
-              >
-                Start over
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      )}
     </div>
   )
 }

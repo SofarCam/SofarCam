@@ -1,22 +1,11 @@
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import { llmFetch } from '../lib/llmFetch'
 import { saveSession, loadSession } from '../lib/sessionStore'
-
-// Color theme for the analyzer tab
-const COLOR = '#D4A04A'
-const COLOR_RGB = '212,160,74'
-
-// Platform icons (text-based, no extra deps)
-const PLATFORM_ICONS = {
-  youtube: '▶',
-  twitter: '✕',
-  instagram: '◈',
-}
+import { TextInput, TextArea, ErrorText, ResultRow, CopyButton } from './ui/ToolKit'
 
 const PLATFORM_LABELS = {
   youtube: 'YouTube',
-  twitter: 'X / Twitter',
+  twitter: 'X',
   instagram: 'Instagram',
 }
 
@@ -79,7 +68,7 @@ export default function ContentAnalyzer() {
       setContentData(data)
       setStep('preview')
     } catch {
-      setFetchError('Network error. Check your connection and try again.')
+      setFetchError('Couldn’t reach that link. Check your connection and try again.')
     } finally {
       setFetching(false)
     }
@@ -146,7 +135,7 @@ Return ONLY valid JSON, no markdown, no explanation:
       saveSession('analyzer_results', parsed)
       saveSession('analyzer_content', contentData)
     } catch {
-      setFetchError('Analysis failed. Try again.')
+      setFetchError('The analysis didn’t come back. Try again in a moment.')
     } finally {
       setAnalyzing(false)
     }
@@ -160,584 +149,171 @@ Return ONLY valid JSON, no markdown, no explanation:
 
   // ── Render ────────────────────────────────────────────────────────────────
 
+  const canAnalyze = !analyzing && (contentData?.platform !== 'instagram' || manualText.trim())
+
   return (
-    <div>
-      <AnimatePresence mode="wait">
+    <div className="grid gap-8">
+      {step === 'input' && (
+        <>
+          <div className="grid gap-2">
+            <TextInput
+              label="Link to a post"
+              type="url"
+              value={url}
+              onChange={setUrl}
+              onEnter={handleFetch}
+              placeholder="https://youtube.com/watch?v=… or https://x.com/…"
+            />
+            <span className="tool-hint">Works with YouTube and X. For Instagram, you’ll paste the caption after the link loads.</span>
+          </div>
+          <ErrorText>{fetchError}</ErrorText>
+          <div>
+            <button type="button" className="btn-gold" onClick={handleFetch} disabled={!url.trim() || fetching}>
+              {fetching ? 'Loading the post…' : 'Load the post'}
+            </button>
+          </div>
+        </>
+      )}
 
-        {/* ── Step 1: URL Input ── */}
-        {step === 'input' && (
-          <motion.div
-            key="input"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.25 }}
-          >
-            <div
-              className="rounded-2xl border p-8"
-              style={{
-                background: 'rgba(22,19,15,0.9)',
-                borderColor: `rgba(${COLOR_RGB},0.15)`,
-                backdropFilter: 'blur(12px)',
-              }}
-            >
-              <p
-                className="text-[10px] tracking-[0.25em] uppercase mb-6"
-                style={{ fontFamily: 'var(--font-heading)', color: `rgba(${COLOR_RGB},0.6)` }}
-              >
-                Paste a URL to analyze
-              </p>
+      {step === 'preview' && contentData && (
+        <>
+          <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-rule pb-4">
+            <p className="tool-label">{PLATFORM_LABELS[contentData.platform]} post</p>
+            <button type="button" className="btn-text" onClick={reset}>Use a different link</button>
+          </div>
 
-              {/* URL input */}
-              <div className="relative mb-3">
-                <input
-                  type="url"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleFetch()}
-                  placeholder="https://youtube.com/watch?v=... or x.com/..."
-                  className="w-full rounded-xl px-4 py-3.5 text-sm outline-none transition-all duration-200"
-                  style={{
-                    fontFamily: 'var(--font-body)',
-                    background: 'rgba(253,248,240,0.04)',
-                    border: `1px solid rgba(${COLOR_RGB},0.15)`,
-                    color: '#FDF8F0',
-                    caretColor: COLOR,
-                  }}
-                />
+          {contentData.platform === 'youtube' && (
+            <div className="grid gap-3">
+              <img
+                src={contentData.thumbnail}
+                onError={(e) => { e.target.src = contentData.thumbnailFallback }}
+                alt={contentData.title}
+                className="w-full max-h-[320px] object-cover"
+              />
+              <p className="text-[21px] font-semibold leading-snug text-silver">{contentData.title}</p>
+              <p className="text-[15px] text-graphite">{contentData.author}</p>
+            </div>
+          )}
+
+          {contentData.platform === 'twitter' && (
+            <div className="grid gap-4">
+              <div className="flex items-center gap-3">
+                {contentData.avatar && <img src={contentData.avatar} alt="" className="h-10 w-10 rounded-full" />}
+                <div>
+                  <p className="text-[16px] font-semibold text-silver">{contentData.author}</p>
+                  <p className="text-[14px] text-graphite">@{contentData.handle}</p>
+                </div>
               </div>
-
-              {/* Platform badges */}
-              <div className="flex items-center gap-3 mb-6">
+              <p className="text-[17px] leading-[1.55] text-silver">{contentData.text}</p>
+              <p className="text-[14px] text-graphite">
                 {[
-                  { icon: '▶', label: 'YouTube', color: '#ef4444' },
-                  { icon: '✕', label: 'X / Twitter', color: '#FDF8F0' },
-                  { icon: '◈', label: 'Instagram*', color: '#D4A04A' },
-                ].map(({ icon, label, color }) => (
-                  <span
-                    key={label}
-                    className="inline-flex items-center gap-1.5 text-[10px]"
-                    style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.3)' }}
-                  >
-                    <span style={{ color }}>{icon}</span>
-                    {label}
-                  </span>
+                  ['views', contentData.views],
+                  ['likes', contentData.likes],
+                  ['reposts', contentData.retweets],
+                  ['replies', contentData.replies],
+                ].map(([label, val]) => `${val?.toLocaleString() ?? '—'} ${label}`).join(', ')}
+              </p>
+            </div>
+          )}
+
+          {contentData.platform === 'instagram' && (
+            <div className="grid gap-4">
+              <p className="text-[16px] text-[#c9c9c4]">{contentData.message}</p>
+              <TextArea
+                label="Caption or text from the post"
+                value={manualText}
+                onChange={setManualText}
+                placeholder="Paste the caption, description, or on-screen text"
+                rows={5}
+              />
+            </div>
+          )}
+
+          <div className="flex flex-wrap items-center gap-4">
+            <button type="button" className="btn-gold" onClick={handleAnalyze} disabled={!canAnalyze}>
+              {analyzing ? 'Analyzing…' : 'Analyze this post'}
+            </button>
+            {analyzing && <span className="tool-hint" aria-live="polite">This usually takes 10–20 seconds.</span>}
+          </div>
+          <ErrorText>{fetchError}</ErrorText>
+        </>
+      )}
+
+      {step === 'results' && analysis && (
+        <>
+          <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-rule pb-4">
+            <p className="tool-label">Analysis</p>
+            <button type="button" className="btn-text" onClick={reset}>Analyze another post</button>
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-[auto_1fr] sm:gap-8">
+            <p className="type-display text-[88px] leading-none text-silver">
+              {analysis.score}<span className="text-[32px] text-graphite">/10</span>
+            </p>
+            <div className="grid gap-2">
+              <p className="text-[22px] font-semibold leading-snug text-silver">{analysis.verdict}</p>
+              <p className="text-[16px] text-[#c9c9c4]">{analysis.scoreReason}</p>
+            </div>
+          </div>
+
+          <div className="grid gap-8 sm:grid-cols-2">
+            <div className="grid gap-3">
+              <p className="tool-label">What works</p>
+              <ul className="grid gap-2 border-t border-rule pt-3">
+                {analysis.strengths?.map((s, i) => (
+                  <li key={i} className="text-[16px] leading-[1.5] text-[#c9c9c4]">{s}</li>
                 ))}
-              </div>
-
-              {/* Error */}
-              <AnimatePresence>
-                {fetchError && (
-                  <motion.p
-                    initial={{ opacity: 0, y: -4 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    className="text-xs mb-4 px-3 py-2 rounded-lg"
-                    style={{
-                      fontFamily: 'var(--font-body)',
-                      color: 'rgba(255,100,100,0.8)',
-                      background: 'rgba(255,100,100,0.05)',
-                      border: '1px solid rgba(255,100,100,0.1)',
-                    }}
-                  >
-                    {fetchError}
-                  </motion.p>
-                )}
-              </AnimatePresence>
-
-              {/* Fetch button */}
-              <motion.button
-                onClick={handleFetch}
-                disabled={!url.trim() || fetching}
-                whileTap={{ scale: 0.98 }}
-                className="w-full py-4 rounded-xl text-sm font-bold tracking-wide uppercase transition-all duration-300"
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  background:
-                    url.trim() && !fetching
-                      ? `linear-gradient(135deg, ${COLOR}, #D4A04A)`
-                      : 'rgba(253,248,240,0.04)',
-                  border: `1px solid ${url.trim() && !fetching ? 'transparent' : 'rgba(253,248,240,0.06)'}`,
-                  color: url.trim() && !fetching ? '#0D0B09' : 'rgba(253,248,240,0.2)',
-                  cursor: url.trim() && !fetching ? 'pointer' : 'not-allowed',
-                  boxShadow: url.trim() && !fetching ? `0 0 30px rgba(${COLOR_RGB},0.25)` : 'none',
-                }}
-              >
-                {fetching ? (
-                  <span className="flex items-center justify-center gap-3">
-                    <motion.span
-                      animate={{ rotate: 360 }}
-                      transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
-                      className="inline-block w-4 h-4 rounded-full"
-                      style={{ border: `2px solid rgba(${COLOR_RGB},0.3)`, borderTopColor: COLOR }}
-                    />
-                    Fetching content...
-                  </span>
-                ) : (
-                  'Fetch & Analyze →'
-                )}
-              </motion.button>
-
-              <p
-                className="text-center text-[10px] mt-4"
-                style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.15)' }}
-              >
-                *Instagram requires manual caption paste after fetch
-              </p>
+              </ul>
             </div>
-          </motion.div>
-        )}
-
-        {/* ── Step 2: Preview fetched content ── */}
-        {step === 'preview' && contentData && (
-          <motion.div
-            key="preview"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.25 }}
-            className="space-y-4"
-          >
-            {/* Content preview card */}
-            <div
-              className="rounded-2xl border p-6"
-              style={{
-                background: 'rgba(22,19,15,0.9)',
-                borderColor: `rgba(${COLOR_RGB},0.15)`,
-                backdropFilter: 'blur(12px)',
-              }}
-            >
-              {/* Platform badge */}
-              <div className="flex items-center justify-between mb-5">
-                <span
-                  className="inline-flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase px-3 py-1 rounded-full"
-                  style={{
-                    fontFamily: 'var(--font-heading)',
-                    color: COLOR,
-                    background: `rgba(${COLOR_RGB},0.1)`,
-                    border: `1px solid rgba(${COLOR_RGB},0.2)`,
-                  }}
-                >
-                  {PLATFORM_ICONS[contentData.platform]} {PLATFORM_LABELS[contentData.platform]}
-                </span>
-                <button
-                  onClick={reset}
-                  className="text-[10px] tracking-[0.2em] uppercase transition-colors duration-200"
-                  style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.25)' }}
-                >
-                  ← New URL
-                </button>
-              </div>
-
-              {/* YouTube preview */}
-              {contentData.platform === 'youtube' && (
-                <div>
-                  <img
-                    src={contentData.thumbnail}
-                    onError={(e) => { e.target.src = contentData.thumbnailFallback }}
-                    alt={contentData.title}
-                    className="w-full rounded-xl mb-4 object-cover"
-                    style={{ maxHeight: '220px' }}
-                  />
-                  <p
-                    className="font-semibold mb-1 leading-snug"
-                    style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', color: '#FDF8F0' }}
-                  >
-                    {contentData.title}
-                  </p>
-                  <p
-                    className="text-xs"
-                    style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.4)' }}
-                  >
-                    {contentData.author}
-                  </p>
-                </div>
-              )}
-
-              {/* Twitter preview */}
-              {contentData.platform === 'twitter' && (
-                <div>
-                  <div className="flex items-center gap-3 mb-4">
-                    {contentData.avatar && (
-                      <img
-                        src={contentData.avatar}
-                        alt={contentData.author}
-                        className="w-10 h-10 rounded-full"
-                        style={{ border: '1px solid rgba(253,248,240,0.1)' }}
-                      />
-                    )}
-                    <div>
-                      <p
-                        className="font-semibold text-sm"
-                        style={{ fontFamily: 'var(--font-heading)', color: '#FDF8F0' }}
-                      >
-                        {contentData.author}
-                      </p>
-                      <p
-                        className="text-xs"
-                        style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.35)' }}
-                      >
-                        @{contentData.handle}
-                      </p>
-                    </div>
-                  </div>
-                  <p
-                    className="text-sm leading-relaxed mb-4"
-                    style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.8)' }}
-                  >
-                    {contentData.text}
-                  </p>
-                  <div className="flex items-center gap-5">
-                    {[
-                      { label: 'Views', val: contentData.views },
-                      { label: 'Likes', val: contentData.likes },
-                      { label: 'RTs', val: contentData.retweets },
-                      { label: 'Replies', val: contentData.replies },
-                    ].map(({ label, val }) => (
-                      <div key={label} className="text-center">
-                        <p
-                          className="text-sm font-bold"
-                          style={{ fontFamily: 'var(--font-heading)', color: '#FDF8F0' }}
-                        >
-                          {val?.toLocaleString() || '—'}
-                        </p>
-                        <p
-                          className="text-[9px] uppercase tracking-widest"
-                          style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.25)' }}
-                        >
-                          {label}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Instagram — manual paste */}
-              {contentData.platform === 'instagram' && (
-                <div>
-                  <p
-                    className="text-sm mb-4 leading-relaxed"
-                    style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.5)' }}
-                  >
-                    {contentData.message}
-                  </p>
-                  <textarea
-                    value={manualText}
-                    onChange={(e) => setManualText(e.target.value)}
-                    placeholder="Paste the caption, description, or text from the post..."
-                    rows={5}
-                    className="w-full rounded-xl px-4 py-3 text-sm outline-none resize-none transition-all duration-200"
-                    style={{
-                      fontFamily: 'var(--font-body)',
-                      background: 'rgba(253,248,240,0.04)',
-                      border: `1px solid rgba(${COLOR_RGB},0.15)`,
-                      color: '#FDF8F0',
-                      caretColor: COLOR,
-                    }}
-                  />
-                </div>
-              )}
+            <div className="grid gap-3">
+              <p className="tool-label">What it misses</p>
+              <ul className="grid gap-2 border-t border-rule pt-3">
+                {analysis.weaknesses?.map((w, i) => (
+                  <li key={i} className="text-[16px] leading-[1.5] text-[#c9c9c4]">{w}</li>
+                ))}
+              </ul>
             </div>
+          </div>
 
-            {/* Analyze button */}
-            <motion.button
-              onClick={handleAnalyze}
-              disabled={analyzing || (contentData.platform === 'instagram' && !manualText.trim())}
-              whileTap={{ scale: 0.98 }}
-              className="w-full py-4 rounded-xl text-sm font-bold tracking-wide uppercase transition-all duration-300"
-              style={{
-                fontFamily: 'var(--font-heading)',
-                background:
-                  !analyzing && (contentData.platform !== 'instagram' || manualText.trim())
-                    ? `linear-gradient(135deg, ${COLOR}, #D4A04A)`
-                    : 'rgba(253,248,240,0.04)',
-                border: `1px solid ${!analyzing ? 'transparent' : 'rgba(253,248,240,0.06)'}`,
-                color: !analyzing ? '#0D0B09' : 'rgba(253,248,240,0.2)',
-                cursor: !analyzing ? 'pointer' : 'not-allowed',
-                boxShadow: !analyzing ? `0 0 30px rgba(${COLOR_RGB},0.25)` : 'none',
-              }}
-            >
-              {analyzing ? (
-                <span className="flex items-center justify-center gap-3">
-                  <motion.span
-                    animate={{ rotate: 360 }}
-                    transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
-                    className="inline-block w-4 h-4 rounded-full"
-                    style={{ border: `2px solid rgba(${COLOR_RGB},0.3)`, borderTopColor: COLOR }}
-                  />
-                  Analyzing...
-                </span>
-              ) : (
-                'Run Analysis →'
-              )}
-            </motion.button>
-
-            <AnimatePresence>
-              {fetchError && (
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="text-center text-xs"
-                  style={{ color: 'rgba(255,100,100,0.7)', fontFamily: 'var(--font-body)' }}
-                >
-                  {fetchError}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </motion.div>
-        )}
-
-        {/* ── Step 3: Analysis results ── */}
-        {step === 'results' && analysis && (
-          <motion.div
-            key="results"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-            className="space-y-4"
-          >
-            {/* Header row */}
-            <div className="flex items-center justify-between">
-              <p
-                className="text-[10px] tracking-[0.3em] uppercase"
-                style={{ fontFamily: 'var(--font-heading)', color: `rgba(${COLOR_RGB},0.5)` }}
-              >
-                Analysis complete
-              </p>
-              <button
-                onClick={reset}
-                className="text-[10px] tracking-[0.2em] uppercase transition-colors duration-200"
-                style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.25)' }}
-              >
-                ← Analyze another
-              </button>
+          {analysis.viralTrigger && (
+            <div className="grid gap-2">
+              <p className="tool-label">Why this kind of post spreads</p>
+              <p className="max-w-[62ch] text-[16px] text-[#c9c9c4]">{analysis.viralTrigger}</p>
             </div>
+          )}
 
-            {/* Verdict + Score */}
-            <div
-              className="rounded-2xl border p-6"
-              style={{
-                background: `rgba(${COLOR_RGB},0.05)`,
-                borderColor: `rgba(${COLOR_RGB},0.2)`,
-              }}
-            >
-              <div className="flex items-start gap-4">
-                <div
-                  className="shrink-0 w-14 h-14 rounded-xl flex items-center justify-center"
-                  style={{
-                    background: `rgba(${COLOR_RGB},0.1)`,
-                    border: `1px solid rgba(${COLOR_RGB},0.2)`,
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-display)',
-                      fontSize: '1.5rem',
-                      fontWeight: 800,
-                      color: COLOR,
-                    }}
-                  >
-                    {analysis.score}
-                  </span>
-                </div>
-                <div className="flex-1">
-                  <p
-                    className="font-semibold leading-snug mb-1"
-                    style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', color: '#FDF8F0' }}
-                  >
-                    {analysis.verdict}
-                  </p>
-                  <p
-                    className="text-xs leading-relaxed"
-                    style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.4)' }}
-                  >
-                    {analysis.scoreReason}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Strengths & Weaknesses */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div
-                className="rounded-xl border p-5"
-                style={{ background: 'rgba(34,197,94,0.04)', borderColor: 'rgba(34,197,94,0.15)' }}
-              >
-                <p
-                  className="text-[9px] tracking-[0.25em] uppercase mb-3"
-                  style={{ fontFamily: 'var(--font-heading)', color: 'rgba(34,197,94,0.6)' }}
-                >
-                  What Works
-                </p>
-                <ul className="space-y-2">
-                  {analysis.strengths?.map((s, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <span style={{ color: '#22c55e', fontSize: '0.6rem', marginTop: '0.25rem' }}>●</span>
-                      <span
-                        className="text-xs leading-relaxed"
-                        style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.55)' }}
-                      >
-                        {s}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div
-                className="rounded-xl border p-5"
-                style={{ background: 'rgba(239,68,68,0.04)', borderColor: 'rgba(239,68,68,0.15)' }}
-              >
-                <p
-                  className="text-[9px] tracking-[0.25em] uppercase mb-3"
-                  style={{ fontFamily: 'var(--font-heading)', color: 'rgba(239,68,68,0.6)' }}
-                >
-                  Missed Opportunities
-                </p>
-                <ul className="space-y-2">
-                  {analysis.weaknesses?.map((w, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <span style={{ color: '#ef4444', fontSize: '0.6rem', marginTop: '0.25rem' }}>●</span>
-                      <span
-                        className="text-xs leading-relaxed"
-                        style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.55)' }}
-                      >
-                        {w}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* Viral Trigger */}
-            <div
-              className="rounded-xl border p-5"
-              style={{
-                background: `rgba(${COLOR_RGB},0.04)`,
-                borderColor: `rgba(${COLOR_RGB},0.15)`,
-              }}
-            >
-              <p
-                className="text-[9px] tracking-[0.25em] uppercase mb-2"
-                style={{ fontFamily: 'var(--font-heading)', color: `rgba(${COLOR_RGB},0.6)` }}
-              >
-                Viral Trigger
-              </p>
-              <p
-                className="text-sm leading-relaxed"
-                style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.6)' }}
-              >
-                {analysis.viralTrigger}
-              </p>
-            </div>
-
-            {/* Strongest Hook — copyable */}
-            {analysis.hook && (
-              <motion.div
-                onClick={() => handleCopy(analysis.hook, 'hook')}
-                className="rounded-xl border p-5 cursor-pointer transition-all duration-200"
-                style={{
-                  background: copied === 'hook' ? 'rgba(212,160,74,0.08)' : 'rgba(212,160,74,0.04)',
-                  borderColor: copied === 'hook' ? 'rgba(232,196,122,0.4)' : 'rgba(212,160,74,0.15)',
-                }}
-                whileTap={{ scale: 0.99 }}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <p
-                    className="text-[9px] tracking-[0.25em] uppercase"
-                    style={{ fontFamily: 'var(--font-heading)', color: 'rgba(232,196,122,0.6)' }}
-                  >
-                    Strongest Hook for a Remake
-                  </p>
-                  <span
-                    className="text-[9px] tracking-[0.2em] uppercase transition-colors duration-200"
-                    style={{
-                      fontFamily: 'var(--font-heading)',
-                      color: copied === 'hook' ? '#E8C47A' : 'rgba(253,248,240,0.2)',
-                    }}
-                  >
-                    {copied === 'hook' ? 'Copied!' : 'Tap to copy'}
-                  </span>
-                </div>
-                <p
-                  className="text-sm leading-relaxed font-medium"
-                  style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.8)' }}
-                >
-                  "{analysis.hook}"
-                </p>
-              </motion.div>
-            )}
-
-            {/* Remake Angles */}
-            {analysis.remakeAngles?.length > 0 && (
+          {analysis.hook && (
+            <div className="grid gap-2 border-l-2 border-gold pl-4">
+              <p className="tool-label">An opening line for your remake</p>
+              <p className="text-[19px] leading-[1.45] text-silver">{analysis.hook}</p>
               <div>
-                <p
-                  className="text-[9px] tracking-[0.25em] uppercase mb-3"
-                  style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.25)' }}
-                >
-                  Remake Angles
-                </p>
-                <div className="space-y-3">
-                  {analysis.remakeAngles.map((angle, idx) => (
-                    <div
-                      key={idx}
-                      className="rounded-xl border p-4"
-                      style={{
-                        background: 'rgba(22,19,15,0.8)',
-                        borderColor: 'rgba(253,248,240,0.07)',
-                      }}
-                    >
-                      <p
-                        className="text-xs font-semibold mb-1"
-                        style={{ fontFamily: 'var(--font-heading)', color: COLOR }}
-                      >
-                        {angle.angle}
-                      </p>
-                      <p
-                        className="text-xs leading-relaxed"
-                        style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.45)' }}
-                      >
-                        {angle.description}
-                      </p>
-                    </div>
-                  ))}
-                </div>
+                <CopyButton copied={copied === 'hook'} onClick={() => handleCopy(analysis.hook, 'hook')} label="Copy this line" />
               </div>
-            )}
+            </div>
+          )}
 
-            {/* Best Platforms */}
-            {analysis.bestPlatforms?.length > 0 && (
-              <div className="flex items-center gap-3 flex-wrap">
-                <p
-                  className="text-[9px] tracking-[0.2em] uppercase"
-                  style={{ fontFamily: 'var(--font-heading)', color: 'rgba(253,248,240,0.25)' }}
-                >
-                  Best on:
-                </p>
-                {analysis.bestPlatforms.map((p) => (
-                  <span
-                    key={p}
-                    className="text-[10px] px-3 py-1 rounded-full"
-                    style={{
-                      fontFamily: 'var(--font-heading)',
-                      background: `rgba(${COLOR_RGB},0.08)`,
-                      border: `1px solid rgba(${COLOR_RGB},0.2)`,
-                      color: COLOR,
-                    }}
-                  >
-                    {p}
-                  </span>
+          {analysis.remakeAngles?.length > 0 && (
+            <div className="grid gap-2">
+              <p className="tool-label">Ways to remake it</p>
+              <ol className="result-list">
+                {analysis.remakeAngles.map((angle, idx) => (
+                  <ResultRow key={idx} index={idx}>
+                    <p className="text-[18px] font-semibold text-silver">{angle.angle}</p>
+                    <p className="text-[16px] text-[#c9c9c4]">{angle.description}</p>
+                  </ResultRow>
                 ))}
-              </div>
-            )}
-          </motion.div>
-        )}
+              </ol>
+            </div>
+          )}
 
-      </AnimatePresence>
+          {analysis.bestPlatforms?.length > 0 && (
+            <p className="text-[16px] text-[#c9c9c4]">
+              <span className="text-graphite">Best suited to: </span>
+              {analysis.bestPlatforms.join(', ')}
+            </p>
+          )}
+        </>
+      )}
     </div>
   )
 }

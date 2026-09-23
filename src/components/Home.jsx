@@ -1,13 +1,10 @@
-import '../App.css'
 import Navbar from './Navbar'
 import Hero from './Hero'
 import SofarContent from './SofarContent'
-import ToolsPreview from './ToolsPreview'
-import Services from './Services'
-import Footer from './Footer'
-import SectionDivider from './SectionDivider'
 import TrendingSection from './TrendingSection'
+import Services from './Services'
 import EmailCapture from './EmailCapture'
+import Footer from './Footer'
 
 export default function Home() {
   return (
@@ -15,18 +12,12 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
-        <SectionDivider />
-        <ToolsPreview />
-        <SectionDivider />
         <SofarContent />
-        <SectionDivider />
         <TrendingSection />
-        <SectionDivider />
         <Services />
-        <SectionDivider />
         <EmailCapture />
-        <Footer />
       </main>
+      <Footer />
     </>
   )
 }

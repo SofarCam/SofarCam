@@ -1,205 +1,69 @@
-import { useRef } from 'react'
-import { motion } from 'framer-motion'
-import { HiArrowUpRight } from 'react-icons/hi2'
+const CALL_HREF = 'mailto:shotbyseven@gmail.com?subject=SofarContent%20discovery%20call'
 
-const services = [
+const SERVICES = [
   {
-    id: 'agent-setup',
-    headline: 'Stop Learning AI. Start Using It.',
-    name: 'AI Agent Setup',
+    name: 'AI agent setup',
     price: '$500–1,500',
-    recurring: '+ $150–300/mo',
+    priceNote: 'plus $150–300 a month',
     timeline: '1–2 weeks',
-    color: '#E8C47A',
-    colorRgb: '212,160,74',
-    description:
-      'We build and deploy custom AI agents for your business. Sales follow-up? Customer support? Content brainstorming? We configure systems that handle repetitive work while you focus on growth.',
-    includes: [
-      'Discovery call (1 hour)',
-      'Custom agent configuration (3–5 tools)',
-      'Training session (2 hours)',
-      '30-day support',
-      'Monthly optimization + retainer',
-    ],
+    desc: 'I build and set up AI agents that take repetitive work off your plate — sales follow-up, customer support, content brainstorming — so you can spend your time on the parts only you can do.',
+    includes: ['1-hour discovery call', 'Agent setup across 3–5 of your tools', '2-hour training session', '30 days of support', 'Monthly tune-ups on retainer'],
   },
   {
-    id: 'strategy',
-    headline: 'Stop Buying AI Tools. Start Using Them.',
-    name: 'AI Implementation Strategy',
+    name: 'AI implementation strategy',
     price: '$500–2,000',
-    recurring: 'One-time',
+    priceNote: 'one time',
     timeline: '5 business days',
-    color: '#E8C47A',
-    colorRgb: '212,160,74',
-    description:
-      "You've got 12 AI subscriptions and nothing to show for it. We audit your stack, identify what's actually moving your business forward, and build a 90-day implementation roadmap you can execute.",
-    includes: [
-      'Full AI stack audit',
-      'Competitive analysis',
-      'Personalized tool recommendations',
-      'Implementation SOPs + workflows',
-      '60-minute strategy call',
-    ],
+    desc: 'Paying for a pile of AI subscriptions and not getting much from them? I audit what you have, find what’s actually helping, and hand you a 90-day plan you can follow.',
+    includes: ['Full audit of your AI tools', 'Competitive analysis', 'Tool recommendations for your business', 'Step-by-step workflows', '60-minute strategy call'],
   },
   {
-    id: 'website',
-    headline: 'Your Website That Markets Itself.',
-    name: 'Custom AI Website',
+    name: 'Custom AI website',
     price: '$1,500–5,000+',
-    recurring: '90-day support',
+    priceNote: 'includes 90 days of support',
     timeline: '2–4 weeks',
-    color: '#E8C47A',
-    colorRgb: '212,160,74',
-    description:
-      'Static sites are dead. We build AI-powered websites that generate content, integrate your tools automatically, and turn visitors into leads without extra work on your end.',
-    includes: [
-      'Full site design + build',
-      'AI tool integration (concept gen, lead magnet, etc.)',
-      'Analytics + performance tracking',
-      'React + Vite + Tailwind stack',
-      '90-day support',
-    ],
+    desc: 'A site that does more than sit there: built-in tools like the ones on this page, lead capture, and analytics so you can see what’s working.',
+    includes: ['Full design and build', 'AI tools built in (idea generator, lead magnet, and more)', 'Analytics and performance tracking', 'Built with React, Vite, and Tailwind', '90 days of support'],
   },
 ]
 
-export default function ServicesSection() {
+export default function Services() {
   return (
-    <section id="services" className="relative py-24 px-6 overflow-hidden">
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse 60% 50% at 80% 50%, rgba(212,160,74,0.04) 0%, transparent 60%)' }}
-      />
-
-      <div className="max-w-4xl mx-auto relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="mb-16"
-        >
-          <div className="inline-flex items-center gap-2 mb-5 px-3 py-1 rounded-full" style={{ background: 'rgba(212,160,74,0.08)', border: '1px solid rgba(232,196,122,0.2)' }}>
-            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#E8C47A' }} />
-            <span className="text-[10px] tracking-[0.25em] uppercase" style={{ color: '#E8C47A', fontFamily: 'var(--font-heading)' }}>Work With Us</span>
-          </div>
-          <h2
-            className="mb-4 heading-glow"
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.2rem, 6vw, 3.5rem)', fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.03em', color: '#FDF8F0' }}
-          >
-            Here is What We{' '}
-            <span className="gradient-text-warm" style={{ filter: 'drop-shadow(0 0 24px rgba(212,160,74,0.4))' }}>Do For You</span>
-          </h2>
-          <p className="max-w-lg leading-relaxed" style={{ fontFamily: 'var(--font-body)', fontSize: '0.95rem', color: 'rgba(253,248,240,0.35)' }}>
-            SofarContent sits between ChatGPT (too generic) and hiring a marketing agency (too expensive).
-            We build solutions that feel like expertise you can actually use.
+    <section id="services" className="paper scroll-mt-6">
+      <div className="container-page grid gap-12 py-20 lg:grid-cols-12 lg:gap-10 lg:py-28">
+        <div className="lg:col-span-4">
+          <h2 className="type-display text-[clamp(48px,5.4vw,76px)]">Work with me</h2>
+          <p className="mt-5 max-w-[36ch] text-[17px] text-smoke">
+            Somewhere between ChatGPT, which is too generic, and a marketing agency, which is too expensive.
+            I set up the AI your business actually needs and show you how to use it.
           </p>
-        </motion.div>
-
-        <div className="space-y-5 mb-16">
-          {services.map((s, idx) => (
-            <ServiceCard key={s.id} s={s} idx={idx} />
-          ))}
+          <div className="mt-10">
+            <a href={CALL_HREF} className="btn-gold">Book a free 15-minute call</a>
+            <p className="mt-4 max-w-[34ch] text-[15px] text-smoke">
+              Not sure which of these you need? That’s what the call is for. If I’m not the right fit, I’ll say so.
+            </p>
+          </div>
         </div>
 
-        {/* CTA block */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="relative rounded-2xl p-10 text-center overflow-hidden"
-          style={{
-            background: 'rgba(13,11,9,0.8)',
-            border: '1px solid rgba(212,160,74,0.25)',
-            boxShadow: '0 0 60px rgba(212,160,74,0.1), inset 0 1px 0 rgba(255,255,255,0.04)',
-          }}
-        >
-          <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent 0%, #D4A04A 30%, #B8862E 70%, transparent 100%)', opacity: 0.6 }} />
-          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(212,160,74,0.08) 0%, transparent 60%)' }} />
-
-          <p className="text-[10px] tracking-[0.3em] uppercase mb-4 relative z-10" style={{ fontFamily: 'var(--font-heading)', color: 'rgba(232,196,122,0.5)' }}>
-            Not sure what you need?
-          </p>
-          <h3 className="mb-3 relative z-10 heading-glow" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.4rem, 4vw, 2rem)', fontWeight: 700, letterSpacing: '-0.02em', color: '#FDF8F0' }}>
-            Let's figure it out together.
-          </h3>
-          <p className="mb-8 max-w-sm mx-auto text-sm leading-relaxed relative z-10" style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.35)' }}>
-            Book a free 15-minute discovery call. We'll tell you exactly what you need —
-            and if we're not the right fit, we'll say that too.
-          </p>
-          <a
-            href="mailto:shotbyseven@gmail.com?subject=SofarContent%20Discovery%20Call"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-sm font-bold tracking-wide uppercase transition-all duration-300 relative z-10"
-            style={{ fontFamily: 'var(--font-heading)', background: 'linear-gradient(135deg, #D4A04A, #B8862E)', color: '#0D0B09', boxShadow: '0 0 40px rgba(212,160,74,0.5), 0 0 80px rgba(212,160,74,0.2)' }}
-            onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 0 60px rgba(212,160,74,0.7), 0 0 120px rgba(212,160,74,0.3)'; e.currentTarget.style.transform = 'translateY(-2px)' }}
-            onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 0 40px rgba(212,160,74,0.5), 0 0 80px rgba(212,160,74,0.2)'; e.currentTarget.style.transform = 'translateY(0)' }}
-          >
-            Book a Discovery Call
-            <HiArrowUpRight size={14} />
-          </a>
-        </motion.div>
+        <ol className="lg:col-span-8 border-t border-black">
+          {SERVICES.map((s) => (
+            <li key={s.name} className="grid gap-4 border-b border-rule-paper py-9 sm:grid-cols-[1fr_auto] sm:gap-x-10">
+              <div className="grid gap-3">
+                <h3 className="text-[26px] font-semibold leading-tight">{s.name}</h3>
+                <p className="max-w-[58ch] text-[17px] leading-[1.55] text-[#2b2b29]">{s.desc}</p>
+                <p className="max-w-[62ch] text-[15px] leading-[1.6] text-smoke">
+                  Includes: {s.includes.join('; ')}.
+                </p>
+              </div>
+              <div className="sm:text-right">
+                <p className="type-frame text-[26px] leading-tight">{s.price}</p>
+                <p className="mt-1 text-[15px] text-smoke">{s.priceNote}</p>
+                <p className="text-[15px] text-smoke">{s.timeline}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
-  )
-}
-
-function ServiceCard({ s, idx }) {
-  const ref = useRef(null)
-
-  function handleMouseMove(e) {
-    const el = ref.current
-    if (!el) return
-    const rect = el.getBoundingClientRect()
-    const rotX = ((e.clientY - rect.top - rect.height / 2) / (rect.height / 2)) * -5
-    const rotY = ((e.clientX - rect.left - rect.width / 2) / (rect.width / 2)) * 5
-    el.style.transform = `perspective(1200px) rotateX(${rotX}deg) rotateY(${rotY}deg)`
-    el.style.boxShadow = `0 30px 80px rgba(${s.colorRgb},0.15), 0 0 0 1px ${s.color}20`
-  }
-
-  function handleMouseLeave() {
-    if (!ref.current) return
-    ref.current.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg)'
-    ref.current.style.boxShadow = 'none'
-  }
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, delay: idx * 0.1 }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="rounded-2xl border p-8 tilt-card relative overflow-hidden"
-      style={{ background: `rgba(${s.colorRgb},0.04)`, borderColor: `${s.color}20`, backdropFilter: 'blur(8px)' }}
-    >
-      <div className="absolute top-0 left-0 right-0 h-px pointer-events-none" style={{ background: `linear-gradient(90deg, transparent 0%, ${s.color}60 50%, transparent 100%)` }} />
-
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
-        <div>
-          <p className="text-[9px] tracking-[0.3em] uppercase mb-2" style={{ fontFamily: 'var(--font-heading)', color: `${s.color}80` }}>{s.name}</p>
-          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.01em', color: '#FDF8F0', textShadow: `0 0 40px rgba(${s.colorRgb},0.2)` }}>
-            {s.headline}
-          </h3>
-        </div>
-        <div className="text-right shrink-0">
-          <p className="font-bold" style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', color: s.color, textShadow: `0 0 12px ${s.color}60` }}>{s.price}</p>
-          <p className="text-xs mt-0.5" style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.3)' }}>{s.recurring}</p>
-          <p className="text-xs mt-0.5" style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.2)' }}>{s.timeline}</p>
-        </div>
-      </div>
-
-      <p className="mb-6 leading-relaxed" style={{ fontFamily: 'var(--font-body)', fontSize: '0.9rem', color: 'rgba(253,248,240,0.45)' }}>{s.description}</p>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        {s.includes.map((item) => (
-          <div key={item} className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: s.color, opacity: 0.6, boxShadow: `0 0 6px ${s.color}` }} />
-            <span className="text-xs" style={{ fontFamily: 'var(--font-body)', color: 'rgba(253,248,240,0.35)' }}>{item}</span>
-          </div>
-        ))}
-      </div>
-    </motion.div>
   )
 }
