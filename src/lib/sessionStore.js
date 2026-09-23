@@ -35,3 +35,30 @@ export function getActiveConcept() {
 export function clearActiveConcept() {
   clearSession('active_concept')
 }
+
+// Active video prompt — set by Concept Generator, read by Video Generator
+export function setActiveVideoPrompt(prompt) {
+  saveSession('active_video_prompt', prompt)
+}
+
+export function getActiveVideoPrompt() {
+  return loadSession('active_video_prompt')
+}
+
+export function clearActiveVideoPrompt() {
+  clearSession('active_video_prompt')
+}
+
+// Video generation history — small rolling log so users can compare takes
+const VIDEO_HISTORY_LIMIT = 4
+
+export function addVideoHistoryEntry(entry) {
+  const history = loadSession('video_history') || []
+  const next = [{ ...entry, ts: Date.now() }, ...history].slice(0, VIDEO_HISTORY_LIMIT)
+  saveSession('video_history', next)
+  return next
+}
+
+export function getVideoHistory() {
+  return loadSession('video_history') || []
+}

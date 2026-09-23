@@ -6,7 +6,7 @@ import LinkedInWriter from './LinkedInWriter'
 import ContentAnalyzer from './ContentAnalyzer'
 import VideoGenerator from './VideoGenerator'
 import { llmFetch } from '../lib/llmFetch'
-import { saveSession, loadSession, setActiveConcept } from '../lib/sessionStore'
+import { saveSession, loadSession, setActiveConcept, setActiveVideoPrompt } from '../lib/sessionStore'
 
 const NICHES = ['Photography', 'Fitness', 'Fashion', 'Food', 'Travel', 'Music', 'Art', 'Business', 'Gaming', 'Lifestyle']
 const PLATFORMS = ['Instagram', 'TikTok', 'YouTube', 'YouTube Shorts', 'Pinterest', 'Etsy']
@@ -551,6 +551,25 @@ Return ONLY valid JSON, no markdown, no explanation:
                       >
                         <span>✍️</span>
                         Write Caption →
+                      </button>
+                      <button
+                        onClick={() => {
+                          setActiveVideoPrompt(`${concept.hook}${concept.format ? ` — ${concept.format}` : ''}`)
+                          setChainedConcept(concept)
+                          setActiveTab('video')
+                        }}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold tracking-wide uppercase transition-all duration-200"
+                        style={{
+                          fontFamily: 'var(--font-heading)',
+                          background: 'rgba(212,160,74,0.08)',
+                          border: '1px solid rgba(212,160,74,0.2)',
+                          color: 'rgba(232,196,122,0.7)',
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(212,160,74,0.4)'}
+                        onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(212,160,74,0.2)'}
+                      >
+                        <span>🎬</span>
+                        Turn into Video →
                       </button>
                     </div>
                   </div>

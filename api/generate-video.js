@@ -1,7 +1,8 @@
 // /api/generate-video.js — Vercel serverless function
 // Submits a text-to-video generation job to Higgsfield or Seedance (via fal.ai).
 // Video generation takes 30s–3min, well past a serverless function's timeout,
-// so this only *starts* the job — the client polls /api/video-status for the result.
+// so this only *starts* the job — the client polls /api/video-status for the
+// result and can call /api/cancel-video to stop a Seedance job early.
 //
 // Required env vars (Vercel → Settings → Environment Variables):
 //   FAL_KEY               — from fal.ai dashboard (used for Seedance)
@@ -21,7 +22,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  const { prompt, provider, aspectRatio = '16:9', duration = 5 } = req.body || {}
+  const { prompt, provider, aspectRatio = '16:9', duration = 5, resolution = '720p' } = req.body || {}
 
   if (!prompt || !prompt.trim()) {
     return res.status(400).json({ error: 'Missing prompt' })
@@ -32,7 +33,7 @@ export default async function handler(req, res) {
 
   try {
     const job = provider === 'seedance'
-      ? await submitSeedance({ prompt, aspectRatio, duration })
+      ? await submitSeedance({ prompt, aspectRatio, duration, resolution })
       : await submitHiggsfield({ prompt, aspectRatio, duration })
     return res.status(200).json(job)
   } catch (err) {
@@ -41,7 +42,7 @@ export default async function handler(req, res) {
   }
 }
 
-async function submitSeedance({ prompt, aspectRatio, duration }) {
+async function submitSeedance({ prompt, aspectRatio, duration, resolution }) {
   const key = process.env.FAL_KEY
   if (!key) throw new Error('FAL_KEY not configured on the server')
 
@@ -55,6 +56,7 @@ async function submitSeedance({ prompt, aspectRatio, duration }) {
       prompt,
       aspect_ratio: aspectRatio,
       duration: String(duration),
+      resolution,
     }),
   })
 
@@ -73,6 +75,7 @@ async function submitSeedance({ prompt, aspectRatio, duration }) {
     jobId: data.request_id,
     statusUrl: data.status_url,
     responseUrl: data.response_url,
+    cancelUrl: data.cancel_url,
   }
 }
 
