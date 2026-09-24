@@ -3,7 +3,7 @@ import HookWriter from './HookWriter'
 import CaptionWriter from './CaptionWriter'
 import LinkedInWriter from './LinkedInWriter'
 import ContentAnalyzer from './ContentAnalyzer'
-import { llmFetch } from '../lib/llmFetch'
+import { llmFetch, parseJsonReply } from '../lib/llmFetch'
 import { saveSession, loadSession, setActiveConcept } from '../lib/sessionStore'
 import { TOOL_IDS } from '../lib/openTool'
 import { ChipGroup, GenerateButton, ErrorText, FallbackNote, ResultRow, CopyButton } from './ui/ToolKit'
@@ -103,7 +103,7 @@ Return ONLY valid JSON, no markdown, no explanation:
     try {
       const { text, usedFallback: fb } = await llmFetch(prompt, 1024)
       setUsedFallback(fb)
-      const parsed = JSON.parse(text)
+      const parsed = parseJsonReply(text)
       setResults(parsed.concepts)
       saveSession('concepts_results', parsed.concepts)
       saveSession('concepts_form', form)

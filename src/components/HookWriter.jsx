@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { llmFetch } from '../lib/llmFetch'
+import { llmFetch, parseJsonReply } from '../lib/llmFetch'
 import { getActiveConcept, clearActiveConcept, saveSession, loadSession } from '../lib/sessionStore'
 import { TextArea, ChipGroup, Checkbox, GenerateButton, ErrorText, FallbackNote, ResultRow, CopyButton } from './ui/ToolKit'
 
@@ -127,7 +127,7 @@ Return ONLY valid JSON, no markdown, no explanation:
     try {
       const { text, usedFallback: fb } = await llmFetch(prompt, 2000)
       setUsedFallback(fb)
-      const parsed = JSON.parse(text)
+      const parsed = parseJsonReply(text)
       setResults(parsed)
       saveSession('hooks_results', parsed)
       saveSession('hooks_form', form)

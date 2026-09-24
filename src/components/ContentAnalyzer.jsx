@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { llmFetch } from '../lib/llmFetch'
+import { llmFetch, parseJsonReply } from '../lib/llmFetch'
 import { saveSession, loadSession } from '../lib/sessionStore'
 import { TextInput, TextArea, ErrorText, ResultRow, CopyButton } from './ui/ToolKit'
 
@@ -129,7 +129,7 @@ Return ONLY valid JSON, no markdown, no explanation:
 
     try {
       const { text } = await llmFetch(prompt, 1200)
-      const parsed = JSON.parse(text)
+      const parsed = parseJsonReply(text)
       setAnalysis(parsed)
       setStep('results')
       saveSession('analyzer_results', parsed)

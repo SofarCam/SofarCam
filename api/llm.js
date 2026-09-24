@@ -3,19 +3,15 @@
 
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions'
 
-// Tried in order: free models first, then cheap paid, then premium.
+// Tried in order until one answers: cheapest first, then premium. No ":free" models —
+// OpenRouter keeps retiring them, and each dead one added a failed call to every request.
 const MODEL_CASCADE = [
-  { id: 'arcee-ai/trinity-large-preview:free', label: 'Trinity Large', tier: 1 },
-  { id: 'google/gemini-2.5-flash:free', label: 'Gemini 2.5 Flash', tier: 1 },
-  { id: 'meta-llama/llama-3.3-70b-instruct:free', label: 'Llama 3.3 70B', tier: 1 },
-  { id: 'deepseek/deepseek-v3:free', label: 'DeepSeek V3', tier: 1 },
-  { id: 'google/gemini-2.0-flash-exp:free', label: 'Gemini 2.0 Flash', tier: 1 },
-  { id: 'moonshotai/kimi-k2:free', label: 'Kimi K2', tier: 1 },
-  { id: 'deepseek/deepseek-v3.2', label: 'DeepSeek V3.2', tier: 2 },
+  { id: 'deepseek/deepseek-v3.2', label: 'DeepSeek V3.2', tier: 1 },
+  { id: 'google/gemini-2.5-flash', label: 'Gemini 2.5 Flash', tier: 1 },
   { id: 'openai/gpt-4.1-mini', label: 'GPT-4.1 Mini', tier: 2 },
-  { id: 'google/gemini-2.5-flash', label: 'Gemini Flash Pro', tier: 2 },
-  { id: 'anthropic/claude-haiku-4-5', label: 'Claude Haiku', tier: 3 },
-  { id: 'x-ai/grok-3-mini-beta', label: 'Grok 3 Mini', tier: 3 },
+  { id: 'meta-llama/llama-3.3-70b-instruct', label: 'Llama 3.3 70B', tier: 2 },
+  { id: 'moonshotai/kimi-k2', label: 'Kimi K2', tier: 2 },
+  { id: 'anthropic/claude-haiku-4.5', label: 'Claude Haiku', tier: 3 },
 ]
 
 const MAX_PROMPT_CHARS = 12000
@@ -60,8 +56,11 @@ async function callModel(key, model, prompt, maxTokens, timeoutMs) {
   }
 
   const data = await res.json()
-  const text = data.choices?.[0]?.message?.content ?? ''
+  const choice = data.choices?.[0]
+  const text = choice?.message?.content ?? ''
   if (!text) throw new Error(`${model.label} returned empty response`)
+  // A reply cut off at max_tokens is half a JSON object, which no tool can use.
+  if (choice.finish_reason === 'length') throw new Error(`${model.label} reply was cut off`)
   return text
 }
 

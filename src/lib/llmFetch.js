@@ -17,3 +17,14 @@ export async function llmFetch(prompt, maxTokens = 1024) {
   }
   return data
 }
+
+/**
+ * Models often wrap JSON in ```json fences or add a sentence before or after it,
+ * even when told not to. Parse the outermost {...} and ignore the rest.
+ */
+export function parseJsonReply(text) {
+  const start = text.indexOf('{')
+  const end = text.lastIndexOf('}')
+  if (start === -1 || end <= start) throw new Error('No JSON object in reply')
+  return JSON.parse(text.slice(start, end + 1))
+}
