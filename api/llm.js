@@ -79,9 +79,12 @@ export default async function handler(req, res) {
   }
   const tokens = Math.min(MAX_TOKENS, Math.max(1, Number(maxTokens) || 1024))
 
-  // VITE_OPENROUTER_API_KEY is the name the old client-side code read; accept it so a key
-  // saved under that name still works, but prefer the server-only name.
-  const key = process.env.OPENROUTER_API_KEY || process.env.VITE_OPENROUTER_API_KEY
+  // OpenRouterKey is the name the key is saved under in Vercel. VITE_OPENROUTER_API_KEY is the
+  // name the old client-side code read; accept it so a key saved under that name still works.
+  const key =
+    process.env.OPENROUTER_API_KEY ||
+    process.env.OpenRouterKey ||
+    process.env.VITE_OPENROUTER_API_KEY
   if (!key) {
     console.error('[llm] OPENROUTER_API_KEY is not set')
     return res.status(503).json({ error: 'The writing tools are not configured yet.' })
