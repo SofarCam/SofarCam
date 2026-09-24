@@ -3,12 +3,13 @@
 
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions'
 
-// Tried in order until one answers: cheapest first, then premium. No ":free" models —
-// OpenRouter keeps retiring them, and each dead one added a failed call to every request.
+// Tried in order until one answers: fast models first, since a visitor is watching a spinner
+// (DeepSeek is cheaper but hit the 25s limit in production). No ":free" models — OpenRouter
+// keeps retiring them, and each dead one added a failed call to every request.
 const MODEL_CASCADE = [
-  { id: 'deepseek/deepseek-v3.2', label: 'DeepSeek V3.2', tier: 1 },
   { id: 'google/gemini-2.5-flash', label: 'Gemini 2.5 Flash', tier: 1 },
-  { id: 'openai/gpt-4.1-mini', label: 'GPT-4.1 Mini', tier: 2 },
+  { id: 'openai/gpt-4.1-mini', label: 'GPT-4.1 Mini', tier: 1 },
+  { id: 'deepseek/deepseek-v3.2', label: 'DeepSeek V3.2', tier: 2 },
   { id: 'meta-llama/llama-3.3-70b-instruct', label: 'Llama 3.3 70B', tier: 2 },
   { id: 'moonshotai/kimi-k2', label: 'Kimi K2', tier: 2 },
   { id: 'anthropic/claude-haiku-4.5', label: 'Claude Haiku', tier: 3 },
